@@ -1,0 +1,32 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-added-large-files
+      - id: check-merge-conflict
+
+  - repo: local
+    hooks:
+      - id: gitleaks
+        name: gitleaks
+        entry: make gitleaks
+        language: system
+        pass_filenames: false
+
+      - id: functions-secure
+        name: secure/functions
+        entry: bash -c 'cd functions && make secure SKIP_GITLEAKS=1'
+        language: system
+        files: ^functions/
+        pass_filenames: false
+
+      - id: functions-lint
+        name: lint/functions
+        entry: bash -c 'cd functions && make lint'
+        language: system
+        types: [go]
+        files: ^functions/
+        pass_filenames: false
