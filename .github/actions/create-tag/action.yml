@@ -1,0 +1,20 @@
+# .github/actions/create-tag/action.yml
+name: Create Release Tag
+description: Create a release tag for a component
+
+inputs:
+  component:
+    required: true
+    description: Component name (e.g. functions, server)
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 #v6.0.3
+      with:
+        fetch-depth: 0
+    - name: Create tag
+      shell: bash
+      run: ./scripts/create_release_tag.sh "${{ inputs.component }}"
+      env:
+        GITHUB_TOKEN: ${{ github.token }}

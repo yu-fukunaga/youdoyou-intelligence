@@ -1,0 +1,25 @@
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    groups:
+      actions:
+        patterns: ["*"]
+
+  - package-ecosystem: "gomod"
+    directory: "/functions"
+    schedule:
+      interval: "daily"
+    groups:
+      go-modules:
+        patterns: ["*"]
+
+  - package-ecosystem: "gomod"
+    directory: "/server"
+    schedule:
+      interval: "daily"
+    groups:
+      go-modules:
+        patterns: ["*"]
