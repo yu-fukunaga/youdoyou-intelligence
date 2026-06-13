@@ -22,21 +22,14 @@ jobs:
         with:
           working-directory: functions
           version: v2.12.2
-
-  secure:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 #v6.0.3
-      - uses: actions/setup-go@4a3601121dd01d1626a1e23e37211e3254c1c06c #v6.4.0
-        with:
-          go-version-file: 'functions/go.mod'
+          args: --enable=gosec
       - name: Setup
         run: cd functions && make setup SKIP_GOLANGCI_LINT=1
-      - name: Secure
-        run: cd functions && make secure SKIP_GITLEAKS=1
+      - name: Vulncheck
+        run: cd functions && make vulncheck
 
   tag:
-    needs: [lint, secure]
+    needs: [lint]
     if: github.ref == 'refs/heads/main'
     permissions:
       contents: write
