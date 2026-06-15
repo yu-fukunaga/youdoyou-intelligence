@@ -7,6 +7,6 @@ import (
 )
 
 func init() {
-	githubWatcher := handlers.NewGithubWatcher()
-	functions.HTTP("GithubWebhook", githubWatcher.Handle)
+	githubWebhook := handlers.NewGithubWebhook()
+	functions.HTTP("GithubWebhook", githubWebhook.Handle)
 }
