@@ -17,16 +17,31 @@ repos:
         pass_filenames: false
 
       - id: functions-secure
-        name: secure/functions
+        name: functions/secure
         entry: bash -c 'cd functions && make secure SKIP_GITLEAKS=1'
         language: system
         files: ^functions/
         pass_filenames: false
 
       - id: functions-lint
-        name: lint/functions
+        name: functions/lint
         entry: bash -c 'cd functions && make lint'
         language: system
         types: [go]
         files: ^functions/
+        pass_filenames: false
+
+      - id: server-secure
+        name: server/secure
+        entry: bash -c 'cd server && make vulncheck'
+        language: system
+        files: ^server/
+        pass_filenames: false
+
+      - id: server-lint
+        name: server/lint
+        entry: bash -c 'cd server && make lint'
+        language: system
+        types: [go]
+        files: ^server/
         pass_filenames: false
