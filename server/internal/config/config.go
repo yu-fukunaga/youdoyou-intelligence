@@ -15,10 +15,10 @@ type Config struct {
 	ProjectID string `envconfig:"GCP_PROJECT_ID"`
 	Env       string `envconfig:"ENV" default:"production"`
 
-	GitHubAppID          string `envconfig:"GITHUB_WATCHER_APP_ID" required:"true"`
-	GitHubInstallationID string `envconfig:"GITHUB_WATCHER_INSTALLATION_ID" required:"true"`
-	GitHubPrivateKey     string `envconfig:"GITHUB_WATCHER_PRIVATE_KEY" required:"true"`
-	RepoDomainMapStr     string `envconfig:"REPO_DOMAIN_MAP" required:"true"`
+	GitHubAppID          string `envconfig:"GITHUB_WATCHER_APP_ID"`
+	GitHubInstallationID string `envconfig:"GITHUB_WATCHER_INSTALLATION_ID"`
+	GitHubPrivateKey     string `envconfig:"GITHUB_WATCHER_PRIVATE_KEY"`
+	RepoDomainMapStr     string `envconfig:"REPO_DOMAIN_MAP"`
 }
 
 var (

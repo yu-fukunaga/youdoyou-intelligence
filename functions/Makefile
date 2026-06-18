@@ -16,11 +16,6 @@ install-tools:
 		curl -sSfL https://golangci-lint.run/install.sh | sh -s -- -b $(PWD)/bin v2.12.2; \
 	fi
 
-.PHONY: deploy/dev/github-webhook
-deploy/dev/github-webhook:
-	gcloud functions deploy github-webhook \
-		--flags-file=../deploy-config/functions/github-webhook-deploy.dev.yaml
-
 # Lint
 .PHONY: lint
 lint:
