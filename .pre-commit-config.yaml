@@ -45,3 +45,24 @@ repos:
         types: [go]
         files: ^server/
         pass_filenames: false
+
+      - id: terraform-fmt
+        name: terraform/fmt
+        entry: bash -c 'cd terraform && make fmt-check'
+        language: system
+        files: ^terraform/.*\.tf$
+        pass_filenames: false
+
+      - id: terraform-lint
+        name: terraform/lint
+        entry: bash -c 'cd terraform && make lint'
+        language: system
+        files: ^terraform/.*\.tf$
+        pass_filenames: false
+
+      - id: terraform-validate
+        name: terraform/validate
+        entry: bash -c 'cd terraform && make validate/dev'
+        language: system
+        files: ^terraform/.*\.tf$
+        pass_filenames: false

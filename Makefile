@@ -28,6 +28,16 @@ pre-commit/format:
 pre-commit/run:
 	pre-commit run --all-files
 
-.PHONY: backend/deploy/dev
-backend/deploy/dev:
-	$(MAKE) -C backend deploy/dev SRC_DIR=./backend
+.PHONY: server/% functions/% firebase/% terraform/%
+
+server/%:
+	direnv exec server $(MAKE) -C server $*
+
+functions/%:
+	direnv exec functions $(MAKE) -C functions $*
+
+firebase/%:
+	direnv exec firebase $(MAKE) -C firebase $*
+
+terraform/%:
+	direnv exec terraform $(MAKE) -C terraform $*

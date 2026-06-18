@@ -23,3 +23,11 @@ updates:
     groups:
       go-modules:
         patterns: ["*"]
+
+  - package-ecosystem: "terraform"
+    directory: "/terraform"
+    schedule:
+      interval: "daily"
+    groups:
+      terraform-deps:
+        patterns: ["*"]
