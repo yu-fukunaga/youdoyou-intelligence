@@ -1,5 +1,8 @@
+# Environment / secrets
 .env
 .envrc
+client_secret_*.apps.googleusercontent.com.json
+
 bin/
 tmp/
 
@@ -7,36 +10,42 @@ tmp/
 .DS_Store
 .AppleDouble
 .LSOverride
-
-# Icon must end with two \r
 Icon
-
-
-# Thumbnails
 ._*
-
-# Files that might be created on a remote share
 .Spotlight-V100
 .Trashes
-
-# Directories potentially created on remote share
 .AppleDB
 .AppleDesktop
 Network Trash Folder
 Temporary Items
 .apdisk
 
+# Go
 .genkit/
-
 /go.work
 /go.work.sum
 
-# Generated testdata (keep locally, don't track)
-app/infra/testdata/
-app/infra/test_output/
-
+# Dependencies
 .claude/workspace/
-
 .vscode/
+**/.build/
+*-debug.log
 
-deploy-config
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+*.tfvars.json
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+.terraform.tfstate.lock.info
+.terraformrc
+terraform.rc
+crash.log
+crash.*.log
+
+# Firebase
+seed
