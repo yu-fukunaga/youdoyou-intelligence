@@ -1,0 +1,30 @@
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    env:
+      - 'DOCKER_BUILDKIT=1'
+    args: [
+      'build',
+      '-t', 'asia-northeast1-docker.pkg.dev/$PROJECT_ID/${_REPO_NAME}/server:latest',
+      '-t', 'asia-northeast1-docker.pkg.dev/$PROJECT_ID/${_REPO_NAME}/server:${_TAG}',
+      '.'
+    ]
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [
+      'push',
+      '--all-tags',
+      'asia-northeast1-docker.pkg.dev/$PROJECT_ID/${_REPO_NAME}/server'
+    ]
+
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: 'gcloud'
+    args: [
+      'run', 'deploy', 'server',
+      '--image=asia-northeast1-docker.pkg.dev/$PROJECT_ID/${_REPO_NAME}/server:${_TAG}',
+      '--region=asia-northeast1',
+      '--project=$PROJECT_ID'
+    ]
+
+substitutions:
+  _REPO_NAME: 'server'
+  _TAG: 'latest'
