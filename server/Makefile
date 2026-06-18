@@ -1,4 +1,4 @@
-.PHONY: build run seed check test clean setup lint secure semgrep secrets create-message
+.PHONY: build run seed check test clean setup lint secure semgrep secrets create-message upgrade-tools
 
 PWD := $(shell pwd)
 DEPLOY_REGION := asia-northeast1
@@ -12,11 +12,15 @@ setup:
 
 install-tools:
 	echo "Installing tools..."
-	go get -tool github.com/air-verse/air@latest
-	go get -tool golang.org/x/vuln/cmd/govulncheck@latest
 	@if [ "$(SKIP_GOLANGCI_LINT)" != "1" ]; then \
 		curl -sSfL https://golangci-lint.run/install.sh | sh -s -- -b $(PWD)/bin v2.12.2; \
 	fi
+
+# Bump pinned tool versions in go.mod (run manually, then commit the diff)
+upgrade-tools:
+	go get -tool github.com/air-verse/air@latest
+	go get -tool golang.org/x/vuln/cmd/govulncheck@latest
+	go mod tidy
 
 # Run the server
 dev:
