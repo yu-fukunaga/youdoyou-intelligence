@@ -46,6 +46,19 @@ ping/cloud/dev:
 	curl -s -H "Authorization: Bearer $$(gcloud auth print-identity-token)" \
 		$$URL/v1/ping;
 
+# Temporarily allow external traffic for local testing (internal-only by default)
+ingress/dev/open:
+	gcloud run services update server \
+		--region=$(DEPLOY_REGION) \
+		--project=$(GCP_PROJECT_ID_PREFIX)-dev \
+		--ingress=all
+
+ingress/dev/close:
+	gcloud run services update server \
+		--region=$(DEPLOY_REGION) \
+		--project=$(GCP_PROJECT_ID_PREFIX)-dev \
+		--ingress=internal
+
 # Build all binaries
 build:
 	@echo "Building..."
@@ -96,26 +109,4 @@ secure:
 # Deploy to dev (current HEAD)
 # Usage: make deploy/dev
 deploy/dev:
-	gcloud run deploy server \
-		--flags-file=../deploy-config/server/deploy-config.dev.yaml
-
-# Deploy to prod (latest tag)
-# Usage: make deploy/prod
-deploy/prod:
-	@LATEST_TAG=$$(git describe --tags --abbrev=0 2>/dev/null); \
-	if [ -z "$$LATEST_TAG" ]; then \
-		echo "Error: No tags found."; \
-		exit 1; \
-	fi; \
-	$(MAKE) deploy/prod/$$LATEST_TAG
-
-# Deploy to prod (specific tag)
-# Usage: make deploy/prod/v1.0.0
-deploy/prod/%:
-	@REVISION_SUFFIX=$$(echo "$*" | sed 's/^v//' | tr '.' '-' | tr '[:upper:]' '[:lower:]'); \
-	CURRENT_BRANCH=$$(git symbolic-ref --short HEAD 2>/dev/null || git rev-parse --short HEAD); \
-	git checkout "$*"; \
-	gcloud run deploy server \
-		--flags-file=../deploy-config/server/deploy-config.prod.yaml \
-		--revision-suffix=$$REVISION_SUFFIX; \
-	git checkout $$CURRENT_BRANCH
+	gcloud builds submit --config=cloudbuild.yaml --project=$(GCP_PROJECT_ID_PREFIX)-dev .
