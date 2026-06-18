@@ -6,7 +6,7 @@ require (
 	cloud.google.com/go/compute/metadata v0.9.0
 	cloud.google.com/go/firestore v1.22.0
 	github.com/bradleyfalzon/ghinstallation/v2 v2.19.0
-	github.com/firebase/genkit/go v1.8.0
+	github.com/firebase/genkit/go v1.9.0
 	github.com/go-chi/chi/v5 v5.3.0
 	github.com/google/go-github/v72 v72.0.0
 	github.com/joho/godotenv v1.5.1
