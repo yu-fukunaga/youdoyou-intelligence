@@ -41,6 +41,10 @@ jobs:
           languages: ${{ matrix.language }}
           build-mode: ${{ matrix.build-mode }}
 
+      - name: Select Xcode version
+        if: matrix.language == 'swift'
+        run: sudo xcode-select -s $(ls -d /Applications/Xcode_*.app | sort -V | tail -1)
+
       - name: Build AppCore (Swift manual build)
         if: matrix.language == 'swift'
         run: cd client/Packages/AppCore && swift build
