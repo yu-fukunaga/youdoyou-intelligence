@@ -4,73 +4,73 @@
 import Foundation
 
 public enum GithubPullCollection {
-    public static let name = "github_pulls"
+  public static let name = "github_pulls"
 
-    public static func documentPath(_ id: String) -> String {
-        "github_pulls/\(id)"
-    }
+  public static func documentPath(_ id: String) -> String {
+    "github_pulls/\(id)"
+  }
 }
 
 public enum GithubPullStatus: String, Codable, Sendable {
-    case open
-    case merged
-    case closed
+  case open
+  case merged
+  case closed
 }
 
 public enum GithubPullFields {
-    public static let id = "id"
-    public static let domainId = "domainId"
-    public static let topicId = "topicId"
-    public static let prNumber = "prNumber"
-    public static let title = "title"
-    public static let status = "status"
-    public static let firstCommitAt = "firstCommitAt"
-    public static let closedAt = "closedAt"
-    public static let fullNote = "fullNote"
-    public static let url = "url"
-    public static let repository = "repository"
-    public static let createdAt = "createdAt"
-    public static let updatedAt = "updatedAt"
+  public static let id = "id"
+  public static let domainId = "domainId"
+  public static let topicId = "topicId"
+  public static let prNumber = "prNumber"
+  public static let title = "title"
+  public static let status = "status"
+  public static let firstCommitAt = "firstCommitAt"
+  public static let closedAt = "closedAt"
+  public static let fullNote = "fullNote"
+  public static let url = "url"
+  public static let repository = "repository"
+  public static let createdAt = "createdAt"
+  public static let updatedAt = "updatedAt"
 }
 
 public struct GithubPull: Codable, Identifiable, Sendable {
-    @DocumentID public var id: String?
-    public var domainId: String
-    public var topicId: String?
-    public var prNumber: Int
-    public var title: String
-    public var status: GithubPullStatus
-    public var firstCommitAt: Date?
-    public var closedAt: Date?
-    public var fullNote: String
-    public var url: String
-    public var repository: String
-    public var createdAt: Date
-    @ServerTimestamp public var updatedAt: Date?
+  @DocumentID public var id: String?
+  public var domainId: String
+  public var topicId: String?
+  public var prNumber: Int
+  public var title: String
+  public var status: GithubPullStatus
+  public var firstCommitAt: Date?
+  public var closedAt: Date?
+  public var fullNote: String
+  public var url: String
+  public var repository: String
+  public var createdAt: Date
+  @ServerTimestamp public var updatedAt: Date?
 
-    public init(
-        domainId: String,
-        topicId: String? = nil,
-        prNumber: Int,
-        title: String,
-        status: GithubPullStatus,
-        firstCommitAt: Date? = nil,
-        closedAt: Date? = nil,
-        fullNote: String,
-        url: String,
-        repository: String,
-        createdAt: Date
-    ) {
-        self.domainId = domainId
-        self.topicId = topicId
-        self.prNumber = prNumber
-        self.title = title
-        self.status = status
-        self.firstCommitAt = firstCommitAt
-        self.closedAt = closedAt
-        self.fullNote = fullNote
-        self.url = url
-        self.repository = repository
-        self.createdAt = createdAt
-    }
+  public init(
+    domainId: String,
+    topicId: String? = nil,
+    prNumber: Int,
+    title: String,
+    status: GithubPullStatus,
+    firstCommitAt: Date? = nil,
+    closedAt: Date? = nil,
+    fullNote: String,
+    url: String,
+    repository: String,
+    createdAt: Date
+  ) {
+    self.domainId = domainId
+    self.topicId = topicId
+    self.prNumber = prNumber
+    self.title = title
+    self.status = status
+    self.firstCommitAt = firstCommitAt
+    self.closedAt = closedAt
+    self.fullNote = fullNote
+    self.url = url
+    self.repository = repository
+    self.createdAt = createdAt
+  }
 }

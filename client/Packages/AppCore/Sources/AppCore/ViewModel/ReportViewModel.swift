@@ -371,8 +371,8 @@ class ReportViewModel: ObservableObject {
     for (i, domain) in domains.enumerated() {
       let color = Self.palette[i % Self.palette.count]
       map[domain.id ?? ""] = color
-        for (j, topic) in (domain.topics).enumerated() {
-            map[topic.id] = Self.palette[(i + j) % Self.palette.count]
+      for (j, topic) in domain.topics.enumerated() {
+        map[topic.id] = Self.palette[(i + j) % Self.palette.count]
       }
     }
     return map

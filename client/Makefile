@@ -1,6 +1,5 @@
 # Variables
 SWIFT_FORMAT := swift-format
-SOURCE_DIRS := YouDoYouClient Packages/AppCore/Sources Packages/AppCore/Tests
 
 # Commands
 .PHONY: format
@@ -9,7 +8,7 @@ format: swift-format precommit-format
 
 .PHONY: swift-format
 swift-format:
-	@$(SWIFT_FORMAT) format --recursive --in-place $(SOURCE_DIRS)
+	@$(SWIFT_FORMAT) format --recursive --in-place .
 
 .PHONY: precommit-format
 precommit-format:
@@ -21,27 +20,19 @@ precommit-format:
 
 .PHONY: lint
 lint:
-	$(SWIFT_FORMAT) lint --recursive $(SOURCE_DIRS)
+	$(SWIFT_FORMAT) lint --recursive .
 
 .PHONY: ci-lint
 ci-lint:
-	$(SWIFT_FORMAT) lint --recursive --strict $(SOURCE_DIRS)
+	$(SWIFT_FORMAT) lint --recursive --strict .
 
 .PHONY: secure
-secure: gitleaks/staged semgrep
+secure: gitleaks semgrep
 	@echo "Security checks completed!"
 
 .PHONY: gitleaks
 gitleaks:
-	gitleaks protect --verbose --redact
-
-.PHONY: gitleaks/staged
-gitleaks/staged:
-	gitleaks protect --verbose --redact --staged
-
-.PHONY: gitleaks/full
-gitleaks/full:
-	gitleaks detect --verbose --redact
+	@gitleaks git --pre-commit --staged --no-banner || (echo ""; echo "❌ gitleaks: secrets detected!"; echo ""; exit 1)
 
 .PHONY: semgrep
 semgrep:
