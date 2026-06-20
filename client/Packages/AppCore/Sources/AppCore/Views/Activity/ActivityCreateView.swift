@@ -1,5 +1,4 @@
 import SwiftUI
-import YouDoYouFirestore
 
 struct ActivityCreateView: View {
   @Environment(\.dismiss) var dismiss

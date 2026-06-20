@@ -1,6 +1,5 @@
 import FirebaseFirestore
 import Foundation
-import YouDoYouFirestore
 
 @MainActor
 class ActivityDetailViewModel: ObservableObject {

@@ -1,5 +1,4 @@
 import SwiftUI
-import YouDoYouFirestore
 
 private struct TopicField: Identifiable {
   let id = UUID()

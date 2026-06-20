@@ -1,6 +1,5 @@
 import Combine
 import FirebaseFirestore
-import YouDoYouFirestore
 
 @MainActor
 class ActivityViewModel: ObservableObject {

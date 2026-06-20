@@ -29,7 +29,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		4908BCF12FA4466C0058DF36 /* youdoyou-firestore-gen-swift */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "youdoyou-firestore-gen-swift"; path = "../youdoyou-firestore-kit/gen/youdoyou-firestore-gen-swift"; sourceTree = SOURCE_ROOT; };
 		496B2DE72F5B3E93009735E3 /* YouDoYouClient.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = YouDoYouClient.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		496B2DF42F5B3E95009735E3 /* YouDoYouClientTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = YouDoYouClientTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		496B2DFE2F5B3E95009735E3 /* YouDoYouClientUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = YouDoYouClientUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -113,7 +112,6 @@
 				496B2E012F5B3E95009735E3 /* YouDoYouClientUITests */,
 				49894E532F5BCBD600F3EAAC /* Frameworks */,
 				496B2DE82F5B3E93009735E3 /* Products */,
-				4908BCF12FA4466C0058DF36 /* youdoyou-firestore-gen-swift */,
 			);
 			sourceTree = "<group>";
 		};

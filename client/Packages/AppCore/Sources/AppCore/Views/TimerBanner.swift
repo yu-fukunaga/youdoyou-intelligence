@@ -1,5 +1,4 @@
 import SwiftUI
-import YouDoYouFirestore
 
 struct TimerBanner: View {
   @EnvironmentObject var activityState: ActivityState

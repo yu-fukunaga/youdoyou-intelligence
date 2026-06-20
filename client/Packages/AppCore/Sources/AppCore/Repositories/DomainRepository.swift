@@ -1,6 +1,5 @@
 import FirebaseFirestore
 import Foundation
-import YouDoYouFirestore
 
 protocol DomainRepositoryProtocol: Sendable {
   func observe(onChange: @escaping ([Domain]) -> Void) -> ListenerRegistration

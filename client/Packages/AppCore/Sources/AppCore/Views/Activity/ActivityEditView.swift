@@ -1,6 +1,5 @@
 // ActivityEditView.swift
 import SwiftUI
-import YouDoYouFirestore
 
 struct ActivityEditView: View {
   @Environment(\.dismiss) var dismiss

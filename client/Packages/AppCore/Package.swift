@@ -19,9 +19,6 @@ let package = Package(
     dependencies: [
         .package(url: "https://github.com/firebase/firebase-ios-sdk.git", from: "12.0.0"),
         .package(url: "https://github.com/google/GoogleSignIn-iOS.git", from: "8.0.0"),
-//        .package(path: "../../../youdoyou-firestore-kit/gen/youdoyou-firestore-gen-swift"),
-//         .package(url: "https://github.com/yu-fukunaga/youdoyou-firestore-gen-swift.git", branch: "gen/issue-89-add-schema-activites-projects")
-         .package(url: "https://github.com/yu-fukunaga/youdoyou-firestore-gen-swift.git", from: "0.0.0")
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -33,7 +30,6 @@ let package = Package(
                 .product(name: "FirebaseAuth", package: "firebase-ios-sdk"),
                 .product(name: "FirebaseStorage", package: "firebase-ios-sdk"),
                 .product(name: "GoogleSignIn", package: "GoogleSignIn-iOS"),
-                .product(name: "YouDoYouFirestore", package: "youdoyou-firestore-gen-swift")
             ]
         ),
         .testTarget(

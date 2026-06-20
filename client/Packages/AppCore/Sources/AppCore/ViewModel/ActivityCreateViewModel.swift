@@ -1,7 +1,6 @@
 import FirebaseAuth
 import FirebaseFirestore
 import Foundation
-import YouDoYouFirestore
 
 @MainActor
 class ActivityCreateViewModel: ObservableObject {

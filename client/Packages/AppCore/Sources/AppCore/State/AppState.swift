@@ -1,6 +1,5 @@
 import FirebaseFirestore
 import SwiftUI
-import YouDoYouFirestore
 
 @MainActor
 class AppState: ObservableObject {

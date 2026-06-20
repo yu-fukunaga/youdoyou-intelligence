@@ -1,5 +1,5 @@
 {
-  "originHash" : "4c92546dbdb088079c84d4812344d075736f31abfd84c33951fc165629e7d1f7",
+  "originHash" : "4780b68e31e2ef4e6d0fc6dec82a3511d846af2bff17d2f5d93be6c8dce605b8",
   "pins" : [
     {
       "identity" : "abseil-cpp-binary",
@@ -143,15 +143,6 @@
       "state" : {
         "revision" : "540318ecedd63d883069ae7f1ed811a2df00b6ac",
         "version" : "2.4.0"
-      }
-    },
-    {
-      "identity" : "youdoyou-firestore-gen-swift",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/yu-fukunaga/youdoyou-firestore-gen-swift.git",
-      "state" : {
-        "revision" : "da2d789673e4e37a7e13ade1bddb2bdb6e233b96",
-        "version" : "0.7.0"
       }
     }
   ],

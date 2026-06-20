@@ -1,7 +1,6 @@
 import Combine
 import FirebaseFirestore
 import Foundation
-import YouDoYouFirestore
 
 @MainActor
 class DomainCreateViewModel: ObservableObject {

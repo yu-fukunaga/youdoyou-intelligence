@@ -1,6 +1,5 @@
 import Charts
 import SwiftUI
-import YouDoYouFirestore
 
 struct ReportView: View {
   @StateObject private var viewModel = ReportViewModel()

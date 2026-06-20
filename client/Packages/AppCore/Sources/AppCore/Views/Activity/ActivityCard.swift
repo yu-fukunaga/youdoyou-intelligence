@@ -1,5 +1,4 @@
 import SwiftUI
-import YouDoYouFirestore
 
 struct ActivityCard: View {
   @EnvironmentObject var appState: AppState

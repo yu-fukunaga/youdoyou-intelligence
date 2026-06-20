@@ -1,5 +1,4 @@
 import SwiftUI
-import YouDoYouFirestore
 
 struct DomainItem: View {
   let domain: Domain
