@@ -1,0 +1,21 @@
+name: CI Client
+permissions:
+  contents: read
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'client/**'
+  pull_request:
+    paths:
+      - 'client/**'
+
+jobs:
+  lint:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 #v7.0.0
+      - name: Install swift-format
+        run: brew install swift-format
+      - name: Lint
+        run: cd client && make ci-lint

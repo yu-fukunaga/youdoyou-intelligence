@@ -46,6 +46,30 @@ repos:
         files: ^server/
         pass_filenames: false
 
+      - id: client-lint
+        name: client/lint
+        entry: bash -c 'cd client && make lint'
+        language: system
+        types: [swift]
+        files: ^client/
+        pass_filenames: false
+
+      - id: client-secure
+        name: client/secure
+        entry: bash -c 'cd client && make semgrep'
+        language: system
+        types: [swift]
+        files: ^client/
+        pass_filenames: false
+
+      - id: client-format
+        name: client/format
+        entry: bash -c 'cd client && make format'
+        language: system
+        types: [swift]
+        files: ^client/
+        pass_filenames: false
+
       - id: terraform-fmt
         name: terraform/fmt
         entry: bash -c 'cd terraform && make fmt-check'

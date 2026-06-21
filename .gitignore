@@ -49,3 +49,14 @@ crash.*.log
 
 # Firebase
 seed
+
+# Xcode / Swift (client)
+build/
+DerivedData/
+*.moved-aside
+*.xcuserstate
+**/xcuserdata/
+.swiftpm/xcode/package.resolved
+*.code-workspace
+GoogleService-Info*.plist
+*.xcconfig
