@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"generator/internal/parser"
+	"github.com/yu-fukunaga/youdoyou-intelligence/firebase/generator/internal/parser"
 )
 
 // SwiftGenerator generates Swift code from schema definitions.
@@ -116,10 +116,10 @@ func (g *SwiftGenerator) generateCollectionEnum(buf *bytes.Buffer, collInfo coll
 	singularName := snakeToPascalCase(singularize(collInfo.Name))
 	vars := extractPathVars(collInfo.Path)
 
-	buf.WriteString(fmt.Sprintf("\npublic enum %sCollection {\n", singularName))
+	fmt.Fprintf(buf, "\npublic enum %sCollection {\n", singularName)
 
 	// Collection name constant
-	buf.WriteString(fmt.Sprintf("    public static let name = %q\n", collInfo.Name))
+	fmt.Fprintf(buf, "    public static let name = %q\n", collInfo.Name)
 
 	// For subcollections, generate collectionPath function
 	if collInfo.IsSubcollection && len(vars) > 0 {
@@ -132,8 +132,8 @@ func (g *SwiftGenerator) generateCollectionEnum(buf *bytes.Buffer, collInfo coll
 		}
 		paramStr := strings.Join(params, ", ")
 
-		buf.WriteString(fmt.Sprintf("\n    public static func collectionPath(%s) -> String {\n", paramStr))
-		buf.WriteString(fmt.Sprintf("        %s\n", buildSwiftInterpolation(collectionPath)))
+		fmt.Fprintf(buf, "\n    public static func collectionPath(%s) -> String {\n", paramStr)
+		fmt.Fprintf(buf, "        %s\n", buildSwiftInterpolation(collectionPath))
 		buf.WriteString("    }\n")
 	}
 
@@ -151,13 +151,13 @@ func (g *SwiftGenerator) generateCollectionEnum(buf *bytes.Buffer, collInfo coll
 	}
 	paramStr := strings.Join(params, ", ")
 
-	buf.WriteString(fmt.Sprintf("\n    public static func documentPath(%s) -> String {\n", paramStr))
+	fmt.Fprintf(buf, "\n    public static func documentPath(%s) -> String {\n", paramStr)
 	if !collInfo.IsSubcollection && len(vars) == 1 {
 		// For top-level: use "id" directly since that's the parameter name
 		collName := strings.Split(collInfo.Path, "/")[0]
-		buf.WriteString(fmt.Sprintf("        \"%s/\\(id)\"\n", collName))
+		fmt.Fprintf(buf, "        \"%s/\\(id)\"\n", collName)
 	} else {
-		buf.WriteString(fmt.Sprintf("        %s\n", buildSwiftInterpolation(collInfo.Path)))
+		fmt.Fprintf(buf, "        %s\n", buildSwiftInterpolation(collInfo.Path))
 	}
 	buf.WriteString("    }\n")
 
@@ -173,13 +173,13 @@ func (g *SwiftGenerator) generateEnumTypes(buf *bytes.Buffer, modelName string, 
 		}
 
 		enumName := modelName + toPascalCase(fieldName)
-		buf.WriteString(fmt.Sprintf("\npublic enum %s: String, Codable, Sendable {\n", enumName))
+		fmt.Fprintf(buf, "\npublic enum %s: String, Codable, Sendable {\n", enumName)
 		for _, v := range field.Enum {
 			camelCase := toCamelCase(v)
 			if camelCase == v {
-				buf.WriteString(fmt.Sprintf("    case %s\n", v))
+				fmt.Fprintf(buf, "    case %s\n", v)
 			} else {
-				buf.WriteString(fmt.Sprintf("    case %s = %q\n", camelCase, v))
+				fmt.Fprintf(buf, "    case %s = %q\n", camelCase, v)
 			}
 		}
 		buf.WriteString("}\n")
@@ -188,9 +188,9 @@ func (g *SwiftGenerator) generateEnumTypes(buf *bytes.Buffer, modelName string, 
 
 // generateFieldsEnum generates a {Model}Fields enum with static let constants.
 func (g *SwiftGenerator) generateFieldsEnum(buf *bytes.Buffer, modelName string, model parser.Model) {
-	buf.WriteString(fmt.Sprintf("\npublic enum %sFields {\n", modelName))
+	fmt.Fprintf(buf, "\npublic enum %sFields {\n", modelName)
 	for _, fieldName := range model.Fields.Keys {
-		buf.WriteString(fmt.Sprintf("    public static let %s = %q\n", toCamelCase(fieldName), fieldName))
+		fmt.Fprintf(buf, "    public static let %s = %q\n", toCamelCase(fieldName), fieldName)
 	}
 	buf.WriteString("}\n")
 }
@@ -212,7 +212,7 @@ func (g *SwiftGenerator) generateStruct(buf *bytes.Buffer, modelName string, mod
 		conformances = "Codable, Identifiable, Sendable"
 	}
 
-	buf.WriteString(fmt.Sprintf("\npublic struct %s: %s {\n", modelName, conformances))
+	fmt.Fprintf(buf, "\npublic struct %s: %s {\n", modelName, conformances)
 
 	// Generate fields
 	for _, fieldName := range model.Fields.Keys {
@@ -226,12 +226,12 @@ func (g *SwiftGenerator) generateStruct(buf *bytes.Buffer, modelName string, mod
 		swiftName := toCamelCase(fieldName)
 
 		if field.Type == "server_timestamp" {
-			buf.WriteString(fmt.Sprintf("    @ServerTimestamp public var %s: Date?\n", swiftName))
+			fmt.Fprintf(buf, "    @ServerTimestamp public var %s: Date?\n", swiftName)
 			continue
 		}
 
 		swiftType := g.fieldToSwiftType(fieldName, field, modelName)
-		buf.WriteString(fmt.Sprintf("    public var %s: %s\n", swiftName, swiftType))
+		fmt.Fprintf(buf, "    public var %s: %s\n", swiftName, swiftType)
 	}
 
 	// Generate init
@@ -285,14 +285,14 @@ func (g *SwiftGenerator) generateInit(buf *bytes.Buffer, modelName string, model
 			suffix = ""
 		}
 		if p.defaultValue != "" {
-			buf.WriteString(fmt.Sprintf("        %s: %s = %s%s\n", p.name, p.swiftType, p.defaultValue, suffix))
+			fmt.Fprintf(buf, "        %s: %s = %s%s\n", p.name, p.swiftType, p.defaultValue, suffix)
 		} else {
-			buf.WriteString(fmt.Sprintf("        %s: %s%s\n", p.name, p.swiftType, suffix))
+			fmt.Fprintf(buf, "        %s: %s%s\n", p.name, p.swiftType, suffix)
 		}
 	}
 	buf.WriteString("    ) {\n")
 	for _, p := range params {
-		buf.WriteString(fmt.Sprintf("        self.%s = %s\n", p.name, p.name))
+		fmt.Fprintf(buf, "        self.%s = %s\n", p.name, p.name)
 	}
 	buf.WriteString("    }\n")
 }

@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"os"
 
-	"generator/internal/parser"
+	"github.com/yu-fukunaga/youdoyou-intelligence/firebase/generator/internal/parser"
 )
 
 func main() {
-	schemaPath := "../schema/firestore.yaml"
+	schemaPath := "./schema/firestore.yaml"
 	if len(os.Args) > 1 {
 		schemaPath = os.Args[1]
 	}

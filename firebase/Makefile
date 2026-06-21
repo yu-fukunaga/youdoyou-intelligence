@@ -1,21 +1,26 @@
 -include .env
 export
 
-# version
-.PHONY: version/gen
-version/gen:
-	@git describe --tags --match "gen/v*" --abbrev=0 2>/dev/null || echo "no gen version"
+.PHONY: emulators
+emulators:
+	@echo "Starting emulators..."
+firebase emulators:start
 
-.PHONY: version/seed
-version/seed:
-	@git describe --tags --match "seed/v*" --abbrev=0 2>/dev/null || echo "no seed version"
+# Setup dependencies
+setup:
+	@echo "Setting up..."
+	$(MAKE) install-tools
+	go mod tidy
 
-# tools
-.PHONY: gen-work
-gen-work: MODULES := ./generator ./seed
-gen-work:
-	@if [ ! -f go.work ]; then go work init $(MODULES); \
-	else go work use $(MODULES) 2>/dev/null || true; fi
+install-tools:
+	echo "Installing tools..."
+	@if [ "$(SKIP_GOLANGCI_LINT)" != "1" ]; then \
+		curl -sSfL https://golangci-lint.run/install.sh | sh -s -- -b $(PWD)/bin v2.12.2; \
+	fi
+
+upgrade-tools:
+	go get -tool golang.org/x/vuln/cmd/govulncheck@latest
+	go mod tidy
 
 .PHONY: gen
 gen:
@@ -24,98 +29,52 @@ gen:
 
 .PHONY: gen/go
 gen/go:
-	cd generator && go run ./cmd/gen/main.go -target=go -schema=../schema/firestore.yaml
+	go run ./generator/cmd/gen/main.go -target=go -schema=./schema/firestore.yaml
 
 .PHONY: gen/swift
 gen/swift:
-	cd generator && go run ./cmd/gen/main.go -target=swift -schema=../schema/firestore.yaml
-
-.PHONY: emulators
-emulators:
-	@echo "Starting emulators..."
-	cd emulator && firebase emulators:start
-
-.PHONY: seed
-seed:
-	@echo "Seeding data..."
-	cd seed && go run . --dir=collection_data/
-	@echo "Done."
-
-# setup
-.PHONY: setup
-setup: setup/generator setup/seed
-
-.PHONY: setup/generator
-setup/generator:
-	cd generator && go mod download && go mod tidy
-
-.PHONY: setup/seed
-setup/seed:
-	cd seed && go mod download && go mod tidy
-
-.PHONY: setup/hooks
-setup/hooks:
-	pre-commit install
+	go run ./generator/cmd/gen/main.go -target=swift -schema=./schema/firestore.yaml
 
 # test
 .PHONY: test
-test: test/generator test/seed
-
-.PHONY: test/generator
-test/generator:
-	cd generator && go test -v ./...
-
-.PHONY: test/seed
-test/seed:
-	cd seed && go test -v ./...
+test:
+	go test -v ./...
 
 # lint
 .PHONY: lint
-lint: lint/generator lint/seed lint/schema
-
-.PHONY: lint/generator
-lint/generator:
-	cd generator && go tool golangci-lint run ./...
-
-.PHONY: lint/seed
-lint/seed:
-	cd seed && go tool golangci-lint run ./...
+lint:
+	@echo "Running linter..."
+	$(PWD)/bin/golangci-lint run --enable=gosec
+	@$(MAKE) lint/schema
 
 .PHONY: lint/schema
 lint/schema:
-	cd generator && go run ./cmd/lint-schema/main.go
+	go run ./generator/cmd/lint-schema/main.go
 
 # format
 .PHONY: format
-format: format/generator format/seed
-	pre-commit run trailing-whitespace --all-files || true
-	pre-commit run end-of-file-fixer --all-files || true
-
-.PHONY: format/generator
-format/generator:
-	cd generator && go fmt ./...
-	cd generator && GOWORK=off go tool golangci-lint run --fix
-
-.PHONY: format/seed
-format/seed:
-	cd seed && go fmt ./...
-	cd seed && GOWORK=off go tool golangci-lint run --fix
+format:
+	@echo "Formatting code..."
+	go fmt ./...
+	$(PWD)/bin/golangci-lint run --fix
 
 # secure
-.PHONY: secrets
-secrets:
-	@echo "Running gitleaks..."
-	gitleaks detect --source .
+.PHONY: gitleaks
+gitleaks:
+	@gitleaks git --pre-commit --staged --no-banner || (echo ""; echo "❌ gitleaks: secrets detected!"; echo ""; exit 1)
 
-.PHONY: semgrep
-semgrep:
-	@echo "Running semgrep..."
-	semgrep --config auto . --quiet
+vulncheck:
+	@go tool govulncheck ./...
 
-.PHONY: secure
-secure: secrets semgrep
-	@echo "Security checks completed!"
-
-.PHONY: pre-commit
-pre-commit:
-	pre-commit run --all-files
+# All security checks
+DIVIDER := "-----------------------------"
+secure:
+	@echo $(DIVIDER)
+	@echo "[1/2] gitleaks"
+	@echo $(DIVIDER)
+	@$(MAKE) gitleaks || (echo ""; echo "❌ gitleaks: secrets detected!"; echo ""; exit 1)
+	@echo $(DIVIDER)
+	@echo "[2/2] govulncheck"
+	@echo $(DIVIDER)
+	@$(MAKE) vulncheck|| (echo ""; echo "❌ govulncheck failed!"; echo ""; exit 1)
+	@echo "✅ All checks passed!"

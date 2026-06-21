@@ -6,14 +6,14 @@ import (
 	"strings"
 	"testing"
 
-	"generator/internal/parser"
+	"github.com/yu-fukunaga/youdoyou-intelligence/firebase/generator/internal/parser"
 )
 
 func newSwiftGen(t *testing.T, schema *parser.Schema) (*SwiftGenerator, string) {
 	t.Helper()
 	tmpDir := t.TempDir()
 	outDir := filepath.Join(tmpDir, "schema")
-	if err := os.MkdirAll(outDir, 0755); err != nil {
+	if err := os.MkdirAll(outDir, 0750); err != nil {
 		t.Fatalf("failed to create outDir: %v", err)
 	}
 	return NewSwift(schema, outDir), tmpDir
@@ -21,7 +21,7 @@ func newSwiftGen(t *testing.T, schema *parser.Schema) (*SwiftGenerator, string) 
 
 func readSwiftFile(t *testing.T, dir, name string) string {
 	t.Helper()
-	content, err := os.ReadFile(filepath.Join(dir, "schema", name))
+	content, err := os.ReadFile(filepath.Join(dir, "schema", name)) // #nosec G304 -- dir is t.TempDir() and name is a hardcoded test filename
 	if err != nil {
 		t.Fatalf("failed to read %s: %v", name, err)
 	}

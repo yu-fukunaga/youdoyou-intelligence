@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"os"
 
-	"generator/internal/generator"
-	"generator/internal/parser"
+	"github.com/yu-fukunaga/youdoyou-intelligence/firebase/generator/internal/generator"
+	"github.com/yu-fukunaga/youdoyou-intelligence/firebase/generator/internal/parser"
 )
 
 type genTargetLang string
@@ -45,7 +45,7 @@ func run(lang genTargetLang, schemaPath string) error {
 	if !ok {
 		return fmt.Errorf("invalid target specified: %s", lang)
 	}
-	if err := os.MkdirAll(config.outputDir, 0755); err != nil {
+	if err := os.MkdirAll(config.outputDir, 0750); err != nil {
 		return fmt.Errorf("creating output directory: %w", err)
 	}
 

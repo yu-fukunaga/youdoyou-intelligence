@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"generator/internal/parser"
+	"github.com/yu-fukunaga/youdoyou-intelligence/firebase/generator/internal/parser"
 )
 
 // Helper functions for creating test schemas
@@ -60,7 +60,7 @@ func TestGenerate_BasicStruct(t *testing.T) {
 	}
 
 	// Read generated file
-	content, err := os.ReadFile(filepath.Join(tmpDir, "user.go"))
+	content, err := os.ReadFile(filepath.Join(tmpDir, "user.go")) // #nosec G304 -- tmpDir is t.TempDir(), fully controlled by the test
 	if err != nil {
 		t.Fatalf("failed to read generated file: %v", err)
 	}
@@ -124,7 +124,7 @@ func TestGenerate_WithEnum(t *testing.T) {
 		t.Fatalf("Generate failed: %v", err)
 	}
 
-	content, err := os.ReadFile(filepath.Join(tmpDir, "user.go"))
+	content, err := os.ReadFile(filepath.Join(tmpDir, "user.go")) // #nosec G304 -- tmpDir is t.TempDir(), fully controlled by the test
 	if err != nil {
 		t.Fatalf("failed to read generated file: %v", err)
 	}
@@ -182,7 +182,7 @@ func TestGenerate_WithArrayAndMap(t *testing.T) {
 		t.Fatalf("Generate failed: %v", err)
 	}
 
-	content, err := os.ReadFile(filepath.Join(tmpDir, "user.go"))
+	content, err := os.ReadFile(filepath.Join(tmpDir, "user.go")) // #nosec G304 -- tmpDir is t.TempDir(), fully controlled by the test
 	if err != nil {
 		t.Fatalf("failed to read generated file: %v", err)
 	}
@@ -247,7 +247,7 @@ func TestGenerate_WithTimestamp(t *testing.T) {
 		t.Fatalf("Generate failed: %v", err)
 	}
 
-	content, err := os.ReadFile(filepath.Join(tmpDir, "user.go"))
+	content, err := os.ReadFile(filepath.Join(tmpDir, "user.go")) // #nosec G304 -- tmpDir is t.TempDir(), fully controlled by the test
 	if err != nil {
 		t.Fatalf("failed to read generated file: %v", err)
 	}
@@ -290,7 +290,7 @@ func TestGenerate_WithVector(t *testing.T) {
 		t.Fatalf("Generate failed: %v", err)
 	}
 
-	content, err := os.ReadFile(filepath.Join(tmpDir, "document.go"))
+	content, err := os.ReadFile(filepath.Join(tmpDir, "document.go")) // #nosec G304 -- tmpDir is t.TempDir(), fully controlled by the test
 	if err != nil {
 		t.Fatalf("failed to read generated file: %v", err)
 	}
@@ -336,7 +336,7 @@ func TestGenerate_WithSubcollections(t *testing.T) {
 		t.Fatalf("Generate failed: %v", err)
 	}
 
-	content, err := os.ReadFile(filepath.Join(tmpDir, "thread.go"))
+	content, err := os.ReadFile(filepath.Join(tmpDir, "thread.go")) // #nosec G304 -- tmpDir is t.TempDir(), fully controlled by the test
 	if err != nil {
 		t.Fatalf("failed to read generated file: %v", err)
 	}
@@ -497,7 +497,7 @@ func TestGenerate_NilSafeGetters(t *testing.T) {
 		t.Fatalf("Generate failed: %v", err)
 	}
 
-	content, err := os.ReadFile(filepath.Join(tmpDir, "user.go"))
+	content, err := os.ReadFile(filepath.Join(tmpDir, "user.go")) // #nosec G304 -- tmpDir is t.TempDir(), fully controlled by the test
 	if err != nil {
 		t.Fatalf("failed to read generated file: %v", err)
 	}
@@ -535,7 +535,7 @@ func TestGenerate_FirestoreAndJSONTags(t *testing.T) {
 		t.Fatalf("Generate failed: %v", err)
 	}
 
-	content, err := os.ReadFile(filepath.Join(tmpDir, "user.go"))
+	content, err := os.ReadFile(filepath.Join(tmpDir, "user.go")) // #nosec G304 -- tmpDir is t.TempDir(), fully controlled by the test
 	if err != nil {
 		t.Fatalf("failed to read generated file: %v", err)
 	}

@@ -80,7 +80,7 @@ type Field struct {
 
 // ParseFile reads and parses a YAML schema file.
 func ParseFile(path string) (*Schema, error) {
-	data, err := os.ReadFile(path)
+	data, err := os.ReadFile(path) // #nosec G304 -- path is an explicit CLI argument for the schema file to generate from
 	if err != nil {
 		return nil, err
 	}

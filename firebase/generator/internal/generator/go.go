@@ -9,7 +9,7 @@ import (
 	"strings"
 	"unicode"
 
-	"generator/internal/parser"
+	"github.com/yu-fukunaga/youdoyou-intelligence/firebase/generator/internal/parser"
 )
 
 // Generator generates Go code from schema definitions.
@@ -58,7 +58,7 @@ func (g *Generator) generateCollectionFile(name string, col parser.Collection) e
 	if len(imports) > 0 {
 		buf.WriteString("import (\n")
 		for _, imp := range imports {
-			buf.WriteString(fmt.Sprintf("\t%q\n", imp))
+			fmt.Fprintf(&buf, "\t%q\n", imp)
 		}
 		buf.WriteString(")\n\n")
 	}
@@ -240,11 +240,11 @@ func (g *Generator) generateModel(buf *bytes.Buffer, modelName string, model par
 
 	// Generate enum types (order preserved from YAML)
 	for _, enum := range enums {
-		buf.WriteString(fmt.Sprintf("type %s string\n\n", enum.Name))
+		fmt.Fprintf(buf, "type %s string\n\n", enum.Name)
 		buf.WriteString("const (\n")
 		for _, v := range enum.Values {
 			constName := enum.Name + toPascalCase(v)
-			buf.WriteString(fmt.Sprintf("\t%s %s = %q\n", constName, enum.Name, v))
+			fmt.Fprintf(buf, "\t%s %s = %q\n", constName, enum.Name, v)
 		}
 		buf.WriteString(")\n\n")
 	}
@@ -260,7 +260,7 @@ func (g *Generator) generateModel(buf *bytes.Buffer, modelName string, model par
 	}
 
 	// Generate struct
-	buf.WriteString(fmt.Sprintf("type %s struct {\n", modelName))
+	fmt.Fprintf(buf, "type %s struct {\n", modelName)
 
 	// Use field names in YAML order
 	fieldNames := model.Fields.Keys
@@ -282,7 +282,7 @@ func (g *Generator) generateModel(buf *bytes.Buffer, modelName string, model par
 			firestoreTag = fieldName + ",serverTimestamp"
 		}
 		tag := fmt.Sprintf("`firestore:%q json:%q yaml:%q`", firestoreTag, fieldName, fieldName)
-		buf.WriteString(fmt.Sprintf("\t%s %s %s\n", goName, goType, tag))
+		fmt.Fprintf(buf, "\t%s %s %s\n", goName, goType, tag)
 	}
 
 	buf.WriteString("}\n\n")
@@ -300,22 +300,22 @@ func (g *Generator) generateModel(buf *bytes.Buffer, modelName string, model par
 		goName := toPascalCase(fieldName)
 		receiver := strings.ToLower(string(modelName[0]))
 		zeroValue := g.zeroValueForType(goType)
-		buf.WriteString(fmt.Sprintf("func (%s *%s) Get%s() %s {\n", receiver, modelName, goName, goType))
-		buf.WriteString(fmt.Sprintf("\tif %s == nil {\n", receiver))
-		buf.WriteString(fmt.Sprintf("\t\treturn %s\n", zeroValue))
+		fmt.Fprintf(buf, "func (%s *%s) Get%s() %s {\n", receiver, modelName, goName, goType)
+		fmt.Fprintf(buf, "\tif %s == nil {\n", receiver)
+		fmt.Fprintf(buf, "\t\treturn %s\n", zeroValue)
 		buf.WriteString("\t}\n")
-		buf.WriteString(fmt.Sprintf("\treturn %s.%s\n", receiver, goName))
+		fmt.Fprintf(buf, "\treturn %s.%s\n", receiver, goName)
 		buf.WriteString("}\n\n")
 	}
 
 	// Add getter for ID if model has id field
 	if hasIDField {
 		receiver := strings.ToLower(string(modelName[0]))
-		buf.WriteString(fmt.Sprintf("func (%s *%s) GetID() string {\n", receiver, modelName))
-		buf.WriteString(fmt.Sprintf("\tif %s == nil {\n", receiver))
+		fmt.Fprintf(buf, "func (%s *%s) GetID() string {\n", receiver, modelName)
+		fmt.Fprintf(buf, "\tif %s == nil {\n", receiver)
 		buf.WriteString("\t\treturn \"\"\n")
 		buf.WriteString("\t}\n")
-		buf.WriteString(fmt.Sprintf("\treturn %s.ID\n", receiver))
+		fmt.Fprintf(buf, "\treturn %s.ID\n", receiver)
 		buf.WriteString("}\n\n")
 	}
 }
@@ -451,7 +451,7 @@ func generateCollectionConstants(buf *bytes.Buffer, collections []collectionInfo
 	buf.WriteString("const (\n")
 	for _, col := range collections {
 		constName := "Collection" + toPascalCase(col.Name)
-		buf.WriteString(fmt.Sprintf("\t%s = %q\n", constName, col.Name))
+		fmt.Fprintf(buf, "\t%s = %q\n", constName, col.Name)
 	}
 	buf.WriteString(")\n\n")
 }
@@ -486,30 +486,30 @@ func generatePathFunctions(buf *bytes.Buffer, collections []collectionInfo) {
 			}
 			collectionParamStr := strings.Join(collectionParams, ", ")
 
-			buf.WriteString(fmt.Sprintf("// %sCollectionPath returns the collection path for %s.\n", singularName, col.Name))
-			buf.WriteString(fmt.Sprintf("func %sCollectionPath(%s) string {\n", singularName, collectionParamStr))
-			buf.WriteString(fmt.Sprintf("\treturn %s\n", collectionPathExpr))
+			fmt.Fprintf(buf, "// %sCollectionPath returns the collection path for %s.\n", singularName, col.Name)
+			fmt.Fprintf(buf, "func %sCollectionPath(%s) string {\n", singularName, collectionParamStr)
+			fmt.Fprintf(buf, "\treturn %s\n", collectionPathExpr)
 			buf.WriteString("}\n\n")
 		}
 
 		// Generate document path function
 		pathExpr := buildPathExpr(col.Path)
-		buf.WriteString(fmt.Sprintf("// %sPath returns the document path for a %s.\n", singularName, singularize(col.Name)))
-		buf.WriteString(fmt.Sprintf("func %sPath(%s) string {\n", singularName, paramStr))
-		buf.WriteString(fmt.Sprintf("\treturn %s\n", pathExpr))
+		fmt.Fprintf(buf, "// %sPath returns the document path for a %s.\n", singularName, singularize(col.Name))
+		fmt.Fprintf(buf, "func %sPath(%s) string {\n", singularName, paramStr)
+		fmt.Fprintf(buf, "\treturn %s\n", pathExpr)
 		buf.WriteString("}\n\n")
 	}
 }
 
 // generateFieldConstants generates field name constants for a model.
 func generateFieldConstants(buf *bytes.Buffer, modelName string, model parser.Model) {
-	buf.WriteString(fmt.Sprintf("// %sFields contains field names for %s.\n", modelName, modelName))
-	buf.WriteString(fmt.Sprintf("var %sFields = struct {\n", modelName))
+	fmt.Fprintf(buf, "// %sFields contains field names for %s.\n", modelName, modelName)
+	fmt.Fprintf(buf, "var %sFields = struct {\n", modelName)
 
 	// Struct field definitions
 	for _, fieldName := range model.Fields.Keys {
 		goName := toPascalCase(fieldName)
-		buf.WriteString(fmt.Sprintf("\t%s string\n", goName))
+		fmt.Fprintf(buf, "\t%s string\n", goName)
 	}
 	buf.WriteString("}{\n")
 
@@ -522,7 +522,7 @@ func generateFieldConstants(buf *bytes.Buffer, modelName string, model parser.Mo
 		if field.Type == "id" {
 			firestoreFieldName = "id"
 		}
-		buf.WriteString(fmt.Sprintf("\t%s: %q,\n", goName, firestoreFieldName))
+		fmt.Fprintf(buf, "\t%s: %q,\n", goName, firestoreFieldName)
 	}
 	buf.WriteString("}\n\n")
 }
@@ -552,19 +552,20 @@ func buildPathExpr(path string) string {
 
 	for i := 0; i < len(path); i++ {
 		c := path[i]
-		if c == '{' {
+		switch c {
+		case '{':
 			if current.Len() > 0 {
 				parts = append(parts, fmt.Sprintf("%q", current.String()))
 				current.Reset()
 			}
 			inVar = true
-		} else if c == '}' {
+		case '}':
 			if current.Len() > 0 {
 				parts = append(parts, current.String())
 				current.Reset()
 			}
 			inVar = false
-		} else {
+		default:
 			current.WriteByte(c)
 		}
 	}
