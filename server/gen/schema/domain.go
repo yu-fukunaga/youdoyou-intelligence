@@ -51,29 +51,14 @@ func (t *Topic) GetImageUrl() string {
 	return t.ImageUrl
 }
 
-type DomainType string
-
-const (
-	DomainTypeDevelopment DomainType = "development"
-	DomainTypeLearning    DomainType = "learning"
-)
-
 type Domain struct {
-	ID          string     `firestore:"-" json:"id" yaml:"id"`
-	Type        DomainType `firestore:"type" json:"type" yaml:"type"`
-	Title       string     `firestore:"title" json:"title" yaml:"title"`
-	Description string     `firestore:"description" json:"description" yaml:"description"`
-	Topics      []*Topic   `firestore:"topics" json:"topics" yaml:"topics"`
-	IconUrl     string     `firestore:"iconUrl" json:"iconUrl" yaml:"iconUrl"`
-	CreatedAt   time.Time  `firestore:"createdAt,serverTimestamp" json:"createdAt" yaml:"createdAt"`
-	UpdatedAt   time.Time  `firestore:"updatedAt,serverTimestamp" json:"updatedAt" yaml:"updatedAt"`
-}
-
-func (d *Domain) GetType() DomainType {
-	if d == nil {
-		return ""
-	}
-	return d.Type
+	ID          string    `firestore:"-" json:"id" yaml:"id"`
+	Title       string    `firestore:"title" json:"title" yaml:"title"`
+	Description string    `firestore:"description" json:"description" yaml:"description"`
+	Topics      []*Topic  `firestore:"topics" json:"topics" yaml:"topics"`
+	IconUrl     string    `firestore:"iconUrl" json:"iconUrl" yaml:"iconUrl"`
+	CreatedAt   time.Time `firestore:"createdAt,serverTimestamp" json:"createdAt" yaml:"createdAt"`
+	UpdatedAt   time.Time `firestore:"updatedAt,serverTimestamp" json:"updatedAt" yaml:"updatedAt"`
 }
 
 func (d *Domain) GetTitle() string {
@@ -141,7 +126,6 @@ var TopicFields = struct {
 // DomainFields contains field names for Domain.
 var DomainFields = struct {
 	Id          string
-	Type        string
 	Title       string
 	Description string
 	Topics      string
@@ -150,7 +134,6 @@ var DomainFields = struct {
 	UpdatedAt   string
 }{
 	Id:          "id",
-	Type:        "type",
 	Title:       "title",
 	Description: "description",
 	Topics:      "topics",
