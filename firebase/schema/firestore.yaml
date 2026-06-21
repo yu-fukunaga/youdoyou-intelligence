@@ -1,0 +1,237 @@
+# definitions/firestore.yaml
+
+# ---------------------------------------------------------
+# 1. モデル定義 (Go struct / Swift struct になるもの)
+# ---------------------------------------------------------
+models:
+  # 外部リファレンス情報（Message内で配列として利用）
+  Reference:
+    fields:
+      type:
+        type: string
+        enum: [thread, web, file]
+      id:
+        type: string
+      title:
+        type: string
+      summary:
+        type: string
+      url:
+        type: string
+
+  # トークン使用量（Message内でマップとして利用）
+  Usage:
+    fields:
+      inputTokens:
+        type: integer
+      outputTokens:
+        type: integer
+      totalTokens:
+        type: integer
+
+  # ドメイン（管理の最小単位）
+  Domain:
+    fields:
+      id:
+        type: id
+      title:
+        type: string
+      description:
+        type: string
+      topics:
+        type: array
+        item_model: Topic
+      iconUrl:
+        type: string
+        optional: true
+      createdAt:
+        type: server_timestamp
+      updatedAt:
+        type: server_timestamp
+
+  Topic:
+    fields:
+      id:
+        type: string
+        description: "development: issue番号 / learning: uuid"
+      code:
+        type: string
+        description: "短縮識別コード (例: YDY-1)"
+        optional: true
+      title:
+        type: string
+      imageUrl:
+        type: string
+        optional: true
+
+  # アクティビティ（タイムラインに流れる実体）
+  Activity:
+    fields:
+      id:
+        type: id
+      domainId:
+        type: string
+      topicId:
+        type: string
+      content:
+        type: string
+      startedAt:
+        type: timestamp
+      endedAt:
+        type: timestamp
+      userId:
+        type: string # 誰が（ユーザーIDまたはエージェントID）
+      userName:
+        type: string # 表示名（非正規化）
+      userIcon:
+        type: string # アイコンURL（非正規化）
+      createdAt:
+        type: server_timestamp
+      updatedAt:
+        type: server_timestamp
+
+  Member:
+    fields:
+      id:
+        type: id
+      type:
+        type: string
+        enum: [human, agent]
+      displayName:
+        type: string
+      iconUrl:
+        type: string
+        optional: true
+      createdAt:
+        type: server_timestamp
+
+  GithubPull:
+    fields:
+      id:
+        type: id
+        description: "GitHub node_id"
+      domainId:
+        type: string
+      topicId:
+        type: string
+        optional: true
+      prNumber:
+        type: integer
+      title:
+        type: string
+      status:
+        type: string
+        enum: [open, merged, closed]
+      firstCommitAt:
+        type: timestamp
+        optional: true
+        description: "作業の最初の一撃（最古のコミット日時）"
+      closedAt:
+        type: timestamp
+        optional: true
+        description: "merged または closed になった時間"
+      fullNote:
+        type: string
+        description: "PR本文 + --- + 全コミット履歴の連結テキスト"
+      url:
+        type: string
+      repository:
+        type: string
+      createdAt:
+        type: timestamp
+        description: "PRが作成された時間"
+      updatedAt:
+        type: server_timestamp
+        description: "ドキュメントが更新された時間"
+
+  # スレッド（親）
+  Thread:
+    fields:
+      id:
+        type: id # DocumentID (UUID v7)
+      userId:
+        type: string
+        description: "Owner of the thread"
+      firstMessage:
+        type: string
+        description: "The first message content. Acts as the thread's identity."
+      unreadCount:
+        type: integer
+      lastReadAt:
+        type: timestamp
+      replyCount:
+        type: integer
+      isPrivate:
+        type: boolean
+      isArchived:
+        type: boolean
+      summary:
+        type: string
+        description: "JSON string containing structured summary"
+      summarizedAt:
+        type: timestamp
+      memorizedAt:
+        type: timestamp
+      createdAt:
+        type: server_timestamp # サーバー側で自動設定
+
+  # メッセージ（子）
+  Message:
+    fields:
+      id:
+        type: id # DocumentID (UUID v7)
+      role:
+        type: string
+        enum: [user, model]
+      message:
+        type: string
+        description: "Markdown content"
+      embedding:
+        type: vector(768)
+      references:
+        type: array
+        item_model: Reference # 上で定義した Reference モデルの配列
+      model:
+        type: string
+        description: "e.g., vertexai/gemini-1.5-flash"
+      latencyMs:
+        type: integer
+      finishReason:
+        type: string
+      finishMessage:
+        type: string
+      usage:
+        type: map
+        model: Usage # 上で定義した Usage モデルを利用
+      createdAt:
+        type: server_timestamp
+
+# ---------------------------------------------------------
+# 2. コレクション定義 (パス生成ロジックになるもの)
+# ---------------------------------------------------------
+collections:
+  domains:
+    path: "domains/{domainID}"
+    model: Domain
+
+  activities:
+    path: "activities/{activityID}"
+    model: Activity
+
+  threads:
+    path: "threads/{threadID}"
+    model: Thread
+    description: "Main timeline posts"
+    subcollections:
+      messages:
+        path: "threads/{threadID}/messages/{messageID}"
+        model: Message
+        description: "Messages in a thread"
+
+  members:
+    path: "members/{memberId}"
+    model: Member
+
+  github_pulls:
+    path: "github_pulls/{githubPullID}"
+    model: GithubPull
