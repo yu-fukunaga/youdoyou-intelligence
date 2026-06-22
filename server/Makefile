@@ -34,6 +34,10 @@ dev-ui:
 	@echo "Starting Genkit Developer UI..."
 	GENKIT_ENV=dev genkit start
 
+seed:
+	@echo "Seeding Firestore emulator..."
+	GCP_PROJECT_ID=firebase-emulator go run ./cmd/seed -dir=./cmd/seed/collection_data
+
 ping:
 	@PORT_NUM=$${PORT:-8081}; \
 	curl -s http://localhost:$$PORT_NUM/v1/ping | jq .;
