@@ -8,7 +8,6 @@ import (
 	"os"
 
 	firebase "firebase.google.com/go/v4"
-	"firebase.google.com/go/v4/auth"
 
 	"cloud.google.com/go/firestore"
 
@@ -69,6 +68,12 @@ func main() {
 	}
 	log.Printf("Target: firestore (%s), auth (%s), project: %s", emulatorHost, authEmulatorHost, cfg.ProjectID) // #nosec G706 -- values are operator-supplied env vars for this local-only CLI, not untrusted input
 
+	if err := run(ctx, cfg); err != nil {
+		log.Fatal(err)
+	}
+}
+
+func run(ctx context.Context, cfg *config.Config) error {
 	app, err := firebase.NewApp(ctx, &firebase.Config{ProjectID: cfg.ProjectID})
 	if err != nil {
 		log.Fatalf("Failed to init firebase app: %v", err)
@@ -84,22 +89,16 @@ func main() {
 	}
 	defer func() {
 		if err := firestoreClient.Close(); err != nil {
-			log.Fatal(err)
+			log.Println(err)
 		}
 	}()
 
-	if err := run(ctx, firestoreClient, authClient); err != nil {
-		log.Fatal(err)
-	}
-}
-
-func run(ctx context.Context, client *firestore.Client, authClient *auth.Client) error {
 	if err := SeedAuthUsers(ctx, authClient); err != nil {
 		return err
 	}
 
 	for name, config := range collectionsMap {
-		if err := config.Seed(ctx, client, name, config); err != nil {
+		if err := config.Seed(ctx, firestoreClient, name, config); err != nil {
 			return fmt.Errorf("failed to seed %s: %w", name, err)
 		}
 	}

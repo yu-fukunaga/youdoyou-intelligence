@@ -49,11 +49,13 @@ func seedCollectionGeneric[T any](ctx context.Context, client *firestore.Client,
 		for _, sub := range config.Subcollections {
 			if raw, exists := doc[sub.Key]; exists && raw != nil {
 				switch items := raw.(type) {
-				case []interface{}:
+				case []any:
 					var subDocs []map[string]any
 					for _, item := range items {
 						if m, ok := item.(map[string]any); ok {
 							subDocs = append(subDocs, m)
+						} else {
+							log.Printf("Warning: subcollection %s contains an invalid document: %v", sub.Key, item)
 						}
 					}
 					subData[sub.Key] = subDocs
@@ -67,9 +69,11 @@ func seedCollectionGeneric[T any](ctx context.Context, client *firestore.Client,
 			}
 		}
 
-		// Idempotency: delete existing document and subcollections
-		if err := deleteDocument(ctx, client, config, id); err != nil {
-			return fmt.Errorf("failed to delete %s/%s: %w", name, id, err)
+		// Idempotency: clear existing subcollection documents before recreating
+		// them below. The parent document itself doesn't need a separate
+		// delete since Set() fully overwrites it.
+		if err := deleteSubcollections(ctx, client, config, id); err != nil {
+			return fmt.Errorf("failed to delete subcollections for %s/%s: %w", name, id, err)
 		}
 
 		// Remove id from the map (used as document path, not stored as a field)
@@ -105,8 +109,7 @@ func seedCollectionGeneric[T any](ctx context.Context, client *firestore.Client,
 	return nil
 }
 
-func deleteDocument(ctx context.Context, client *firestore.Client, config CollectionConfig, id string) error {
-	// Delete subcollection documents first
+func deleteSubcollections(ctx context.Context, client *firestore.Client, config CollectionConfig, id string) error {
 	for _, sub := range config.Subcollections {
 		iter := client.Collection(sub.CollectionPath(id)).DocumentRefs(ctx)
 		for {
@@ -122,10 +125,7 @@ func deleteDocument(ctx context.Context, client *firestore.Client, config Collec
 			}
 		}
 	}
-
-	// Delete the document itself
-	_, err := client.Doc(config.Path(id)).Delete(ctx)
-	return err
+	return nil
 }
 
 // loadSeeds loads a specific collection's YAML file from a directory.
