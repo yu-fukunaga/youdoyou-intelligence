@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	"firebase.google.com/go/v4/auth"
@@ -21,7 +22,12 @@ func SeedAuthUsers(ctx context.Context, client *auth.Client) error {
 	log.Println("Seeding Auth users...")
 
 	for _, u := range authUserSeeds {
-		if _, err := client.GetUser(ctx, u.UID); err == nil {
+		if _, err := client.GetUser(ctx, u.UID); err != nil {
+			if !auth.IsUserNotFound(err) {
+				return fmt.Errorf("error checking auth user %s (UID: %s): %w", u.Email, u.UID, err)
+			}
+			log.Printf("Auth user %s (UID: %s) not found, creating...\n", u.Email, u.UID)
+		} else {
 			log.Printf("Auth user %s (UID: %s) already exists, skipping.\n", u.Email, u.UID)
 			continue
 		}
