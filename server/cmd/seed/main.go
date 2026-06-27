@@ -93,6 +93,11 @@ func run(ctx context.Context, cfg *config.Config) error {
 		}
 	}()
 
+	log.Println("Clearing database...")
+	if err := clearDatabase(os.Getenv("FIRESTORE_EMULATOR_HOST"), cfg.ProjectID); err != nil {
+		return fmt.Errorf("failed to clear database: %w", err)
+	}
+
 	if err := SeedAuthUsers(ctx, authClient); err != nil {
 		return err
 	}

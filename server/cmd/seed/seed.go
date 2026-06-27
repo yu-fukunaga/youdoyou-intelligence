@@ -8,8 +8,9 @@ import (
 	"path/filepath"
 	"time"
 
+	"net/http"
+
 	"cloud.google.com/go/firestore"
-	"google.golang.org/api/iterator"
 	"gopkg.in/yaml.v3"
 )
 
@@ -57,13 +58,6 @@ func seedCollectionGeneric[T any](ctx context.Context, client *firestore.Client,
 			}
 		}
 
-		// Idempotency: clear existing subcollection documents before recreating
-		// them below. The parent document itself doesn't need a separate
-		// delete since Set() fully overwrites it.
-		if err := deleteSubcollections(ctx, client, config, id); err != nil {
-			return fmt.Errorf("failed to delete subcollections for %s/%s: %w", name, id, err)
-		}
-
 		// Remove id from the map (used as document path, not stored as a field)
 		delete(doc, "id")
 
@@ -97,21 +91,23 @@ func seedCollectionGeneric[T any](ctx context.Context, client *firestore.Client,
 	return nil
 }
 
-func deleteSubcollections(ctx context.Context, client *firestore.Client, config CollectionConfig, id string) error {
-	for _, sub := range config.Subcollections {
-		iter := client.Collection(sub.CollectionPath(id)).DocumentRefs(ctx)
-		for {
-			ref, err := iter.Next()
-			if err == iterator.Done {
-				break
-			}
-			if err != nil {
-				return err
-			}
-			if _, err := ref.Delete(ctx); err != nil {
-				return err
-			}
+func clearDatabase(emulatorHost, projectID string) error {
+	url := fmt.Sprintf("http://%s/emulator/v1/projects/%s/databases/(default)/documents", emulatorHost, projectID)
+	req, err := http.NewRequest(http.MethodDelete, url, nil) // #nosec G704 -- URL is constructed from FIRESTORE_EMULATOR_HOST, an operator-supplied env var for local dev only
+	if err != nil {
+		return err
+	}
+	resp, err := http.DefaultClient.Do(req) // #nosec G704
+	if err != nil {
+		return err
+	}
+	defer func() {
+		if err := resp.Body.Close(); err != nil {
+			log.Printf("failed to close response body: %v", err)
 		}
+	}()
+	if resp.StatusCode != http.StatusOK {
+		return fmt.Errorf("clear database failed with status %d", resp.StatusCode)
 	}
 	return nil
 }
