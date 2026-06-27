@@ -27,16 +27,6 @@ func seedCollectionGeneric[T any](ctx context.Context, client *firestore.Client,
 	}
 
 	for _, doc := range rawDocs {
-		// Optional: Validate schema by attempting to convert the map to the generic type T.
-		if yamlBytes, err := yaml.Marshal(doc); err == nil {
-			var schemaCheck T
-			if err := yaml.Unmarshal(yamlBytes, &schemaCheck); err != nil {
-				log.Printf("Warning: document in %s might not match the schema: %v", name, err)
-			}
-		} else {
-			log.Printf("Warning: failed to marshal document in %s for schema check: %v", name, err)
-		}
-
 		convertTimestamps(doc)
 
 		id, ok := doc["id"].(string)
