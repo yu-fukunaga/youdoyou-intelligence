@@ -4,7 +4,7 @@ export
 .PHONY: emulators
 emulators:
 	@echo "Starting emulators..."
-firebase emulators:start
+	cd emulator && firebase emulators:start
 
 # Setup dependencies
 setup:
