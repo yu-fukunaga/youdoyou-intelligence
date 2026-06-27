@@ -59,8 +59,6 @@ func seedCollectionGeneric[T any](ctx context.Context, client *firestore.Client,
 						}
 					}
 					subData[sub.Key] = subDocs
-				case []map[string]any:
-					subData[sub.Key] = items
 				default:
 					return fmt.Errorf("unexpected type for subcollection %s: expected list, got %T", sub.Key, raw)
 				}
