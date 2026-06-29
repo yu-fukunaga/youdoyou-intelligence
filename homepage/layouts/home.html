@@ -1,0 +1,16 @@
+{{ define "main" }}
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-name">{{ .Params.hero_name }}</div>
+    <div class="hero-name-ja">{{ .Params.hero_name_ja }}</div>
+    <p class="hero-desc">{{ .Params.hero_desc }}</p>
+    <p class="hero-tagline">{{ .Params.hero_tagline }}</p>
+    <div class="hero-socials">
+      <span class="hero-company">{{ .Params.hero_company }}</span>
+      <a href="{{ .Params.hero_github }}" class="social-link">GitHub</a>
+      <a href="{{ .Params.hero_linkedin }}" class="social-link">LinkedIn</a>
+    </div>
+  </div>
+</section>
+{{ end }}

@@ -1,0 +1,113 @@
+/* ── Hero ── */
+.hero {
+  height: 100vh;
+  background-color: #1a1a1a;
+  background-image: url('/images/hero.jpg');
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to top,
+      rgba(0, 0, 0, 0.75) 0%,
+      rgba(0, 0, 0, 0.2) 50%,
+      transparent 100%
+    );
+  }
+
+  & .hero-content {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: var(--max-w);
+    margin: 0 auto;
+    padding: 0 20px;
+    color: #fff;
+  }
+
+  & .hero-name {
+    font-size: 36px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 6px;
+
+    @media (max-width: 640px) { font-size: 28px; }
+  }
+
+  & .hero-name-ja {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.5);
+    margin-bottom: 20px;
+  }
+
+  & .hero-desc {
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.75);
+    line-height: 2;
+    margin-bottom: 20px;
+
+    @media (max-width: 640px) {
+      font-size: 14px;
+      line-height: 1.85;
+    }
+  }
+
+  & .hero-tagline {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.5);
+    margin-bottom: 28px;
+  }
+
+  & .hero-socials {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  & .hero-company {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.4);
+  }
+
+  & .social-link {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.55);
+    transition: color 0.15s;
+
+    &:hover { color: #fff; }
+  }
+}
+
+/* ── Buttons ── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 18px;
+  border-radius: 7px;
+  font-size: 13px;
+  font-family: inherit;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.15s;
+
+  &:hover { opacity: 0.8; }
+
+  &.btn-primary {
+    background: #fff;
+    color: var(--text);
+  }
+
+  &.btn-secondary {
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  }
+}

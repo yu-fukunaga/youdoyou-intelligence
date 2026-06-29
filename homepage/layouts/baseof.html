@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+      {{- if .IsHome -}}
+      Yu Fukunaga
+      {{- else -}}
+      {{ .Title }} | Yu Fukunaga
+      {{- end -}}
+    </title>
+    {{- $css := slice
+    (resources.Get "css/base.css")
+    (resources.Get "css/nav.css")
+    (resources.Get "css/hero.css")
+    (resources.Get "css/footer.css")
+    | resources.Concat "css/bundle.css"
+    -}}
+    <meta name="description"
+          content="{{ with .Params.description }}{{ . }}{{ else }}Yu Fukunaga — ソフトウェアエンジニア / YouDoYou{{ end }}">
+    <meta name="keywords"
+          content="{{ with .Params.keywords }}{{ . }}{{ else }}Yu Fukunaga, ソフトウェアエンジニア, Go, Cloud Run, AI{{ end }}">
+    <link rel="stylesheet" href="{{ $css.RelPermalink }}">
+  </head>
+  <body>
+    <header class="nav">
+      <div class="nav-inner">
+        <a href="/" class="nav-brand">Yu Fukunaga</a>
+        <nav>
+          <ul>
+            <li><a href="/#projects">Projects</a></li>
+            <li><a href="/#skills">Skills</a></li>
+            <li><a href="/posts/">Blog</a></li>
+            <li><a href="/#contact">Contact</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+    <main>
+      {{ block "main" . }}{{ end }}
+    </main>
+    <footer class="footer">
+      <p>© {{ now.Year }} Yu Fukunaga</p>
+    </footer>
+    <script>
+    const nav = document.querySelector('.nav');
+    const update = () => nav.classList.toggle('scrolled', window.scrollY > 60);
+    window.addEventListener('scroll', update, { passive: true });
+    update();
+    </script>
+  </body>
+</html>
