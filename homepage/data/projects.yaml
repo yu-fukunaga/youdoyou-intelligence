@@ -1,0 +1,47 @@
+- name: youdoyou-intelligence
+  description: このサイト自体の裏側を作ったプロジェクト。AI エージェントを活用した個人向けインテリジェンス基盤。GitHub・技術ブログ・活動ログを横断分析し、自分の現在地を可視化する。
+  tech: [Go, Claude API, Cloud Run]
+  url: https://github.com/yu-fukunaga/youdoyou-intelligence
+  status: active
+  featured: true
+  image: ""
+
+- name: homepage
+  description: Hugo で構築した個人ポートフォリオ。テーマなし・Hugo Pipes + CSS Nesting で構成。
+  tech: [Hugo, CSS]
+  url: https://github.com/yu-fukunaga/homepage
+  status: active
+  featured: false
+  color: "#dbeafe"
+
+- name: trial-scheduler
+  description: 業務委託案件のスケジュール最適化ツール。Go + Cloud Scheduler で定期実行。
+  tech: [Go, GCP]
+  url: ""
+  status: wip
+  featured: false
+  color: "#fce7f3"
+
+- name: trial-analytics
+  description: 活動ログの可視化ダッシュボード。BigQuery + Looker Studio で構成。
+  tech: [Python, BigQuery]
+  url: ""
+  status: wip
+  featured: false
+  color: "#fef9c3"
+
+- name: trial-notion-sync
+  description: Notion データベースと外部サービスを同期する自動化ツール。Webhook 経由でタスクを双方向連携。
+  tech: [Go, Notion API]
+  url: ""
+  status: wip
+  featured: false
+  color: "#ede9fe"
+
+- name: trial-resume
+  description: Markdown で管理する職務経歴書。GitHub Actions で PDF 自動生成・公開。
+  tech: [Markdown, GitHub Actions]
+  url: ""
+  status: wip
+  featured: false
+  color: "#d1fae5"

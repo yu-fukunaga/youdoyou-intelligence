@@ -13,4 +13,104 @@
     </div>
   </div>
 </section>
+<!-- Projects -->
+<section class="section" id="projects">
+  <div class="container">
+    <h2 class="section-title">Projects</h2>
+    {{- range where hugo.Data.projects "featured" true }}
+    <a class="project-featured{{ with .url }} project-featured--link{{ end }}"
+       {{ with .url }}
+       href="{{ . }}"
+       target="_blank"
+       rel="noopener"
+       {{ end }}>
+      <div class="project-featured-body">
+        <span class="badge badge--featured">Featured</span>
+        <p class="project-featured-desc">{{ .description }}</p>
+        <div class="project-tech">
+          {{- range .tech }}<span class="tag">{{ . }}</span>{{ end }}
+        </div>
+        <span class="project-featured-cta">詳しく見る →</span>
+      </div>
+      <div class="project-featured-image">
+        {{- if .image }}
+        <img src="{{ .image }}" alt="{{ .name }}" width="800" height="450">
+        {{- end }}
+      </div>
+    </a>
+    {{- end }}
+    <p class="projects-others-label">その他のプロジェクト</p>
+    <div class="projects-carousel-wrap">
+      <div class="projects-carousel" id="projectsCarousel">
+        {{- range where hugo.Data.projects "featured" false }}
+        <a class="project-card{{ with .url }} project-card--link{{ end }}"
+           {{ with .url }}
+           href="{{ . }}"
+           target="_blank"
+           rel="noopener"
+           {{ end }}>
+        <div class="project-card-thumb"
+             style="{{ with .color }}background:{{ . }}{{ else }}background:var(--surface){{ end }}"></div>
+        <div class="project-card-body">
+          <span class="project-name">{{ .name }}</span>
+          <div class="project-tech">
+            {{- range .tech }}<span class="tag">{{ . }}</span>{{ end }}
+          </div>
+        </div>
+      </a>
+      {{- end }}
+    </div>
+    <div class="carousel-dots" id="carouselDots"></div>
+  </div>
+</div>
+</section>
+<script>
+    (function () {
+        const carousel = document.getElementById('projectsCarousel');
+        const dotsWrap = document.getElementById('carouselDots');
+        if (!carousel || !dotsWrap) return;
+        const cards = carousel.querySelectorAll('.project-card');
+        let current = 0;
+        let timer;
+
+        function cardWidth() { return cards[0].offsetWidth + 12; }
+
+        function goTo(index) {
+            current = (index + cards.length) % cards.length;
+            carousel.scrollTo({ left: current * cardWidth(), behavior: 'smooth' });
+            dots.forEach((d, i) => d.classList.toggle('is-active', i === current));
+        }
+
+        function next() { goTo(current + 1); }
+
+        const dots = Array.from(cards).map((_, i) => {
+            const d = document.createElement('button');
+            d.className = 'carousel-dot' + (i === 0 ? ' is-active' : '');
+            d.addEventListener('click', () => { clearInterval(timer); goTo(i); timer = setInterval(next, 3500); });
+            dotsWrap.appendChild(d);
+            return d;
+        });
+
+        function updateDots() {
+            const scrollable = carousel.scrollWidth > carousel.clientWidth + 1;
+            dotsWrap.style.display = scrollable ? 'flex' : 'none';
+            if (scrollable && !timer) timer = setInterval(next, 3500);
+            if (!scrollable && timer) { clearInterval(timer); timer = null; }
+        }
+
+        carousel.addEventListener('mouseenter', () => clearInterval(timer));
+        carousel.addEventListener('mouseleave', () => { if (carousel.scrollWidth > carousel.clientWidth + 1) timer = setInterval(next, 3500); });
+
+        let touchStartX = 0;
+        carousel.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; clearInterval(timer); }, { passive: true });
+        carousel.addEventListener('touchend', e => {
+            const diff = touchStartX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 40) diff > 0 ? next() : goTo(current - 1);
+            timer = setInterval(next, 3500);
+        }, { passive: true });
+
+        requestAnimationFrame(updateDots);
+        window.addEventListener('resize', updateDots);
+    })();
+</script>
 {{ end }}
