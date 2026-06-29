@@ -1,0 +1,5 @@
+{
+  "profile": "golang",
+  "indent": 2,
+  "exclude": "public"
+}

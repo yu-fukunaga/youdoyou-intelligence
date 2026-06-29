@@ -1,0 +1,36 @@
+rules:
+  - id: hugo-unsafe-safeHTML
+    patterns:
+      - pattern: '{{ ... | safeHTML }}'
+    message: "safeHTML bypasses Hugo's auto-escaping. Ensure the value is trusted."
+    languages: [generic]
+    severity: WARNING
+    paths:
+      exclude: [.semgrep.yaml]
+
+  - id: hugo-unsafe-safeJS
+    patterns:
+      - pattern: '{{ ... | safeJS }}'
+    message: "safeJS bypasses Hugo's auto-escaping. Ensure the value is trusted."
+    languages: [generic]
+    severity: WARNING
+    paths:
+      exclude: [.semgrep.yaml]
+
+  - id: hugo-unsafe-safeURL
+    patterns:
+      - pattern: '{{ ... | safeURL }}'
+    message: "safeURL bypasses Hugo's URL sanitization. Ensure the value is trusted."
+    languages: [generic]
+    severity: WARNING
+    paths:
+      exclude: [.semgrep.yaml]
+
+  - id: hugo-unsafe-safeCSS
+    patterns:
+      - pattern: '{{ ... | safeCSS }}'
+    message: "safeCSS bypasses Hugo's CSS escaping. Ensure the value is trusted."
+    languages: [generic]
+    severity: WARNING
+    paths:
+      exclude: [.semgrep.yaml]
