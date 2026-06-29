@@ -113,4 +113,33 @@
         window.addEventListener('resize', updateDots);
     })();
 </script>
+<!-- About -->
+<section class="section" id="about">
+  <div class="container">
+    <h2 class="section-title">About</h2>
+    <div class="about-inner">
+      <div class="about-photo">
+        {{- if .Params.about_photo }}
+        <img src="{{ .Params.about_photo }}"
+             alt="{{ .Params.about_name }}"
+             class="about-img"
+             width="140"
+             height="140">
+        {{- else }}
+        <div class="about-img-placeholder">YF</div>
+        {{- end }}
+      </div>
+      <div class="about-body">
+        <p class="about-name">{{ .Params.about_name }}</p>
+        <p class="about-role">{{ .Params.about_role }}</p>
+        {{- range .Params.about_bio }}
+        <p class="about-bio">{{ . }}</p>
+        {{- end }}
+        {{- with .Params.about_resume }}
+        <a href="{{ . }}" class="about-resume" download>レジュメをダウンロード ↓</a>
+        {{- end }}
+      </div>
+    </div>
+  </div>
+</section>
 {{ end }}
