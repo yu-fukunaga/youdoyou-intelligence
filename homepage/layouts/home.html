@@ -162,4 +162,31 @@
     </div>
   </div>
 </section>
+<!-- Blog -->
+<section class="section" id="blog">
+  <div class="container">
+    <h2 class="section-title">External Posts</h2>
+    <div class="blog-list">
+      {{- with .Params.blog_feed }}
+      {{- with resources.GetRemote . }}
+      {{- $feed := .Content | transform.Unmarshal }}
+      {{- range first 5 $feed.channel.item }}
+      <a class="blog-item" href="{{ .link }}" target="_blank" rel="noopener">
+        <span class="blog-date">{{ ( .pubDate | time.AsTime ).Format "2006.01.02" }}</span>
+        <span class="blog-meta">
+          <img src="https://static.zenn.studio/images/icon.png"
+               alt="Zenn"
+               class="blog-logo"
+               width="16"
+               height="16">
+          <span class="blog-title">{{ .title }}</span>
+        </span>
+        <span class="blog-arrow">→</span>
+      </a>
+      {{- end }}
+      {{- end }}
+      {{- end }}
+    </div>
+  </div>
+</section>
 {{ end }}
