@@ -142,4 +142,24 @@
     </div>
   </div>
 </section>
+<!-- Experience -->
+<section class="section" id="experience">
+  <div class="container">
+    <h2 class="section-title">Experience</h2>
+    <div class="experience-list">
+      {{- range hugo.Data.experience }}
+      <div class="experience-item">
+        <div class="experience-period">{{ .period }}</div>
+        <div class="experience-body">
+          <div class="experience-header">
+            <span class="experience-company">{{ .company }}</span>
+            <span class="experience-type">{{ .type }}</span>
+          </div>
+          <p class="experience-desc">{{ .desc }}</p>
+        </div>
+      </div>
+      {{- end }}
+    </div>
+  </div>
+</section>
 {{ end }}

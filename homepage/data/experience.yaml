@@ -1,0 +1,24 @@
+- company: "メルペイ"
+  period: "2022.06 - 現在"
+  type: "業務委託"
+  desc: "決済サービスのバックエンド開発"
+
+- company: "Qunasys"
+  period: "2021.09 - 2022.09"
+  type: "業務委託"
+  desc: "APIサーバーおよびWebフロントエンド開発"
+
+- company: "社名非公開（SaaS企業）"
+  period: "2022.01 - 2022.05"
+  type: "業務委託"
+  desc: "Goでの開発支援（受託開発案件）"
+
+- company: "社名非公開（SI企業）"
+  period: "2020.01 - 2021.12"
+  type: "業務委託"
+  desc: "POSレジ・バックオフィスWebアプリ開発（C#）"
+
+- company: "社名非公開"
+  period: "2019.05 - 2019.12"
+  type: "派遣社員"
+  desc: "バックオフィスシステム開発（C#, VBA）"

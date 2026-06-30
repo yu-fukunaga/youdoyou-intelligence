@@ -1,0 +1,53 @@
+/* ── Experience ── */
+.experience-list {
+  border-top: 1px solid var(--border);
+}
+
+.experience-item {
+  display: flex;
+  gap: 24px;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--border);
+
+  @media (max-width: 640px) {
+    flex-direction: column;
+    gap: 8px;
+  }
+}
+
+.experience-period {
+  flex-shrink: 0;
+  width: 160px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.experience-body {
+  flex: 1;
+}
+
+.experience-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.experience-company {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.experience-type {
+  font-size: 11px;
+  color: var(--muted);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 2px 10px;
+}
+
+.experience-desc {
+  font-size: 14px;
+  color: var(--text);
+  line-height: 1.7;
+}
