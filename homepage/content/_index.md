@@ -5,9 +5,9 @@ hero_desc: "AI時代に求められるエンジニアの輪郭は、まだ誰に
 hero_tagline: "このサイトでソフトウェアエンジニア福永裕の全てがわかります。"
 hero_company: "屋号: YouDoYou"
 hero_github: "https://github.com/yu-fukunaga"
-hero_linkedin: "https://linkedin.com/in/yufukunaga"
+hero_linkedin: "https://www.linkedin.com/in/yu-fukunaga"
 hero_zenn: "https://zenn.dev/yu_fukunaga"
-footer_linkedin: "https://www.linkedin.com/in/yu-fukunaga/"
+footer_linkedin: "https://www.linkedin.com/in/yu-fukunaga"
 about_name: "福永 裕"
 about_role: "Software Engineer / YouDoYou"
 about_bio:
