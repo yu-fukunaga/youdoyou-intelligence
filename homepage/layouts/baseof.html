@@ -34,12 +34,10 @@
         <a href="/" class="nav-brand">Yu Fukunaga</a>
         <nav>
           <ul>
-            <li><a href="/#about">About</a></li>
-            <li><a href="/#experience">Experience</a></li>
-            <li><a href="/#projects">Projects</a></li>
-            <li><a href="/#skills">Skills</a></li>
-            <li><a href="/#blog">Blog</a></li>
-            <li><a href="/#contact">Contact</a></li>
+            <li><a href="/projects/">Projects</a></li>
+            <li><a href="/skill/">Skill</a></li>
+            <li><a href="/weekly/">Weekly</a></li>
+            <li><a href="/contact/" class="nav-cta">Contact</a></li>
           </ul>
         </nav>
       </div>
@@ -86,14 +84,22 @@
                   </path>
                 </svg>
               </a>
+              <a href="{{ .Params.hero_zenn }}"
+                 target="_blank"
+                 rel="noopener"
+                 aria-label="Zenn">
+                <img src="https://static.zenn.studio/images/icon.png"
+                     alt="Zenn"
+                     width="18"
+                     height="18">
+              </a>
             </div>
           </div>
           <nav class="footer-sitemap">
-            <a href="/#about">About</a>
-            <a href="/#experience">Experience</a>
-            <a href="/#projects">Projects</a>
-            <a href="/#blog">Blog</a>
-            <a href="/#contact">Contact</a>
+            <a href="/projects/">Projects</a>
+            <a href="/skill/">Skill</a>
+            <a href="/weekly/">Weekly</a>
+            <a href="/contact/">Contact</a>
           </nav>
         </div>
       </div>

@@ -35,6 +35,18 @@
     &:hover { color: #fff; }
   }
 
+  & .nav-cta {
+    font-size: 13px;
+    font-weight: 600;
+    background: var(--accent);
+    color: #fff !important;
+    padding: 6px 16px;
+    border-radius: 999px;
+    transition: opacity 0.15s;
+
+    &:hover { opacity: 0.85; }
+  }
+
   &.scrolled {
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(10px);
@@ -45,6 +57,10 @@
     & nav a {
       color: var(--muted);
       &:hover { color: var(--text); }
+    }
+
+    & .nav-cta {
+      color: #fff !important;
     }
   }
 }

@@ -83,6 +83,15 @@
 
     &:hover { color: #fff; }
   }
+
+  & .social-link--icon {
+    display: flex;
+    align-items: center;
+    opacity: 0.55;
+    transition: opacity 0.15s;
+
+    &:hover { opacity: 1; }
+  }
 }
 
 /* ── Buttons ── */
