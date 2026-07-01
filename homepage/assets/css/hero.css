@@ -91,6 +91,10 @@
     transition: opacity 0.15s;
 
     &:hover { opacity: 1; }
+
+    img {
+      filter: grayscale(1) brightness(10);
+    }
   }
 }
 
