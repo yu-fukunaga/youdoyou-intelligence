@@ -90,3 +90,17 @@ repos:
         language: system
         files: ^terraform/.*\.tf$
         pass_filenames: false
+
+      - id: homepage-secure
+        name: homepage/secure
+        entry: bash -c 'cd homepage && make secure'
+        language: system
+        files: ^homepage/layouts/.*\.html$
+        pass_filenames: false
+
+      - id: homepage-lint
+        name: homepage/lint
+        entry: bash -c 'cd homepage && make lint'
+        language: system
+        files: ^homepage/layouts/.*\.html$
+        pass_filenames: false

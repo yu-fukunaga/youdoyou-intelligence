@@ -25,6 +25,12 @@ Temporary Items
 /go.work
 /go.work.sum
 
+# Hugo
+homepage/public/
+homepage/.hugo_build.lock
+quickstart/
+.playwright-cli/
+
 # Dependencies
 .claude/workspace/
 .vscode/
@@ -57,3 +63,6 @@ DerivedData/
 *.code-workspace
 GoogleService-Info*.plist
 *.xcconfig
+
+# Skill
+.claude/skills/playwright-cli/
