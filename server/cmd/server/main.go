@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"cloud.google.com/go/firestore"
+	"github.com/firebase/genkit/go/ai"
 	"github.com/firebase/genkit/go/genkit"
 	"github.com/firebase/genkit/go/plugins/googlegenai"
 	"github.com/firebase/genkit/go/plugins/server"
@@ -47,6 +48,9 @@ func main() {
 		return "pong", nil
 	})
 
+	llmPingUsecase := usecase.NewLlmPingUsecase(g, ai.ModelRef{})
+	llmPingFlow := genkit.DefineFlow(g, "llmPingFlow", llmPingUsecase.Execute)
+
 	pullRequestRepo := repository.NewFirestorePullRequestRepository(firestoreClient)
 
 	// --- 3. Routes ---
@@ -54,6 +58,7 @@ func main() {
 	r := chi.NewRouter()
 	r.Route("/v1", func(r chi.Router) {
 		r.Get("/ping", genkit.Handler(pingFlow))
+		r.Post("/llm-ping", genkit.Handler(llmPingFlow))
 
 		if cfg.GitHubAppID == "" {
 			log.Println("GITHUB_WATCHER_APP_ID not set, GitHub webhook integration disabled")
