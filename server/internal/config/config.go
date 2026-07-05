@@ -19,12 +19,19 @@ type Config struct {
 	GitHubInstallationID string `envconfig:"GITHUB_WATCHER_INSTALLATION_ID"`
 	GitHubPrivateKey     string `envconfig:"GITHUB_WATCHER_PRIVATE_KEY"`
 	RepoDomainMapStr     string `envconfig:"REPO_DOMAIN_MAP"`
+
+	OllamaServerAddress string `envconfig:"OLLAMA_SERVER_ADDRESS" default:"http://127.0.0.1:11434"`
+	OllamaModel         string `envconfig:"OLLAMA_MODEL" default:"gemma4"`
 }
 
 var (
 	configInstance *Config
 	once           sync.Once
 )
+
+func (c *Config) IsDev() bool {
+	return c.Env == "development"
+}
 
 func LoadConfig() *Config {
 	once.Do(func() {
