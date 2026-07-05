@@ -7,8 +7,10 @@ import (
 	"net/http"
 
 	"cloud.google.com/go/firestore"
+	"github.com/firebase/genkit/go/ai"
 	"github.com/firebase/genkit/go/genkit"
 	"github.com/firebase/genkit/go/plugins/googlegenai"
+	"github.com/firebase/genkit/go/plugins/ollama"
 	"github.com/firebase/genkit/go/plugins/server"
 	"github.com/go-chi/chi/v5"
 
@@ -25,10 +27,25 @@ func main() {
 
 	// --- 1. Init Plugins & Clients ---
 
-	g := genkit.Init(ctx,
-		genkit.WithPlugins(&googlegenai.GoogleAI{}),
-		genkit.WithDefaultModel("googleai/gemini-3.5-flash"),
-	)
+	var g *genkit.Genkit
+	var localModel ai.ModelRef
+
+	if cfg.IsDev() {
+		log.Printf("ENV=development: using local Ollama model %q at %s\n", cfg.OllamaModel, cfg.OllamaServerAddress)
+		ollamaPlugin := &ollama.Ollama{ServerAddress: cfg.OllamaServerAddress}
+		g = genkit.Init(ctx, genkit.WithPlugins(ollamaPlugin))
+
+		model := ollamaPlugin.DefineModel(g,
+			ollama.ModelDefinition{Name: cfg.OllamaModel, Type: "chat"},
+			&ai.ModelOptions{Supports: &ai.ModelSupports{Multiturn: true}},
+		)
+		localModel = ai.NewModelRef(model.Name(), nil)
+	} else {
+		g = genkit.Init(ctx,
+			genkit.WithPlugins(&googlegenai.GoogleAI{}),
+			genkit.WithDefaultModel("googleai/gemini-3.5-flash"),
+		)
+	}
 
 	firestoreClient, err := firestore.NewClient(ctx, cfg.ProjectID)
 	if err != nil {
@@ -47,6 +64,9 @@ func main() {
 		return "pong", nil
 	})
 
+	llmPingUsecase := usecase.NewLlmPingUsecase(g, localModel)
+	llmPingFlow := genkit.DefineFlow(g, "llmPingFlow", llmPingUsecase.Execute)
+
 	pullRequestRepo := repository.NewFirestorePullRequestRepository(firestoreClient)
 
 	// --- 3. Routes ---
@@ -54,6 +74,7 @@ func main() {
 	r := chi.NewRouter()
 	r.Route("/v1", func(r chi.Router) {
 		r.Get("/ping", genkit.Handler(pingFlow))
+		r.Post("/llm-ping", genkit.Handler(llmPingFlow))
 
 		if cfg.GitHubAppID == "" {
 			log.Println("GITHUB_WATCHER_APP_ID not set, GitHub webhook integration disabled")

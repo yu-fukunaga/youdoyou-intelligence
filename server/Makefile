@@ -28,7 +28,7 @@ dev:
 
 dev-server:
 	@echo "Running server with air hot reload (ENV=dev)..."
-	GENKIT_ENV=dev GCP_PROJECT_ID=$(GCP_PROJECT_ID_PREFIX)-dev go tool air
+	ENV=development GENKIT_ENV=dev GCP_PROJECT_ID=$(GCP_PROJECT_ID_PREFIX)-dev go tool air
 
 dev-ui:
 	@echo "Starting Genkit Developer UI..."
