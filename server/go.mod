@@ -8,7 +8,7 @@ require (
 	firebase.google.com/go/v4 v4.20.0
 	github.com/bradleyfalzon/ghinstallation/v2 v2.19.0
 	github.com/firebase/genkit/go v1.10.0
-	github.com/go-chi/chi/v5 v5.3.0
+	github.com/go-chi/chi/v5 v5.3.1
 	github.com/google/go-github/v72 v72.0.0
 	github.com/joho/godotenv v1.5.1
 	github.com/kelseyhightower/envconfig v1.4.0
