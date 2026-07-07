@@ -1,3 +1,16 @@
+---
+id: "20260705-001"
+status: "done"
+priority: "medium"
+assignee: null
+epic: null
+dueDate: null
+created: "2026-07-07T12:33:57.941Z"
+modified: "2026-07-07T12:50:28.243Z"
+completedAt: "2026-07-07T12:50:28.243Z"
+labels: []
+order: "a0"
+---
 # ローカルLLM開発環境
 
 ## 目的・背景
