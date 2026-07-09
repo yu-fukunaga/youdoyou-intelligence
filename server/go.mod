@@ -5,7 +5,7 @@ go 1.26.4
 require (
 	cloud.google.com/go/compute/metadata v0.9.0
 	cloud.google.com/go/firestore v1.22.0
-	firebase.google.com/go/v4 v4.20.0
+	firebase.google.com/go/v4 v4.21.0
 	github.com/bradleyfalzon/ghinstallation/v2 v2.19.0
 	github.com/firebase/genkit/go v1.10.0
 	github.com/go-chi/chi/v5 v5.3.1
