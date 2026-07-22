@@ -11,7 +11,7 @@ import (
 
 	"cloud.google.com/go/firestore"
 
-	"github.com/yu-fukunaga/youdoyou-intelligence/server/gen/schema"
+	"github.com/yu-fukunaga/youdoyou-intelligence/gen-go/schema"
 	"github.com/yu-fukunaga/youdoyou-intelligence/server/internal/config"
 )
 

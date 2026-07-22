@@ -3,7 +3,7 @@ package usecase
 import (
 	"context"
 
-	schema "github.com/yu-fukunaga/youdoyou-intelligence/server/gen/schema"
+	schema "github.com/yu-fukunaga/youdoyou-intelligence/gen-go/schema"
 )
 
 type PullRequestRepository interface {
