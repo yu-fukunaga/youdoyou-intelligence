@@ -21,8 +21,8 @@ type genConfig struct {
 }
 
 var genConfigMap = map[genTargetLang]genConfig{
-	GenTargetLang_Go:    {outputDir: "../../server/gen/schema"},
-	GenTargetLang_Swift: {outputDir: "../../client/Packages/AppCore/Sources/AppCore/Generated"},
+	GenTargetLang_Go:    {outputDir: "../gen-go/schema"},
+	GenTargetLang_Swift: {outputDir: "../client/Packages/AppCore/Sources/AppCore/Generated"},
 }
 
 func main() {

@@ -11,7 +11,7 @@ import (
 
 	"github.com/google/go-github/v72/github"
 
-	schema "github.com/yu-fukunaga/youdoyou-intelligence/server/gen/schema"
+	schema "github.com/yu-fukunaga/youdoyou-intelligence/gen-go/schema"
 )
 
 var (

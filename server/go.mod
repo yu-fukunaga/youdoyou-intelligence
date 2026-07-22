@@ -2,6 +2,8 @@ module github.com/yu-fukunaga/youdoyou-intelligence/server
 
 go 1.26.5
 
+replace github.com/yu-fukunaga/youdoyou-intelligence/gen-go => ../gen-go
+
 require (
 	cloud.google.com/go/compute/metadata v0.9.0
 	cloud.google.com/go/firestore v1.22.0
@@ -12,6 +14,7 @@ require (
 	github.com/google/go-github/v72 v72.0.0
 	github.com/joho/godotenv v1.5.1
 	github.com/kelseyhightower/envconfig v1.4.0
+	github.com/yu-fukunaga/youdoyou-intelligence/gen-go v0.0.0
 	gopkg.in/yaml.v3 v3.0.1
 )
 

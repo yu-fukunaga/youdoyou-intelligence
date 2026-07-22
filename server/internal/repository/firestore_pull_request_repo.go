@@ -5,7 +5,7 @@ import (
 
 	"cloud.google.com/go/firestore"
 
-	schema "github.com/yu-fukunaga/youdoyou-intelligence/server/gen/schema"
+	schema "github.com/yu-fukunaga/youdoyou-intelligence/gen-go/schema"
 	"github.com/yu-fukunaga/youdoyou-intelligence/server/internal/usecase"
 )
 
