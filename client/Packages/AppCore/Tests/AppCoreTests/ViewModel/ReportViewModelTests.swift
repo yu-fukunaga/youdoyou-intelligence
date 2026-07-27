@@ -7,10 +7,9 @@ private func date(_ y: Int, _ m: Int, _ d: Int, _ h: Int = 0) -> Date {
   Calendar.current.date(from: DateComponents(year: y, month: m, day: d, hour: h))!
 }
 
-@MainActor
 struct ReportViewModel_DateIntervalTests {
 
-  nonisolated static let cases:
+  static let cases:
     [(
       periodType: PeriodType,
       currentDate: Date,
@@ -51,6 +50,7 @@ struct ReportViewModel_DateIntervalTests {
     ]
 
   @Test(arguments: cases)
+  @MainActor
   func dateInterval(
     periodType: PeriodType,
     currentDate: Date,
@@ -65,10 +65,9 @@ struct ReportViewModel_DateIntervalTests {
 
 }
 
-@MainActor
 struct ReportViewModel_DateRangeTextTests {
 
-  nonisolated static let cases:
+  static let cases:
     [(
       periodType: PeriodType,
       currentDate: Date,
@@ -97,6 +96,7 @@ struct ReportViewModel_DateRangeTextTests {
     ]
 
   @Test(arguments: cases)
+  @MainActor
   func dateRangeText_test(
     periodType: PeriodType,
     currentDate: Date,
@@ -111,10 +111,9 @@ struct ReportViewModel_DateRangeTextTests {
 
 }
 
-@MainActor
 struct ReportViewModel_BucketsTests {
 
-  nonisolated static let cases:
+  static let cases:
     [(
       periodType: PeriodType,
       currentDate: Date,
@@ -202,6 +201,7 @@ struct ReportViewModel_BucketsTests {
     ]
 
   @Test(arguments: cases)
+  @MainActor
   func dateRangeText_test(
     periodType: PeriodType,
     currentDate: Date,
