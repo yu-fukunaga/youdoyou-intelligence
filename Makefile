@@ -1,4 +1,5 @@
 -include .env
+include Makefile.agg
 export
 
 DEPLOY_REGION := asia-northeast1
@@ -28,16 +29,6 @@ pre-commit/format:
 pre-commit/run:
 	pre-commit run --all-files
 
-.PHONY: server/% functions/% firebase/% terraform/%
-
-server/%:
-	direnv exec server $(MAKE) -C server $*
-
-functions/%:
-	direnv exec functions $(MAKE) -C functions $*
-
-firebase/%:
-	direnv exec firebase $(MAKE) -C firebase $*
-
-terraform/%:
-	direnv exec terraform $(MAKE) -C terraform $*
+.PHONY: aggregate
+aggregate:
+	scripts/generate_makefile_aggregate.sh

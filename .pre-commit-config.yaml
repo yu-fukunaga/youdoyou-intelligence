@@ -104,3 +104,10 @@ repos:
         language: system
         files: ^homepage/layouts/.*\.html$
         pass_filenames: false
+
+      - id: makefile-aggregate-check
+        name: Makefile.agg is up to date
+        entry: bash -c 'make aggregate && git diff --exit-code -- Makefile.agg'
+        language: system
+        files: ^[^/]+/Makefile$|^Makefile\.agg$
+        pass_filenames: false
