@@ -9,7 +9,7 @@ require (
 	cloud.google.com/go/firestore v1.24.0
 	firebase.google.com/go/v4 v4.21.0
 	github.com/bradleyfalzon/ghinstallation/v2 v2.19.0
-	github.com/firebase/genkit/go v1.10.0
+	github.com/firebase/genkit/go v1.11.0
 	github.com/go-chi/chi/v5 v5.3.1
 	github.com/google/go-github/v72 v72.0.0
 	github.com/joho/godotenv v1.5.1
@@ -102,7 +102,7 @@ require (
 	golang.org/x/vuln v1.3.0 // indirect
 	google.golang.org/api v0.287.1 // indirect
 	google.golang.org/appengine/v2 v2.0.6 // indirect
-	google.golang.org/genai v1.51.0 // indirect
+	google.golang.org/genai v1.57.0 // indirect
 	google.golang.org/genproto v0.0.0-20260511170946-3700d4141b60 // indirect
 	google.golang.org/genproto/googleapis/api v0.0.0-20260630182238-925bb5da69e7 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20260630182238-925bb5da69e7 // indirect
