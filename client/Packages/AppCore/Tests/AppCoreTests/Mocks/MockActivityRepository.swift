@@ -3,6 +3,10 @@ import FirebaseFirestore
 @testable import AppCore
 
 final class MockActivityRepository: ActivityRepositoryProtocol, @unchecked Sendable {
+  var activities: [Activity] = []
+  var stubbedError: Error?
+  private(set) var queryCallCount = 0
+
   func observe(onChange: @escaping ([Activity]) -> Void) -> ListenerRegistration {
     return MockListenerRegistration()
   }
@@ -10,7 +14,11 @@ final class MockActivityRepository: ActivityRepositoryProtocol, @unchecked Senda
   func delete(id: String) async throws {}
   func update(_ activity: Activity) async throws {}
   func query(from: Date, to: Date) async throws -> [Activity] {
-    return []
+    queryCallCount += 1
+    if let stubbedError {
+      throw stubbedError
+    }
+    return activities
   }
 }
 

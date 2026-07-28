@@ -19,8 +19,8 @@ struct ReportViewModel_DateIntervalTests {
         periodType: .day,
         currentDate: date(2026, 1, 1),
         expected: DateInterval(
-          start: Calendar.current.startOfDay(for: date(2026, 1, 1)),
-          duration: 86400
+          start: date(2026, 1, 1),
+          end: date(2026, 1, 2)
         )
       ),
       (
@@ -212,6 +212,43 @@ struct ReportViewModel_BucketsTests {
     vm.currentDate = currentDate
 
     #expect(vm.buckets == expected)
+  }
+
+}
+
+struct ReportViewModel_LoadIfNeededTests {
+
+  @Test
+  @MainActor
+  func loadIfNeeded_test() async {
+    let mock = MockActivityRepository()
+    let vm = ReportViewModel(repository: mock)
+
+    await vm.loadIfNeeded()
+    #expect(mock.queryCallCount == 1)
+  }
+
+}
+
+struct ReportViewModel_ReloadTests {
+
+  private struct DummyError: Error {}
+
+  @Test
+  @MainActor
+  func reload_whenQueryThrows_doesNotCacheAndRetriesNextTime() async {
+    let mock = MockActivityRepository()
+    mock.stubbedError = DummyError()
+    let vm = ReportViewModel(repository: mock)
+
+    await vm.reload()
+
+    #expect(mock.queryCallCount == 1)
+    #expect(vm.totalDuration == 0)
+
+    // Not cached, so calling again triggers another query
+    await vm.loadIfNeeded()
+    #expect(mock.queryCallCount == 2)
   }
 
 }
