@@ -736,3 +736,57 @@ struct ReportViewModel_SummaryRowsTests {
   }
 
 }
+
+struct ReportViewModel_ResolveTitleTests {
+
+  struct TestCase: CustomTestStringConvertible {
+    let name: String
+    let selectedDomainId: String?
+    let id: String
+    let expected: String
+
+    var testDescription: String { name }
+  }
+
+  static let domains: [Domain] = [
+    domain(id: "d1", title: "Work", topics: [Topic(id: "t1", title: "Coding")]),
+    domain(id: "d2", title: "Life", topics: []),
+  ]
+
+  static let cases: [TestCase] = [
+    TestCase(
+      name: "resolves domain title when no domain is selected",
+      selectedDomainId: nil,
+      id: "d1",
+      expected: "Work"
+    ),
+    TestCase(
+      name: "falls back to the id when no matching domain is found",
+      selectedDomainId: nil,
+      id: "unknown",
+      expected: "unknown"
+    ),
+    TestCase(
+      name: "resolves topic title within the selected domain",
+      selectedDomainId: "d1",
+      id: "t1",
+      expected: "Coding"
+    ),
+    TestCase(
+      name: "falls back to the id when the topic isn't in the selected domain",
+      selectedDomainId: "d1",
+      id: "unknown",
+      expected: "unknown"
+    ),
+  ]
+
+  @Test(arguments: cases)
+  @MainActor
+  func resolveTitle_test(testCase: TestCase) {
+    let vm = ReportViewModel(repository: MockActivityRepository())
+    vm.selectedDomainId = testCase.selectedDomainId
+
+    #expect(vm.resolveTitle(id: testCase.id, domains: Self.domains) == testCase.expected)
+  }
+
+}
