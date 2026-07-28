@@ -483,3 +483,23 @@ struct ReportViewModel_TotalDurationTests {
   }
 
 }
+
+struct ReportViewModel_DayActivitiesTests {
+
+  @Test
+  @MainActor
+  func dayActivities_test() async {
+    let mock = MockActivityRepository()
+    mock.activities = [
+      activity(domainId: "d1", topicId: "t3", startedAt: date(2026, 1, 1, 2), endedAt: date(2026, 1, 1, 3)),
+      activity(domainId: "d1", topicId: "t1", startedAt: date(2026, 1, 1, 0), endedAt: date(2026, 1, 1, 1)),
+      activity(domainId: "d1", topicId: "t2", startedAt: date(2026, 1, 1, 1), endedAt: date(2026, 1, 1, 2)),
+    ]
+    let vm = ReportViewModel(repository: mock)
+
+    await vm.reload()
+
+    #expect(vm.dayActivities.map { $0.topicId } == ["t1", "t2", "t3"])
+  }
+
+}
