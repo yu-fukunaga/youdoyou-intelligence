@@ -37,7 +37,7 @@ front matter は必須。すべてのspecファイルの先頭に付与する。
 
 ````markdown
 ---
-id: "0013-skill-evaluation-agent"
+id: "0013"
 status: "backlog"
 created: "2026-07-07T12:37:57.634Z"
 modified: "2026-07-07T12:37:57.634Z"
@@ -69,7 +69,7 @@ order: ""
 
 front matter の各フィールド:
 
-- `id`: ファイル名から `.md` を除いたもの（例: `0013-skill-evaluation-agent`）
+- `id`: ファイル名の連番部分(`NNNN`)のみ（例: `0013`）。ファイル名をリネームしてもidを書き直さずに済むようにするため
 - `status`: 新規作成時は常に `"backlog"`
 - `created` / `modified`: 手順2で取得したISO8601タイムスタンプを同じ値で設定
 - `completedAt`: 新規作成時は常に `null`

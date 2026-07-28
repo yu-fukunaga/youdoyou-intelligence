@@ -1,5 +1,5 @@
 ---
-id: "0002-makefile-tab-completion"
+id: "0002"
 status: "done"
 priority: "medium"
 assignee: null
