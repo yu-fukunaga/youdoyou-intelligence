@@ -71,4 +71,5 @@ GoogleService-Info*.plist
 
 # Personal task notes (not part of tracked specs)
 spec/*.md
+!spec/README.md
 !spec/done/

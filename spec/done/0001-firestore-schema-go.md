@@ -1,5 +1,5 @@
 ---
-id: "0001-firestore-schema-go"
+id: "0001"
 status: "done"
 priority: "medium"
 assignee: null
