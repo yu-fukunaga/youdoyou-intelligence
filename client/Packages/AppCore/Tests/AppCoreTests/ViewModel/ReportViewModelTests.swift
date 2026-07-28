@@ -649,3 +649,90 @@ struct ReportViewModel_ChartBarsTests {
   }
 
 }
+
+struct ReportViewModel_SummaryRowsTests {
+
+  struct ExpectedRow: Equatable {
+    let id: String
+    let title: String
+    let bucketDurations: [TimeInterval]
+  }
+
+  struct TestCase: CustomTestStringConvertible {
+    let name: String
+    let activities: [Activity]
+    let domains: [Domain]
+    let selectedDomainId: String?
+    let expectedRows: [ExpectedRow]
+
+    var testDescription: String { name }
+  }
+
+  static let domains: [Domain] = [
+    domain(id: "d1", title: "Work", topics: [Topic(id: "t1", title: "Coding"), Topic(id: "t2", title: "Meeting")]),
+    domain(id: "d2", title: "Life", topics: []),
+  ]
+
+  // Week starting 2026/1/1: bucket index 3=1/1, 4=1/2, 5=1/3
+  static let cases: [TestCase] = [
+    TestCase(
+      name: "groups by domain per bucket and sorts by total descending",
+      activities: [
+        activity(domainId: "d1", topicId: "t1", startedAt: date(2026, 1, 1, 1), endedAt: date(2026, 1, 1, 3)),
+        activity(domainId: "d1", topicId: "t1", startedAt: date(2026, 1, 3, 1), endedAt: date(2026, 1, 3, 2)),
+        activity(domainId: "d2", topicId: "t9", startedAt: date(2026, 1, 2, 1), endedAt: date(2026, 1, 2, 2)),
+      ],
+      domains: domains,
+      selectedDomainId: nil,
+      expectedRows: [
+        ExpectedRow(
+          id: "d1", title: "Work",
+          bucketDurations: [0, 0, 0, 2 * 3600, 0, 1 * 3600, 0]
+        ),
+        ExpectedRow(
+          id: "d2", title: "Life",
+          bucketDurations: [0, 0, 0, 0, 1 * 3600, 0, 0]
+        ),
+      ]
+    ),
+    TestCase(
+      name: "groups by topic when a domain is selected",
+      activities: [
+        activity(domainId: "d1", topicId: "t1", startedAt: date(2026, 1, 1, 1), endedAt: date(2026, 1, 1, 3)),
+        activity(domainId: "d1", topicId: "t2", startedAt: date(2026, 1, 2, 1), endedAt: date(2026, 1, 2, 2)),
+      ],
+      domains: domains,
+      selectedDomainId: "d1",
+      expectedRows: [
+        ExpectedRow(
+          id: "t1", title: "Coding",
+          bucketDurations: [0, 0, 0, 2 * 3600, 0, 0, 0]
+        ),
+        ExpectedRow(
+          id: "t2", title: "Meeting",
+          bucketDurations: [0, 0, 0, 0, 1 * 3600, 0, 0]
+        ),
+      ]
+    ),
+  ]
+
+  @Test(arguments: cases)
+  @MainActor
+  func summaryRows_test(testCase: TestCase) async {
+    let mock = MockActivityRepository()
+    mock.activities = testCase.activities
+    let vm = ReportViewModel(repository: mock)
+    vm.periodType = .week
+    vm.currentDate = date(2026, 1, 1)
+    vm.selectedDomainId = testCase.selectedDomainId
+
+    await vm.reload()
+
+    let rows =
+      vm.summaryRows(domains: testCase.domains)
+      .map { ExpectedRow(id: $0.id, title: $0.title, bucketDurations: $0.bucketDurations) }
+
+    #expect(rows == testCase.expectedRows)
+  }
+
+}
