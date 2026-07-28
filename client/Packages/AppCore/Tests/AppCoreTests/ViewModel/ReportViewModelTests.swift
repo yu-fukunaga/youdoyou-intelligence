@@ -7,6 +7,24 @@ private func date(_ y: Int, _ m: Int, _ d: Int, _ h: Int = 0) -> Date {
   Calendar.current.date(from: DateComponents(year: y, month: m, day: d, hour: h))!
 }
 
+private func activity(
+  domainId: String,
+  topicId: String,
+  startedAt: Date,
+  endedAt: Date
+) -> Activity {
+  Activity(
+    domainId: domainId,
+    topicId: topicId,
+    content: "",
+    startedAt: startedAt,
+    endedAt: endedAt,
+    userId: "u1",
+    userName: "user",
+    userIcon: ""
+  )
+}
+
 struct ReportViewModel_DateIntervalTests {
 
   static let cases:
@@ -401,6 +419,67 @@ struct ReportViewModel_ToggleTopicTests {
     vm.toggleTopic(input)
 
     #expect(vm.selectedTopicId == expected)
+  }
+
+}
+
+struct ReportViewModel_TotalDurationTests {
+
+  struct TestCase: CustomTestStringConvertible {
+    let name: String
+    let activities: [Activity]
+    let selectedDomainId: String?
+    let selectedTopicId: String?
+    let expected: TimeInterval
+
+    var testDescription: String { name }
+  }
+
+  static let cases: [TestCase] = [
+    TestCase(
+      name: "sums all activities without filter",
+      activities: [
+        activity(domainId: "d1", topicId: "t1", startedAt: date(2026, 1, 1, 0), endedAt: date(2026, 1, 1, 1)),
+        activity(domainId: "d2", topicId: "t2", startedAt: date(2026, 1, 1, 1), endedAt: date(2026, 1, 1, 3)),
+      ],
+      selectedDomainId: nil,
+      selectedTopicId: nil,
+      expected: 3 * 3600
+    ),
+    TestCase(
+      name: "filters by domain",
+      activities: [
+        activity(domainId: "d1", topicId: "t1", startedAt: date(2026, 1, 1, 0), endedAt: date(2026, 1, 1, 1)),
+        activity(domainId: "d2", topicId: "t2", startedAt: date(2026, 1, 1, 1), endedAt: date(2026, 1, 1, 3)),
+      ],
+      selectedDomainId: "d1",
+      selectedTopicId: nil,
+      expected: 1 * 3600
+    ),
+    TestCase(
+      name: "filters by domain and topic",
+      activities: [
+        activity(domainId: "d1", topicId: "t1", startedAt: date(2026, 1, 1, 0), endedAt: date(2026, 1, 1, 1)),
+        activity(domainId: "d1", topicId: "t2", startedAt: date(2026, 1, 1, 1), endedAt: date(2026, 1, 1, 3)),
+      ],
+      selectedDomainId: "d1",
+      selectedTopicId: "t2",
+      expected: 2 * 3600
+    ),
+  ]
+
+  @Test(arguments: cases)
+  @MainActor
+  func totalDuration_test(testCase: TestCase) async {
+    let mock = MockActivityRepository()
+    mock.activities = testCase.activities
+    let vm = ReportViewModel(repository: mock)
+    vm.selectedDomainId = testCase.selectedDomainId
+    vm.selectedTopicId = testCase.selectedTopicId
+
+    await vm.reload()
+
+    #expect(vm.totalDuration == testCase.expected)
   }
 
 }
