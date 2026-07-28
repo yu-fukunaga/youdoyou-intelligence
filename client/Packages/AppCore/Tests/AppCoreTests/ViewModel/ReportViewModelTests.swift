@@ -216,6 +216,57 @@ struct ReportViewModel_BucketsTests {
 
 }
 
+struct ReportViewModel_BucketLabelTests {
+
+  static let cases:
+    [(
+      periodType: PeriodType,
+      bucketStart: Date,
+      expected: String
+    )] = [
+      (
+        periodType: .day,
+        bucketStart: date(2026, 1, 1),
+        expected: ""
+      ),
+      (
+        periodType: .week,
+        bucketStart: date(2026, 1, 1),  // Thursday
+        expected: "Thu"
+      ),
+      (
+        periodType: .quarter,
+        bucketStart: date(2026, 1, 1),
+        expected: "1/1"
+      ),
+      (
+        periodType: .year,
+        bucketStart: date(2026, 1, 1),
+        expected: "1月"
+      ),
+    ]
+
+  @Test(arguments: cases)
+  @MainActor
+  func bucketLabel_test(
+    periodType: PeriodType,
+    bucketStart: Date,
+    expected: String
+  ) {
+    // shortWeekdaySymbols depends on locale, so fix it explicitly for a deterministic result
+    var calendar = Calendar(identifier: .gregorian)
+    calendar.locale = Locale(identifier: "en_US")
+    calendar.firstWeekday = 2
+
+    let vm = ReportViewModel(repository: MockActivityRepository(), calendar: calendar)
+    vm.periodType = periodType
+
+    let bucket = DateInterval(start: bucketStart, end: bucketStart)
+    #expect(vm.bucketLabel(for: bucket) == expected)
+  }
+
+}
+
 struct ReportViewModel_LoadIfNeededTests {
 
   @Test
