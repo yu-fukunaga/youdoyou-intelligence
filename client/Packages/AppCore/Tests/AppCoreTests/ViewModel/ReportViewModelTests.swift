@@ -303,3 +303,39 @@ struct ReportViewModel_ReloadTests {
   }
 
 }
+
+struct ReportViewModel_MovePeriodTests {
+
+  static let cases:
+    [(
+      periodType: PeriodType,
+      offset: Int,
+      expected: Date
+    )] = [
+      (periodType: .day, offset: 1, expected: date(2026, 1, 2)),
+      (periodType: .day, offset: -1, expected: date(2025, 12, 31)),
+      (periodType: .week, offset: 1, expected: date(2026, 1, 8)),
+      (periodType: .week, offset: -1, expected: date(2025, 12, 25)),
+      (periodType: .quarter, offset: 1, expected: date(2026, 3, 26)),  // +12 weeks
+      (periodType: .quarter, offset: -1, expected: date(2025, 10, 9)),  // -12 weeks
+      (periodType: .year, offset: 1, expected: date(2027, 1, 1)),
+      (periodType: .year, offset: -1, expected: date(2025, 1, 1)),
+    ]
+
+  @Test(arguments: cases)
+  @MainActor
+  func movePeriod_test(
+    periodType: PeriodType,
+    offset: Int,
+    expected: Date
+  ) {
+    let vm = ReportViewModel(repository: MockActivityRepository())
+    vm.periodType = periodType
+    vm.currentDate = date(2026, 1, 1)
+
+    vm.movePeriod(by: offset)
+
+    #expect(vm.currentDate == expected)
+  }
+
+}
