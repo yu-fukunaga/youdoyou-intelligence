@@ -1,4 +1,5 @@
 import Foundation
+import SwiftUI
 import Testing
 
 @testable import AppCore
@@ -787,6 +788,54 @@ struct ReportViewModel_ResolveTitleTests {
     vm.selectedDomainId = testCase.selectedDomainId
 
     #expect(vm.resolveTitle(id: testCase.id, domains: Self.domains) == testCase.expected)
+  }
+
+}
+
+struct ReportViewModel_ColorForActivityTests {
+
+  struct TestCase: CustomTestStringConvertible {
+    let name: String
+    let selectedDomainId: String?
+    let activity: Activity
+    let expected: Color
+
+    var testDescription: String { name }
+  }
+
+  static let domains: [Domain] = [
+    domain(id: "d1", title: "Work", topics: [Topic(id: "t1", title: "Coding"), Topic(id: "t2", title: "Meeting")]),
+    domain(id: "d2", title: "Life", topics: []),
+  ]
+
+  static let cases: [TestCase] = [
+    TestCase(
+      name: "colors by domain index when no domain is selected",
+      selectedDomainId: nil,
+      activity: activity(domainId: "d2", topicId: "t9", startedAt: date(2026, 1, 1), endedAt: date(2026, 1, 1, 1)),
+      expected: .orange
+    ),
+    TestCase(
+      name: "colors by topic index within the domain when a domain is selected",
+      selectedDomainId: "d1",
+      activity: activity(domainId: "d1", topicId: "t2", startedAt: date(2026, 1, 1), endedAt: date(2026, 1, 1, 1)),
+      expected: .orange
+    ),
+    TestCase(
+      name: "falls back to gray when the id has no color mapping",
+      selectedDomainId: nil,
+      activity: activity(domainId: "unknown", topicId: "t9", startedAt: date(2026, 1, 1), endedAt: date(2026, 1, 1, 1)),
+      expected: .gray
+    ),
+  ]
+
+  @Test(arguments: cases)
+  @MainActor
+  func colorForActivity_test(testCase: TestCase) {
+    let vm = ReportViewModel(repository: MockActivityRepository())
+    vm.selectedDomainId = testCase.selectedDomainId
+
+    #expect(vm.colorForActivity(testCase.activity, domains: Self.domains) == testCase.expected)
   }
 
 }
