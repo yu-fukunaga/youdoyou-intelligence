@@ -25,6 +25,12 @@ private func activity(
   )
 }
 
+private func domain(id: String, title: String, topics: [Topic] = []) -> Domain {
+  var d = Domain(title: title, description: "", topics: topics)
+  d.id = id
+  return d
+}
+
 struct ReportViewModel_DateIntervalTests {
 
   static let cases:
@@ -541,6 +547,105 @@ struct ReportViewModel_DayScrollStartTests {
     await vm.reload()
 
     #expect(vm.dayScrollStart == testCase.expected)
+  }
+
+}
+
+struct ReportViewModel_ChartBarsTests {
+
+  struct ExpectedSegment: Equatable {
+    let id: String
+    let title: String
+    let duration: TimeInterval
+  }
+
+  struct TestCase: CustomTestStringConvertible {
+    let name: String
+    let activities: [Activity]
+    let domains: [Domain]
+    let selectedDomainId: String?
+    let targetBucketIndex: Int
+    let expectedSegments: [ExpectedSegment]
+
+    var testDescription: String { name }
+  }
+
+  static let domains: [Domain] = [
+    domain(id: "d1", title: "Work", topics: [Topic(id: "t1", title: "Coding"), Topic(id: "t2", title: "Meeting")]),
+    domain(id: "d2", title: "Life", topics: []),
+  ]
+
+  // Week starting 2026/1/1: bucket 3 is the 2026/1/1 (Thu) day bucket
+  static let cases: [TestCase] = [
+    TestCase(
+      name: "bucket with no activities gets an empty placeholder segment",
+      activities: [],
+      domains: domains,
+      selectedDomainId: nil,
+      targetBucketIndex: 3,
+      expectedSegments: [ExpectedSegment(id: "empty", title: "", duration: 0)]
+    ),
+    TestCase(
+      name: "groups by domain and sums duration within the bucket",
+      activities: [
+        activity(domainId: "d1", topicId: "t1", startedAt: date(2026, 1, 1, 1), endedAt: date(2026, 1, 1, 3)),
+        activity(domainId: "d2", topicId: "t9", startedAt: date(2026, 1, 1, 5), endedAt: date(2026, 1, 1, 6)),
+      ],
+      domains: domains,
+      selectedDomainId: nil,
+      targetBucketIndex: 3,
+      expectedSegments: [
+        ExpectedSegment(id: "d1", title: "Work", duration: 2 * 3600),
+        ExpectedSegment(id: "d2", title: "Life", duration: 1 * 3600),
+      ]
+    ),
+    TestCase(
+      name: "groups by topic when a domain is selected",
+      activities: [
+        activity(domainId: "d1", topicId: "t1", startedAt: date(2026, 1, 1, 1), endedAt: date(2026, 1, 1, 3)),
+        activity(domainId: "d1", topicId: "t2", startedAt: date(2026, 1, 1, 5), endedAt: date(2026, 1, 1, 6)),
+      ],
+      domains: domains,
+      selectedDomainId: "d1",
+      targetBucketIndex: 3,
+      expectedSegments: [
+        ExpectedSegment(id: "t1", title: "Coding", duration: 2 * 3600),
+        ExpectedSegment(id: "t2", title: "Meeting", duration: 1 * 3600),
+      ]
+    ),
+    TestCase(
+      name: "clamps duration to the bucket when an activity spans two buckets",
+      activities: [
+        activity(domainId: "d1", topicId: "t1", startedAt: date(2025, 12, 31, 23), endedAt: date(2026, 1, 1, 2))
+      ],
+      domains: domains,
+      selectedDomainId: nil,
+      targetBucketIndex: 3,
+      expectedSegments: [
+        ExpectedSegment(id: "d1", title: "Work", duration: 2 * 3600)
+      ]
+    ),
+  ]
+
+  @Test(arguments: cases)
+  @MainActor
+  func chartBars_test(testCase: TestCase) async {
+    let mock = MockActivityRepository()
+    mock.activities = testCase.activities
+    let vm = ReportViewModel(repository: mock)
+    vm.periodType = .week
+    vm.currentDate = date(2026, 1, 1)
+    vm.selectedDomainId = testCase.selectedDomainId
+
+    await vm.reload()
+
+    let bars = vm.chartBars(domains: testCase.domains)
+    let segments =
+      bars[testCase.targetBucketIndex].segments
+      .map { ExpectedSegment(id: $0.id, title: $0.title, duration: $0.duration) }
+      .sorted { $0.id < $1.id }
+
+    #expect(segments == testCase.expectedSegments.sorted { $0.id < $1.id })
   }
 
 }
