@@ -374,3 +374,33 @@ struct ReportViewModel_SelectDomainTests {
   }
 
 }
+
+struct ReportViewModel_ToggleTopicTests {
+
+  static let cases:
+    [(
+      initialTopicId: String?,
+      input: String,
+      expected: String?
+    )] = [
+      (initialTopicId: nil, input: "t1", expected: "t1"),
+      (initialTopicId: "t1", input: "t1", expected: nil),
+      (initialTopicId: "t1", input: "t2", expected: "t2"),
+    ]
+
+  @Test(arguments: cases)
+  @MainActor
+  func toggleTopic_test(
+    initialTopicId: String?,
+    input: String,
+    expected: String?
+  ) {
+    let vm = ReportViewModel(repository: MockActivityRepository())
+    vm.selectedTopicId = initialTopicId
+
+    vm.toggleTopic(input)
+
+    #expect(vm.selectedTopicId == expected)
+  }
+
+}
