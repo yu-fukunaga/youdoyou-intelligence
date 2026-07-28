@@ -1,5 +1,5 @@
 ---
-id: "2026-07-25-makefile-tab-completion"
+id: "0002-makefile-tab-completion"
 status: "done"
 priority: "medium"
 assignee: null
@@ -8,7 +8,7 @@ dueDate: null
 created: "2026-07-25T01:56:51.000Z"
 modified: "2026-07-27T00:29:16.448Z"
 completedAt: "2026-07-27T00:29:16.448Z"
-labels: []
+labels: ["scripts"]
 order: "a1"
 ---
 # Makefileのタブ補完対応
