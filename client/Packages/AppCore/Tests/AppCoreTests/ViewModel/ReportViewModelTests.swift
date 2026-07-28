@@ -339,3 +339,38 @@ struct ReportViewModel_MovePeriodTests {
   }
 
 }
+
+struct ReportViewModel_SelectDomainTests {
+
+  static let cases:
+    [(
+      initialDomainId: String?,
+      initialTopicId: String?,
+      input: String?,
+      expectedDomainId: String?
+    )] = [
+      (initialDomainId: nil, initialTopicId: nil, input: "d1", expectedDomainId: "d1"),
+      (initialDomainId: "d1", initialTopicId: "t1", input: "d1", expectedDomainId: nil),
+      (initialDomainId: "d1", initialTopicId: "t1", input: "d2", expectedDomainId: "d2"),
+      (initialDomainId: "d1", initialTopicId: "t1", input: nil, expectedDomainId: nil),
+    ]
+
+  @Test(arguments: cases)
+  @MainActor
+  func selectDomain_test(
+    initialDomainId: String?,
+    initialTopicId: String?,
+    input: String?,
+    expectedDomainId: String?
+  ) {
+    let vm = ReportViewModel(repository: MockActivityRepository())
+    vm.selectedDomainId = initialDomainId
+    vm.selectedTopicId = initialTopicId
+
+    vm.selectDomain(input)
+
+    #expect(vm.selectedDomainId == expectedDomainId)
+    #expect(vm.selectedTopicId == nil)
+  }
+
+}
