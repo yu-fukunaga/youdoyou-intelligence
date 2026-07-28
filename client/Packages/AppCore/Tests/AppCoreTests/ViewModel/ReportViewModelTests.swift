@@ -503,3 +503,44 @@ struct ReportViewModel_DayActivitiesTests {
   }
 
 }
+
+struct ReportViewModel_DayScrollStartTests {
+
+  struct TestCase: CustomTestStringConvertible {
+    let name: String
+    let activities: [Activity]
+    let expected: Date
+
+    var testDescription: String { name }
+  }
+
+  static let cases: [TestCase] = [
+    TestCase(
+      name: "falls back to start of day when there are no activities",
+      activities: [],
+      expected: date(2026, 1, 1, 0)
+    ),
+    TestCase(
+      name: "starts 3 hours before the first activity",
+      activities: [
+        activity(domainId: "d1", topicId: "t1", startedAt: date(2026, 1, 1, 5), endedAt: date(2026, 1, 1, 6)),
+        activity(domainId: "d1", topicId: "t2", startedAt: date(2026, 1, 1, 8), endedAt: date(2026, 1, 1, 9)),
+      ],
+      expected: date(2026, 1, 1, 2)
+    ),
+  ]
+
+  @Test(arguments: cases)
+  @MainActor
+  func dayScrollStart_test(testCase: TestCase) async {
+    let mock = MockActivityRepository()
+    mock.activities = testCase.activities
+    let vm = ReportViewModel(repository: mock)
+    vm.currentDate = date(2026, 1, 1, 5)
+
+    await vm.reload()
+
+    #expect(vm.dayScrollStart == testCase.expected)
+  }
+
+}
