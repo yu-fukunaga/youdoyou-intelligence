@@ -10,7 +10,6 @@ struct ReportView: View {
       VStack(spacing: 0) {
         periodPicker
         dateRangeHeader
-        domainChips
         chartSection
         summaryList
       }
@@ -58,46 +57,31 @@ struct ReportView: View {
     }
     .frame(maxWidth: .infinity)
     .padding(.vertical, 12)
-  }
-
-  // MARK: - Domain Chips
-
-  private var domainChips: some View {
-    ScrollView(.horizontal, showsIndicators: false) {
-      HStack(spacing: 8) {
-        chipButton(title: "All", isSelected: viewModel.selectedDomainId == nil) {
-          viewModel.selectDomain(nil)
-        }
-        ForEach(appState.domains) { domain in
-          chipButton(
-            title: domain.title,
-            isSelected: viewModel.selectedDomainId == domain.id
-          ) {
-            viewModel.selectDomain(domain.id)
-          }
-        }
-      }
-      .padding(.horizontal)
+    .overlay(alignment: .trailing) {
+      groupingUnitButton
+        .padding(.trailing)
     }
-    .padding(.bottom, 12)
   }
 
-  private func chipButton(
-    title: String, isSelected: Bool, action: @escaping () -> Void
-  ) -> some View {
-    Button(action: action) {
-      Text(title)
-        .font(.subheadline)
-        .fontWeight(isSelected ? .semibold : .regular)
-        .padding(.horizontal, 14)
-        .padding(.vertical, 6)
-        .background(isSelected ? Color.primary : Color(.systemBackground))
-        .foregroundStyle(isSelected ? Color(.systemBackground) : .primary)
-        .clipShape(Capsule())
-        .overlay(
-          Capsule()
-            .stroke(Color(.separator), lineWidth: isSelected ? 0 : 0.5)
-        )
+  private var groupingUnitButton: some View {
+    let isTopic = viewModel.groupingUnit == .topic
+
+    return VStack(spacing: 2) {
+      Text(viewModel.groupingUnit.rawValue)
+        .font(.caption2)
+        .foregroundStyle(.secondary)
+        .frame(width: 40, alignment: .center)
+
+      Button {
+        viewModel.groupingUnit = isTopic ? .domain : .topic
+      } label: {
+        Image(systemName: "list.bullet.indent")
+          .font(.system(size: 16, weight: .semibold))
+          .foregroundStyle(isTopic ? Color(.systemBackground) : .primary)
+          .frame(width: 32, height: 32)
+          .background(isTopic ? Color.primary : Color(.systemFill))
+          .clipShape(Circle())
+      }
     }
   }
 
@@ -133,7 +117,7 @@ struct ReportView: View {
         VStack(alignment: .leading, spacing: 1) {
           Text(
             viewModel.timelineTitle(
-              for: activity[keyPath: viewModel.selectedDomainId != nil ? \Activity.topicId : \Activity.domainId],
+              for: viewModel.groupId(for: activity),
               domains: appState.domains
             )
           )
@@ -235,30 +219,60 @@ struct ReportView: View {
   private var summaryList: some View {
     let rows = viewModel.listRows(domains: appState.domains)
 
-    return VStack(spacing: 0) {
-      ForEach(rows) { row in
-        summaryRowView(row)
+    return LazyVStack(spacing: 0, pinnedViews: [.sectionHeaders]) {
+      Section {
+        ForEach(rows) { row in
+          summaryRowView(row)
+        }
+      } header: {
+        totalRowView
       }
     }
     .padding(.top, 16)
   }
 
-  private func summaryRowView(_ row: ListRow) -> some View {
-    let isSelected = viewModel.selectedTopicId == row.id
-    let isTopic = viewModel.selectedDomainId != nil
+  private var totalRowView: some View {
+    let isSelected = viewModel.selectedItemId == nil
 
     return Button {
-      if isTopic {
-        viewModel.toggleTopic(row.id)
+      viewModel.selectedItemId = nil
+    } label: {
+      HStack(spacing: 10) {
+        Text("合計")
+          .font(.subheadline)
+          .fontWeight(.semibold)
+        Spacer()
+        Text(viewModel.listTotalDuration.reportText)
+          .font(.subheadline)
+          .foregroundStyle(.secondary)
       }
+      .padding(.horizontal)
+      .padding(.vertical, 12)
+      .background(isSelected ? Color(.systemFill) : Color(.systemGroupedBackground))
+    }
+    .buttonStyle(.plain)
+  }
+
+  private func summaryRowView(_ row: ListRow) -> some View {
+    let isSelected = viewModel.selectedItemId == row.id
+
+    return Button {
+      viewModel.toggleItem(row.id)
     } label: {
       HStack(spacing: 10) {
         Circle()
           .fill(row.color)
           .frame(width: 10, height: 10)
-        Text(row.title)
-          .font(.subheadline)
-          .lineLimit(1)
+        VStack(alignment: .leading, spacing: 1) {
+          if let subtitle = row.subtitle {
+            Text(subtitle)
+              .font(.caption2)
+              .foregroundStyle(.secondary)
+          }
+          Text(row.title)
+            .font(.subheadline)
+            .lineLimit(1)
+        }
         Spacer()
         Text(row.total.reportText)
           .font(.subheadline)
@@ -269,6 +283,5 @@ struct ReportView: View {
       .background(isSelected ? Color(.systemFill) : .clear)
     }
     .buttonStyle(.plain)
-    .disabled(!isTopic)
   }
 }

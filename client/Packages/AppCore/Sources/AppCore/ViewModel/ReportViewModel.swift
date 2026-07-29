@@ -10,6 +10,11 @@ enum PeriodType: String, CaseIterable {
   case fiveYears = "5Y"
 }
 
+enum GroupingUnit: String, CaseIterable {
+  case domain = "Domain"
+  case topic = "Topic"
+}
+
 struct BarChartSegment: Identifiable {
   let id: String
   let title: String
@@ -28,6 +33,7 @@ struct BarChartColumn: Identifiable {
 struct ListRow: Identifiable {
   let id: String
   let title: String
+  let subtitle: String?
   let color: Color
   let bucketDurations: [TimeInterval]
   var total: TimeInterval { bucketDurations.reduce(0, +) }
@@ -39,8 +45,10 @@ struct ListRow: Identifiable {
 class ReportViewModel: ObservableObject {
   @Published var periodType: PeriodType = .week
   @Published var currentDate: Date = .now
-  @Published var selectedDomainId: String?
-  @Published var selectedTopicId: String?
+  @Published var groupingUnit: GroupingUnit = .domain {
+    didSet { selectedItemId = nil }
+  }
+  @Published var selectedItemId: String?
   @Published private(set) var isLoading = false
 
   private var cache: [String: [Activity]] = [:]
@@ -210,29 +218,13 @@ class ReportViewModel: ObservableObject {
 
   // MARK: - Filter
 
-  func selectDomain(_ domainId: String?) {
-    if selectedDomainId == domainId {
-      selectedDomainId = nil
-    }
-    else {
-      selectedDomainId = domainId
-    }
-    selectedTopicId = nil
-  }
-
-  func toggleTopic(_ topicId: String) {
-    selectedTopicId = selectedTopicId == topicId ? nil : topicId
+  func toggleItem(_ id: String) {
+    selectedItemId = selectedItemId == id ? nil : id
   }
 
   private var filteredActivities: [Activity] {
-    var result = currentActivities
-    if let domainId = selectedDomainId {
-      result = result.filter { $0.domainId == domainId }
-    }
-    if let topicId = selectedTopicId {
-      result = result.filter { $0.topicId == topicId }
-    }
-    return result
+    guard let selectedItemId else { return currentActivities }
+    return currentActivities.filter { $0[keyPath: groupingKey] == selectedItemId }
   }
 
   // MARK: - Overall
@@ -257,13 +249,21 @@ class ReportViewModel: ObservableObject {
   }
 
   func timelineTitle(for id: String, domains: [Domain]) -> String {
-    if selectedDomainId != nil {
-      let domain = domains.first { $0.id == selectedDomainId }
-      return domain?.topics.first { $0.id == id }?.title ?? id
-    }
-    else {
+    switch groupingUnit {
+    case .domain:
       return domains.first { $0.id == id }?.title ?? id
+    case .topic:
+      for domain in domains {
+        if let topic = domain.topics.first(where: { $0.id == id }) {
+          return topic.title
+        }
+      }
+      return id
     }
+  }
+
+  func groupId(for activity: Activity) -> String {
+    activity[keyPath: groupingKey]
   }
 
   func timelineColor(for activity: Activity, domains: [Domain]) -> Color {
@@ -272,7 +272,7 @@ class ReportViewModel: ObservableObject {
     return colorMap[id] ?? .gray
   }
 
-  // MARK: - Bar Chart (Week / Quarter / Year)
+  // MARK: - Bar Chart (Week / 6M / 5Y)
 
   func barChartColumns(domains: [Domain]) -> [BarChartColumn] {
     let activities = filteredActivities
@@ -303,8 +303,18 @@ class ReportViewModel: ObservableObject {
 
   // MARK: - List
 
+  // Unfiltered total, used for the list's pinned "Total" row so it always
+  // reflects everything regardless of the current selection.
+  var listTotalDuration: TimeInterval {
+    currentActivities.reduce(0) {
+      $0 + $1.endedAt.timeIntervalSince($1.startedAt)
+    }
+  }
+
+  // Uses currentActivities (not filteredActivities) so every row stays visible
+  // for tapping even while another item is selected.
   func listRows(domains: [Domain]) -> [ListRow] {
-    let activities = filteredActivities
+    let activities = currentActivities
     let colorMap = colorMap(domains: domains)
     let allBuckets = buckets
     let groups = listGroups(in: activities, domains: domains)
@@ -313,8 +323,9 @@ class ReportViewModel: ObservableObject {
       let durations = allBuckets.map { bucket in
         listBucketDuration(groupId: group.id, activities: activities, in: bucket)
       }
+      let subtitle = groupingUnit == .topic ? domainTitle(forTopicId: group.id, domains: domains) : nil
       return ListRow(
-        id: group.id, title: group.title,
+        id: group.id, title: group.title, subtitle: subtitle,
         color: colorMap[group.id] ?? .gray, bucketDurations: durations
       )
     }
@@ -323,9 +334,8 @@ class ReportViewModel: ObservableObject {
 
   // MARK: - Helpers
 
-  // Groups by topic when a domain is selected, otherwise by domain.
   private var groupingKey: KeyPath<Activity, String> {
-    selectedDomainId != nil ? \.topicId : \.domainId
+    groupingUnit == .domain ? \.domainId : \.topicId
   }
 
   // One BarChartColumn's segments: groups only include activity within this bucket,
@@ -383,6 +393,10 @@ class ReportViewModel: ObservableObject {
     return ids.map { id in
       (id: id, title: timelineTitle(for: id, domains: domains))
     }
+  }
+
+  private func domainTitle(forTopicId topicId: String, domains: [Domain]) -> String? {
+    domains.first { $0.topics.contains { $0.id == topicId } }?.title
   }
 
   private func colorMap(domains: [Domain]) -> [String: Color] {
