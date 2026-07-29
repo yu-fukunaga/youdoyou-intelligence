@@ -1,4 +1,5 @@
 import Charts
+import Foundation
 import SwiftUI
 
 struct ReportView: View {
@@ -9,8 +10,14 @@ struct ReportView: View {
     ScrollView {
       VStack(spacing: 0) {
         periodPicker
-        dateRangeHeader
-        chartSection
+        if viewModel.periodType == .day {
+          dayHeader
+          dayClockChart
+        }
+        else {
+          dateRangeHeader
+          barChart
+        }
         summaryList
       }
     }
@@ -108,83 +115,84 @@ struct ReportView: View {
     }
   }
 
-  // MARK: - Chart Section
+  // MARK: - Day Header
 
-  @ViewBuilder
-  private var chartSection: some View {
-    if viewModel.periodType == .day {
-      dayTimeline
+  private static let clockChartSize: CGFloat = 200
+
+  private var dayHeader: some View {
+    HStack {
+      Text(viewModel.headerDateRangeText)
+        .font(.caption)
+        .foregroundStyle(.secondary)
+      Spacer()
+      groupingUnitButton
     }
-    else {
-      barChart
-    }
+    .padding(.horizontal)
+    .padding(.vertical, 12)
   }
 
-  // MARK: - Day Timeline
+  // MARK: - Day Clock Chart
 
-  private var dayTimeline: some View {
-    let activities = viewModel.timelineActivities
-    let cal = Calendar.current
-    let dayStart = cal.startOfDay(for: viewModel.currentDate)
-    let dayEnd = cal.date(byAdding: .day, value: 1, to: dayStart)!
+  private var dayClockChart: some View {
+    let segments = viewModel.clockSegments(domains: appState.domains)
 
-    return Chart(activities) { activity in
-      RectangleMark(
-        x: .value("Activity", ""),
-        yStart: .value("Start", activity.startedAt),
-        yEnd: .value("End", activity.endedAt)
-      )
-      .foregroundStyle(viewModel.timelineColor(for: activity, domains: appState.domains))
-      .cornerRadius(4)
-      .annotation(position: .overlay, alignment: .topLeading) {
-        VStack(alignment: .leading, spacing: 1) {
-          Text(
-            viewModel.timelineTitle(
-              for: viewModel.groupId(for: activity),
-              domains: appState.domains
-            )
-          )
+    return ZStack {
+      clockHourLabels
+        .frame(width: Self.clockChartSize + 40, height: Self.clockChartSize + 40)
+
+      Chart(segments) { segment in
+        SectorMark(
+          angle: .value("Duration", segment.duration),
+          innerRadius: .ratio(0.72),
+          angularInset: 0
+        )
+        .foregroundStyle(segment.color)
+      }
+      .frame(width: Self.clockChartSize, height: Self.clockChartSize)
+
+      VStack(spacing: 2) {
+        Text("合計")
           .font(.caption2)
-          .fontWeight(.medium)
-          Text(activity.endedAt.timeIntervalSince(activity.startedAt).reportText)
-            .font(.caption2)
-        }
-        .foregroundStyle(.white)
-        .padding(4)
+          .foregroundStyle(.secondary)
+        Text(viewModel.headerTotalDuration.reportText)
+          .font(.title2)
+          .fontWeight(.bold)
       }
     }
-    .chartYScale(domain: dayStart...dayEnd)
-    .chartScrollableAxes(.vertical)
-    .chartYVisibleDomain(length: 12 * 3600)
-    .chartScrollPosition(initialY: viewModel.timelineScrollStart)
-    .chartXAxis(.hidden)
-    .chartYAxis {
-      AxisMarks(values: .stride(by: .hour, count: 1)) { value in
-        AxisValueLabel {
-          if let date = value.as(Date.self) {
-            Text("\(cal.component(.hour, from: date)):00")
-              .font(.caption2)
-          }
-        }
-        AxisGridLine()
-      }
-    }
-    .frame(height: 400)
-    .padding(.horizontal)
+    .padding(.vertical, 8)
+    .frame(maxWidth: .infinity)
     .contentShape(Rectangle())
     .gesture(
-      DragGesture(minimumDistance: 50, coordinateSpace: .local)
+      DragGesture(minimumDistance: 30)
         .onEnded { value in
-          if abs(value.translation.width) > abs(value.translation.height) {
-            if value.translation.width < -50 {
-              viewModel.movePeriod(by: 1)
-            }
-            else if value.translation.width > 50 {
-              viewModel.movePeriod(by: -1)
-            }
+          if value.translation.width < -30 {
+            viewModel.movePeriod(by: 1)
+          }
+          else if value.translation.width > 30 {
+            viewModel.movePeriod(by: -1)
           }
         }
     )
+  }
+
+  // Hour numbers (0-23) around the chart's outer edge, like a clock face.
+  private var clockHourLabels: some View {
+    Canvas { context, size in
+      let center = CGPoint(x: size.width / 2, y: size.height / 2)
+      let radius = Self.clockChartSize / 2 + 12
+
+      for hour in 0..<24 {
+        let angle = Angle(degrees: Double(hour) / 24 * 360 - 90).radians
+        let point = CGPoint(
+          x: center.x + CGFloat(cos(angle)) * radius,
+          y: center.y + CGFloat(sin(angle)) * radius
+        )
+        let text = Text("\(hour)")
+          .font(.system(size: 9))
+          .foregroundStyle(.secondary)
+        context.draw(text, at: point)
+      }
+    }
   }
 
   // MARK: - Bar Chart

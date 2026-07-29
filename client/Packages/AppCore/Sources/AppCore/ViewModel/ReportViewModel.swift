@@ -30,6 +30,12 @@ struct BarChartColumn: Identifiable {
   var total: TimeInterval { segments.reduce(0) { $0 + $1.duration } }
 }
 
+struct ClockSegment: Identifiable {
+  let id: String
+  let color: Color
+  let duration: TimeInterval
+}
+
 struct ListRow: Identifiable {
   let id: String
   let title: String
@@ -251,11 +257,45 @@ class ReportViewModel: ObservableObject {
     filteredActivities.sorted { $0.startedAt < $1.startedAt }
   }
 
-  var timelineScrollStart: Date {
+  // The full day as an ordered sequence of segments covering all 24 hours (activities
+  // plus the gaps between them), so a SectorMark chart built from this list lines up
+  // with real clock positions instead of just being proportional slices.
+  func clockSegments(domains: [Domain]) -> [ClockSegment] {
     let cal = calendar
     let dayStart = cal.startOfDay(for: currentDate)
-    guard let first = timelineActivities.first else { return dayStart }
-    return cal.date(byAdding: .hour, value: -3, to: first.startedAt) ?? dayStart
+    let dayEnd = cal.date(byAdding: .day, value: 1, to: dayStart)!
+    let colorMap = colorMap(domains: domains)
+
+    var segments: [ClockSegment] = []
+    var cursor = dayStart
+
+    for activity in timelineActivities {
+      let start = max(max(activity.startedAt, dayStart), cursor)
+      let end = min(activity.endedAt, dayEnd)
+      guard start < end else { continue }
+
+      if start > cursor {
+        segments.append(
+          ClockSegment(
+            id: "gap-\(segments.count)", color: Color(.systemFill), duration: start.timeIntervalSince(cursor))
+        )
+      }
+
+      let colorId = groupId(for: activity)
+      segments.append(
+        ClockSegment(
+          id: activity.id ?? colorId, color: colorMap[colorId] ?? .gray, duration: end.timeIntervalSince(start))
+      )
+      cursor = end
+    }
+
+    if cursor < dayEnd {
+      segments.append(
+        ClockSegment(id: "gap-\(segments.count)", color: Color(.systemFill), duration: dayEnd.timeIntervalSince(cursor))
+      )
+    }
+
+    return segments
   }
 
   func timelineTitle(for id: String, domains: [Domain]) -> String {

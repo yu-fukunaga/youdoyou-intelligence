@@ -523,43 +523,63 @@ struct ReportViewModel_TimelineActivitiesTests {
 
 }
 
-struct ReportViewModel_TimelineScrollStartTests {
+struct ReportViewModel_ClockSegmentsTests {
 
-  struct TestCase: CustomTestStringConvertible {
-    let name: String
-    let activities: [Activity]
-    let expected: Date
-
-    var testDescription: String { name }
-  }
-
-  static let cases: [TestCase] = [
-    TestCase(
-      name: "falls back to start of day when there are no activities",
-      activities: [],
-      expected: date(2026, 1, 1, 0)
-    ),
-    TestCase(
-      name: "starts 3 hours before the first activity",
-      activities: [
-        activity(domainId: "d1", topicId: "t1", startedAt: date(2026, 1, 1, 5), endedAt: date(2026, 1, 1, 6)),
-        activity(domainId: "d1", topicId: "t2", startedAt: date(2026, 1, 1, 8), endedAt: date(2026, 1, 1, 9)),
-      ],
-      expected: date(2026, 1, 1, 2)
-    ),
+  static let domains: [Domain] = [
+    domain(id: "d1", title: "Work", topics: []),
+    domain(id: "d2", title: "Life", topics: []),
   ]
 
-  @Test(arguments: cases)
+  @Test
   @MainActor
-  func timelineScrollStart_test(testCase: TestCase) async {
+  func clockSegments_noActivities_isOneFullDayGap() async {
     let mock = MockActivityRepository()
-    mock.activities = testCase.activities
     let vm = ReportViewModel(repository: mock)
-    vm.currentDate = date(2026, 1, 1, 5)
+    vm.periodType = .day
+    vm.currentDate = date(2026, 1, 1)
 
     await vm.loadIfNeeded()
 
-    #expect(vm.timelineScrollStart == testCase.expected)
+    let segments = vm.clockSegments(domains: Self.domains)
+    #expect(segments.map(\.duration) == [86400])
+  }
+
+  @Test
+  @MainActor
+  func clockSegments_coversFullDayWithGapsAroundActivities() async {
+    let mock = MockActivityRepository()
+    mock.activities = [
+      activity(domainId: "d1", topicId: "t1", startedAt: date(2026, 1, 1, 10), endedAt: date(2026, 1, 1, 12))
+    ]
+    let vm = ReportViewModel(repository: mock)
+    vm.periodType = .day
+    vm.currentDate = date(2026, 1, 1)
+
+    await vm.loadIfNeeded()
+
+    let segments = vm.clockSegments(domains: Self.domains)
+    #expect(segments.map(\.duration) == [10 * 3600, 2 * 3600, 12 * 3600])
+    #expect(segments.reduce(0) { $0 + $1.duration } == 86400)
+  }
+
+  @Test
+  @MainActor
+  func clockSegments_clampsOverlappingActivityToStartAfterThePrevious() async {
+    let mock = MockActivityRepository()
+    mock.activities = [
+      activity(domainId: "d1", topicId: "t1", startedAt: date(2026, 1, 1, 10), endedAt: date(2026, 1, 1, 12)),
+      activity(domainId: "d2", topicId: "t2", startedAt: date(2026, 1, 1, 11), endedAt: date(2026, 1, 1, 13)),
+    ]
+    let vm = ReportViewModel(repository: mock)
+    vm.periodType = .day
+    vm.currentDate = date(2026, 1, 1)
+
+    await vm.loadIfNeeded()
+
+    let segments = vm.clockSegments(domains: Self.domains)
+    // gap(0-10), d1(10-12), d2 clamped to (12-13), gap(13-24)
+    #expect(segments.map(\.duration) == [10 * 3600, 2 * 3600, 1 * 3600, 11 * 3600])
+    #expect(segments.reduce(0) { $0 + $1.duration } == 86400)
   }
 
 }
