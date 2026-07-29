@@ -98,19 +98,21 @@ class ReportViewModel: ObservableObject {
   }
 
   var headerDateRangeText: String {
-    let f = DateFormatter()
     let interval = dateInterval
     let cal = calendar
     let lastDay = cal.date(byAdding: .day, value: -1, to: interval.end)!
 
     switch periodType {
     case .day:
+      let f = DateFormatter()
       f.dateFormat = "yyyy/MM/dd"
       return f.string(from: interval.start)
     case .week:
-      let weekNumber = cal.component(.weekOfYear, from: interval.start)
-      f.dateFormat = "yyyy/MM/dd"
-      return "第\(weekNumber)週 \(f.string(from: interval.start)) - \(f.string(from: lastDay))"
+      let startFormatter = DateFormatter()
+      startFormatter.dateFormat = "yyyy年M月d日"
+      let endFormatter = DateFormatter()
+      endFormatter.dateFormat = "M月d日"
+      return "\(startFormatter.string(from: interval.start))~\(endFormatter.string(from: lastDay))"
     case .sixMonths:
       let year = cal.component(.year, from: interval.start)
       let half = cal.component(.month, from: interval.start) <= 6 ? "前期" : "後期"
@@ -118,7 +120,7 @@ class ReportViewModel: ObservableObject {
     case .fiveYears:
       let startYear = cal.component(.year, from: interval.start)
       let endYear = cal.component(.year, from: lastDay)
-      return "直近5年 \(startYear) - \(endYear)"
+      return "\(startYear)年~\(endYear)年"
     }
   }
 
@@ -233,6 +235,14 @@ class ReportViewModel: ObservableObject {
     filteredActivities.reduce(0) {
       $0 + $1.endedAt.timeIntervalSince($1.startedAt)
     }
+  }
+
+  // Average per bucket (day for Week, month for 6M, year for 5Y). Day has no
+  // meaningful sub-bucket, so it's treated as a single bucket (average == total).
+  var headerAverageDuration: TimeInterval {
+    let count = periodType == .day ? 1 : buckets.count
+    guard count > 0 else { return 0 }
+    return headerTotalDuration / Double(count)
   }
 
   // MARK: - Timeline (Day)

@@ -47,41 +47,64 @@ struct ReportView: View {
   // MARK: - Date Range Header
 
   private var dateRangeHeader: some View {
-    VStack(spacing: 4) {
-      Text(viewModel.headerTotalDuration.reportText)
-        .font(.title)
-        .fontWeight(.bold)
-      Text(viewModel.headerDateRangeText)
-        .font(.caption)
-        .foregroundStyle(.secondary)
-    }
-    .frame(maxWidth: .infinity)
-    .padding(.vertical, 12)
-    .overlay(alignment: .trailing) {
+    HStack {
+      VStack(alignment: .leading) {
+        HStack {
+          VStack(alignment: .leading, spacing: 4) {
+            Text("合計時間")
+              .font(.caption2)
+              .foregroundStyle(.secondary)
+            styledDuration(viewModel.headerTotalDuration)
+          }
+          Divider()
+            .frame(height: 32)
+          VStack(alignment: .leading, spacing: 4) {
+            Text("平均時間")
+              .font(.caption2)
+              .foregroundStyle(.secondary)
+            styledDuration(viewModel.headerAverageDuration)
+          }
+        }
+        Text(viewModel.headerDateRangeText)
+          .font(.caption)
+          .foregroundStyle(.secondary)
+      }
+      Spacer()
       groupingUnitButton
-        .padding(.trailing)
     }
+    .padding(.horizontal)
+    .padding(.vertical, 12)
+  }
+
+  private func styledDuration(_ duration: TimeInterval) -> Text {
+    let totalMinutes = Int(duration) / 60
+    let hours = totalMinutes / 60
+    let minutes = totalMinutes % 60
+
+    func number(_ value: Int) -> Text {
+      Text("\(value)").font(.headline).fontWeight(.bold)
+    }
+    func unit(_ label: String) -> Text {
+      Text(label).font(.callout).foregroundStyle(.secondary)
+    }
+
+    if hours == 0 { return number(minutes) + unit("分") }
+    if minutes == 0 { return number(hours) + unit("時間") }
+    return number(hours) + unit("時間") + Text(" ") + number(minutes) + unit("分")
   }
 
   private var groupingUnitButton: some View {
     let isTopic = viewModel.groupingUnit == .topic
 
-    return VStack(spacing: 2) {
-      Text(viewModel.groupingUnit.rawValue)
-        .font(.caption2)
-        .foregroundStyle(.secondary)
-        .frame(width: 40, alignment: .center)
-
-      Button {
-        viewModel.groupingUnit = isTopic ? .domain : .topic
-      } label: {
-        Image(systemName: "list.bullet.indent")
-          .font(.system(size: 16, weight: .semibold))
-          .foregroundStyle(isTopic ? Color(.systemBackground) : .primary)
-          .frame(width: 32, height: 32)
-          .background(isTopic ? Color.primary : Color(.systemFill))
-          .clipShape(Circle())
-      }
+    return Button {
+      viewModel.groupingUnit = isTopic ? .domain : .topic
+    } label: {
+      Image(systemName: "list.bullet.indent")
+        .font(.system(size: 14, weight: .semibold))
+        .foregroundStyle(isTopic ? Color(.systemBackground) : .secondary)
+        .frame(width: 24, height: 24)
+        .background(isTopic ? Color.primary : Color(.systemFill))
+        .clipShape(Circle())
     }
   }
 

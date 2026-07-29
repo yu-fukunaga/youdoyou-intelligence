@@ -114,7 +114,7 @@ struct ReportViewModel_HeaderDateRangeTextTests {
       (
         periodType: .week,
         currentDate: date(2026, 1, 1),
-        expected: "第1週 2025/12/29 - 2026/01/04"
+        expected: "2025年12月29日~1月4日"
       ),
       (
         periodType: .sixMonths,
@@ -129,7 +129,7 @@ struct ReportViewModel_HeaderDateRangeTextTests {
       (
         periodType: .fiveYears,
         currentDate: date(2026, 1, 1),
-        expected: "直近5年 2022 - 2026"
+        expected: "2022年~2026年"
       ),
     ]
 
@@ -463,6 +463,42 @@ struct ReportViewModel_HeaderTotalDurationTests {
     await vm.loadIfNeeded()
 
     #expect(vm.headerTotalDuration == testCase.expected)
+  }
+
+}
+
+struct ReportViewModel_HeaderAverageDurationTests {
+
+  @Test
+  @MainActor
+  func headerAverageDuration_day_equalsTotal() async {
+    let mock = MockActivityRepository()
+    mock.activities = [
+      activity(domainId: "d1", topicId: "t1", startedAt: date(2026, 1, 1, 0), endedAt: date(2026, 1, 1, 3))
+    ]
+    let vm = ReportViewModel(repository: mock)
+    vm.periodType = .day
+    vm.currentDate = date(2026, 1, 1)
+
+    await vm.loadIfNeeded()
+
+    #expect(vm.headerAverageDuration == vm.headerTotalDuration)
+  }
+
+  @Test
+  @MainActor
+  func headerAverageDuration_week_dividesByBucketCount() async {
+    let mock = MockActivityRepository()
+    mock.activities = [
+      activity(domainId: "d1", topicId: "t1", startedAt: date(2026, 1, 1, 0), endedAt: date(2026, 1, 1, 14))
+    ]
+    let vm = ReportViewModel(repository: mock)
+    vm.periodType = .week
+    vm.currentDate = date(2026, 1, 1)
+
+    await vm.loadIfNeeded()
+
+    #expect(vm.headerAverageDuration == 2 * 3600)  // 14h / 7 buckets
   }
 
 }
