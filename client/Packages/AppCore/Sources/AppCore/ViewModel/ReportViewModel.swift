@@ -6,8 +6,8 @@ import SwiftUI
 enum PeriodType: String, CaseIterable {
   case day = "Day"
   case week = "Week"
-  case quarter = "Quarter"
-  case year = "Year"
+  case sixMonths = "6M"
+  case fiveYears = "5Y"
 }
 
 struct BarChartSegment: Identifiable {
@@ -74,13 +74,18 @@ class ReportViewModel: ObservableObject {
       return DateInterval(start: start, duration: 86400)
     case .week:
       return cal.dateInterval(of: .weekOfYear, for: currentDate)!
-    case .quarter:
-      let weekEnd = cal.dateInterval(of: .weekOfYear, for: currentDate)!.end
-      let weekStart = cal.dateInterval(of: .weekOfYear, for: currentDate)!.start
-      let start = cal.date(byAdding: .weekOfYear, value: -11, to: weekStart)!
-      return DateInterval(start: start, end: weekEnd)
-    case .year:
-      return cal.dateInterval(of: .year, for: currentDate)!
+    case .sixMonths:
+      let year = cal.component(.year, from: currentDate)
+      let month = cal.component(.month, from: currentDate)
+      let startMonth = month <= 6 ? 1 : 7
+      let start = cal.date(from: DateComponents(year: year, month: startMonth, day: 1))!
+      let end = cal.date(byAdding: .month, value: 6, to: start)!
+      return DateInterval(start: start, end: end)
+    case .fiveYears:
+      let year = cal.component(.year, from: currentDate)
+      let start = cal.date(from: DateComponents(year: year - 4, month: 1, day: 1))!
+      let end = cal.date(from: DateComponents(year: year + 1, month: 1, day: 1))!
+      return DateInterval(start: start, end: end)
     }
   }
 
@@ -94,16 +99,22 @@ class ReportViewModel: ObservableObject {
     case .day:
       f.dateFormat = "yyyy/MM/dd"
       return f.string(from: interval.start)
-    case .week, .quarter:
+    case .week:
+      let weekNumber = cal.component(.weekOfYear, from: interval.start)
       f.dateFormat = "yyyy/MM/dd"
-      return "\(f.string(from: interval.start)) - \(f.string(from: lastDay))"
-    case .year:
-      f.dateFormat = "yyyy年"
-      return f.string(from: interval.start)
+      return "第\(weekNumber)週 \(f.string(from: interval.start)) - \(f.string(from: lastDay))"
+    case .sixMonths:
+      let year = cal.component(.year, from: interval.start)
+      let half = cal.component(.month, from: interval.start) <= 6 ? "前期" : "後期"
+      return "\(year)年\(half)"
+    case .fiveYears:
+      let startYear = cal.component(.year, from: interval.start)
+      let endYear = cal.component(.year, from: lastDay)
+      return "直近5年 \(startYear) - \(endYear)"
     }
   }
 
-  // MARK: - Buckets (Week / Quarter / Year only)
+  // MARK: - Buckets (Week / 6M / 5Y only)
 
   var buckets: [DateInterval] {
     let cal = calendar
@@ -115,8 +126,8 @@ class ReportViewModel: ObservableObject {
       switch periodType {
       case .day: return .hour  // unused
       case .week: return .day
-      case .quarter: return .weekOfYear
-      case .year: return .month
+      case .sixMonths: return .month
+      case .fiveYears: return .year
       }
     }()
 
@@ -135,12 +146,10 @@ class ReportViewModel: ObservableObject {
       return ""
     case .week:
       return cal.shortWeekdaySymbols[cal.component(.weekday, from: bucket.start) - 1]
-    case .quarter:
-      let f = DateFormatter()
-      f.dateFormat = "M/d"
-      return f.string(from: bucket.start)
-    case .year:
+    case .sixMonths:
       return "\(cal.component(.month, from: bucket.start))月"
+    case .fiveYears:
+      return "\(cal.component(.year, from: bucket.start))年"
     }
   }
 
@@ -187,12 +196,12 @@ class ReportViewModel: ObservableObject {
     case .week:
       component = .weekOfYear
       value = offset
-    case .quarter:
-      component = .weekOfYear
-      value = 12 * offset
-    case .year:
+    case .sixMonths:
+      component = .month
+      value = 6 * offset
+    case .fiveYears:
       component = .year
-      value = offset
+      value = 5 * offset
     }
 
     currentDate = cal.date(byAdding: component, value: value, to: currentDate)!

@@ -57,18 +57,26 @@ struct ReportViewModel_DateIntervalTests {
         )
       ),
       (
-        periodType: .quarter,
-        currentDate: date(2026, 1, 1),
-        expected: DateInterval(
-          start: date(2025, 10, 13),  // 12週前の月曜
-          end: date(2026, 1, 5)  // 今週の翌月曜
-        )
-      ),
-      (
-        periodType: .year,
+        periodType: .sixMonths,
         currentDate: date(2026, 1, 1),
         expected: DateInterval(
           start: date(2026, 1, 1),
+          end: date(2026, 7, 1)
+        )
+      ),
+      (
+        periodType: .sixMonths,
+        currentDate: date(2026, 8, 15),
+        expected: DateInterval(
+          start: date(2026, 7, 1),
+          end: date(2027, 1, 1)
+        )
+      ),
+      (
+        periodType: .fiveYears,
+        currentDate: date(2026, 1, 1),
+        expected: DateInterval(
+          start: date(2022, 1, 1),
           end: date(2027, 1, 1)
         )
       ),
@@ -106,17 +114,22 @@ struct ReportViewModel_HeaderDateRangeTextTests {
       (
         periodType: .week,
         currentDate: date(2026, 1, 1),
-        expected: "2025/12/29 - 2026/01/04"
+        expected: "第1週 2025/12/29 - 2026/01/04"
       ),
       (
-        periodType: .quarter,
+        periodType: .sixMonths,
         currentDate: date(2026, 1, 1),
-        expected: "2025/10/13 - 2026/01/04",
+        expected: "2026年前期",
       ),
       (
-        periodType: .year,
+        periodType: .sixMonths,
+        currentDate: date(2026, 8, 15),
+        expected: "2026年後期",
+      ),
+      (
+        periodType: .fiveYears,
         currentDate: date(2026, 1, 1),
-        expected: "2026年"
+        expected: "直近5年 2022 - 2026"
       ),
     ]
 
@@ -188,25 +201,7 @@ struct ReportViewModel_BucketsTests {
         ]
       ),
       (
-        periodType: .quarter,
-        currentDate: date(2026, 1, 1),
-        expected: [
-          DateInterval(start: date(2025, 10, 13), end: date(2025, 10, 20)),
-          DateInterval(start: date(2025, 10, 20), end: date(2025, 10, 27)),
-          DateInterval(start: date(2025, 10, 27), end: date(2025, 11, 3)),
-          DateInterval(start: date(2025, 11, 3), end: date(2025, 11, 10)),
-          DateInterval(start: date(2025, 11, 10), end: date(2025, 11, 17)),
-          DateInterval(start: date(2025, 11, 17), end: date(2025, 11, 24)),
-          DateInterval(start: date(2025, 11, 24), end: date(2025, 12, 1)),
-          DateInterval(start: date(2025, 12, 1), end: date(2025, 12, 8)),
-          DateInterval(start: date(2025, 12, 8), end: date(2025, 12, 15)),
-          DateInterval(start: date(2025, 12, 15), end: date(2025, 12, 22)),
-          DateInterval(start: date(2025, 12, 22), end: date(2025, 12, 29)),
-          DateInterval(start: date(2025, 12, 29), end: date(2026, 1, 5)),
-        ]
-      ),
-      (
-        periodType: .year,
+        periodType: .sixMonths,
         currentDate: date(2026, 1, 1),
         expected: [
           DateInterval(start: date(2026, 1, 1), end: date(2026, 2, 1)),
@@ -215,12 +210,17 @@ struct ReportViewModel_BucketsTests {
           DateInterval(start: date(2026, 4, 1), end: date(2026, 5, 1)),
           DateInterval(start: date(2026, 5, 1), end: date(2026, 6, 1)),
           DateInterval(start: date(2026, 6, 1), end: date(2026, 7, 1)),
-          DateInterval(start: date(2026, 7, 1), end: date(2026, 8, 1)),
-          DateInterval(start: date(2026, 8, 1), end: date(2026, 9, 1)),
-          DateInterval(start: date(2026, 9, 1), end: date(2026, 10, 1)),
-          DateInterval(start: date(2026, 10, 1), end: date(2026, 11, 1)),
-          DateInterval(start: date(2026, 11, 1), end: date(2026, 12, 1)),
-          DateInterval(start: date(2026, 12, 1), end: date(2027, 1, 1)),
+        ]
+      ),
+      (
+        periodType: .fiveYears,
+        currentDate: date(2026, 1, 1),
+        expected: [
+          DateInterval(start: date(2022, 1, 1), end: date(2023, 1, 1)),
+          DateInterval(start: date(2023, 1, 1), end: date(2024, 1, 1)),
+          DateInterval(start: date(2024, 1, 1), end: date(2025, 1, 1)),
+          DateInterval(start: date(2025, 1, 1), end: date(2026, 1, 1)),
+          DateInterval(start: date(2026, 1, 1), end: date(2027, 1, 1)),
         ]
       ),
     ]
@@ -260,14 +260,14 @@ struct ReportViewModel_BucketLabelTests {
         expected: "Thu"
       ),
       (
-        periodType: .quarter,
-        bucketStart: date(2026, 1, 1),
-        expected: "1/1"
-      ),
-      (
-        periodType: .year,
+        periodType: .sixMonths,
         bucketStart: date(2026, 1, 1),
         expected: "1月"
+      ),
+      (
+        periodType: .fiveYears,
+        bucketStart: date(2026, 1, 1),
+        expected: "2026年"
       ),
     ]
 
@@ -337,10 +337,10 @@ struct ReportViewModel_MovePeriodTests {
       (periodType: .day, offset: -1, expected: date(2025, 12, 31)),
       (periodType: .week, offset: 1, expected: date(2026, 1, 8)),
       (periodType: .week, offset: -1, expected: date(2025, 12, 25)),
-      (periodType: .quarter, offset: 1, expected: date(2026, 3, 26)),  // +12 weeks
-      (periodType: .quarter, offset: -1, expected: date(2025, 10, 9)),  // -12 weeks
-      (periodType: .year, offset: 1, expected: date(2027, 1, 1)),
-      (periodType: .year, offset: -1, expected: date(2025, 1, 1)),
+      (periodType: .sixMonths, offset: 1, expected: date(2026, 7, 1)),  // +6 months
+      (periodType: .sixMonths, offset: -1, expected: date(2025, 7, 1)),  // -6 months
+      (periodType: .fiveYears, offset: 1, expected: date(2031, 1, 1)),
+      (periodType: .fiveYears, offset: -1, expected: date(2021, 1, 1)),
     ]
 
   @Test(arguments: cases)
