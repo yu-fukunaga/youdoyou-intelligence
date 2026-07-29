@@ -49,10 +49,10 @@ struct ReportView: View {
 
   private var dateRangeHeader: some View {
     VStack(spacing: 4) {
-      Text(viewModel.totalDuration.reportText)
+      Text(viewModel.headerTotalDuration.reportText)
         .font(.title)
         .fontWeight(.bold)
-      Text(viewModel.dateRangeText)
+      Text(viewModel.headerDateRangeText)
         .font(.caption)
         .foregroundStyle(.secondary)
     }
@@ -116,7 +116,7 @@ struct ReportView: View {
   // MARK: - Day Timeline
 
   private var dayTimeline: some View {
-    let activities = viewModel.dayActivities
+    let activities = viewModel.timelineActivities
     let cal = Calendar.current
     let dayStart = cal.startOfDay(for: viewModel.currentDate)
     let dayEnd = cal.date(byAdding: .day, value: 1, to: dayStart)!
@@ -127,13 +127,13 @@ struct ReportView: View {
         yStart: .value("Start", activity.startedAt),
         yEnd: .value("End", activity.endedAt)
       )
-      .foregroundStyle(viewModel.colorForActivity(activity, domains: appState.domains))
+      .foregroundStyle(viewModel.timelineColor(for: activity, domains: appState.domains))
       .cornerRadius(4)
       .annotation(position: .overlay, alignment: .topLeading) {
         VStack(alignment: .leading, spacing: 1) {
           Text(
-            viewModel.resolveTitle(
-              id: activity[keyPath: viewModel.selectedDomainId != nil ? \Activity.topicId : \Activity.domainId],
+            viewModel.timelineTitle(
+              for: activity[keyPath: viewModel.selectedDomainId != nil ? \Activity.topicId : \Activity.domainId],
               domains: appState.domains
             )
           )
@@ -149,7 +149,7 @@ struct ReportView: View {
     .chartYScale(domain: dayStart...dayEnd)
     .chartScrollableAxes(.vertical)
     .chartYVisibleDomain(length: 12 * 3600)
-    .chartScrollPosition(initialY: viewModel.dayScrollStart)
+    .chartScrollPosition(initialY: viewModel.timelineScrollStart)
     .chartXAxis(.hidden)
     .chartYAxis {
       AxisMarks(values: .stride(by: .hour, count: 1)) { value in
@@ -183,7 +183,7 @@ struct ReportView: View {
   // MARK: - Bar Chart
 
   private var barChart: some View {
-    let bars = viewModel.chartBars(domains: appState.domains)
+    let bars = viewModel.barChartColumns(domains: appState.domains)
 
     return Chart {
       ForEach(bars) { bar in
@@ -233,7 +233,7 @@ struct ReportView: View {
   // MARK: - Summary List
 
   private var summaryList: some View {
-    let rows = viewModel.summaryRows(domains: appState.domains)
+    let rows = viewModel.listRows(domains: appState.domains)
 
     return VStack(spacing: 0) {
       ForEach(rows) { row in
@@ -243,7 +243,7 @@ struct ReportView: View {
     .padding(.top, 16)
   }
 
-  private func summaryRowView(_ row: SummaryRow) -> some View {
+  private func summaryRowView(_ row: ListRow) -> some View {
     let isSelected = viewModel.selectedTopicId == row.id
     let isTopic = viewModel.selectedDomainId != nil
 
