@@ -198,7 +198,7 @@ struct ReportView: View {
         AxisGridLine()
       }
     }
-    .frame(height: 240)
+    .frame(height: 120)
     .padding(.horizontal)
     .contentShape(Rectangle())
     .gesture(
