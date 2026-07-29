@@ -10,22 +10,22 @@ enum PeriodType: String, CaseIterable {
   case year = "Year"
 }
 
-struct ChartSegment: Identifiable {
+struct BarChartSegment: Identifiable {
   let id: String
   let title: String
   let color: Color
   let duration: TimeInterval
 }
 
-struct ChartBar: Identifiable {
+struct BarChartColumn: Identifiable {
   var id: Date { date }
   let date: Date
   let label: String
-  let segments: [ChartSegment]
+  let segments: [BarChartSegment]
   var total: TimeInterval { segments.reduce(0) { $0 + $1.duration } }
 }
 
-struct SummaryRow: Identifiable {
+struct ListRow: Identifiable {
   let id: String
   let title: String
   let color: Color
@@ -84,7 +84,7 @@ class ReportViewModel: ObservableObject {
     }
   }
 
-  var dateRangeText: String {
+  var headerDateRangeText: String {
     let f = DateFormatter()
     let interval = dateInterval
     let cal = calendar
@@ -159,7 +159,7 @@ class ReportViewModel: ObservableObject {
     await reload()
   }
 
-  func reload() async {
+  private func reload() async {
     let interval = dateInterval
     isLoading = true
     defer { isLoading = false }
@@ -226,65 +226,85 @@ class ReportViewModel: ObservableObject {
     return result
   }
 
-  // MARK: - Aggregation
+  // MARK: - Overall
 
-  var totalDuration: TimeInterval {
+  var headerTotalDuration: TimeInterval {
     filteredActivities.reduce(0) {
       $0 + $1.endedAt.timeIntervalSince($1.startedAt)
     }
   }
 
-  // Day timeline
-  var dayActivities: [Activity] {
+  // MARK: - Timeline (Day)
+
+  var timelineActivities: [Activity] {
     filteredActivities.sorted { $0.startedAt < $1.startedAt }
   }
 
-  var dayScrollStart: Date {
+  var timelineScrollStart: Date {
     let cal = calendar
     let dayStart = cal.startOfDay(for: currentDate)
-    guard let first = dayActivities.first else { return dayStart }
+    guard let first = timelineActivities.first else { return dayStart }
     return cal.date(byAdding: .hour, value: -3, to: first.startedAt) ?? dayStart
   }
 
-  // Bar charts
-  func chartBars(domains: [Domain]) -> [ChartBar] {
+  func timelineTitle(for id: String, domains: [Domain]) -> String {
+    if selectedDomainId != nil {
+      let domain = domains.first { $0.id == selectedDomainId }
+      return domain?.topics.first { $0.id == id }?.title ?? id
+    }
+    else {
+      return domains.first { $0.id == id }?.title ?? id
+    }
+  }
+
+  func timelineColor(for activity: Activity, domains: [Domain]) -> Color {
+    let colorMap = colorMap(domains: domains)
+    let id = activity[keyPath: groupingKey]
+    return colorMap[id] ?? .gray
+  }
+
+  // MARK: - Bar Chart (Week / Quarter / Year)
+
+  func barChartColumns(domains: [Domain]) -> [BarChartColumn] {
     let activities = filteredActivities
-    let colorMap = buildColorMap(domains: domains)
+    let colorMap = colorMap(domains: domains)
 
     return buckets.map { bucket in
       let inBucket = activities.filter {
         $0.startedAt < bucket.end && bucket.start < $0.endedAt
       }
 
-      let grouped = groupByCurrentLevel(inBucket, in: bucket, domains: domains)
+      let grouped = barChartSegments(inBucket, in: bucket, domains: domains)
       var segments = grouped.map {
-        ChartSegment(
+        BarChartSegment(
           id: $0.id, title: $0.title,
           color: colorMap[$0.id] ?? .gray, duration: $0.duration
         )
       }
 
       if segments.isEmpty {
-        segments.append(ChartSegment(id: "empty", title: "", color: .clear, duration: 0))
+        segments.append(BarChartSegment(id: "empty", title: "", color: .clear, duration: 0))
       }
 
-      return ChartBar(
+      return BarChartColumn(
         date: bucket.start, label: bucketLabel(for: bucket), segments: segments
       )
     }
   }
 
-  func summaryRows(domains: [Domain]) -> [SummaryRow] {
+  // MARK: - List
+
+  func listRows(domains: [Domain]) -> [ListRow] {
     let activities = filteredActivities
-    let colorMap = buildColorMap(domains: domains)
+    let colorMap = colorMap(domains: domains)
     let allBuckets = buckets
-    let groups = uniqueGroups(in: activities, domains: domains)
+    let groups = listGroups(in: activities, domains: domains)
 
     return groups.map { group in
       let durations = allBuckets.map { bucket in
-        durationFor(groupId: group.id, activities: activities, in: bucket)
+        listBucketDuration(groupId: group.id, activities: activities, in: bucket)
       }
-      return SummaryRow(
+      return ListRow(
         id: group.id, title: group.title,
         color: colorMap[group.id] ?? .gray, bucketDurations: durations
       )
@@ -294,11 +314,14 @@ class ReportViewModel: ObservableObject {
 
   // MARK: - Helpers
 
+  // Groups by topic when a domain is selected, otherwise by domain.
   private var groupingKey: KeyPath<Activity, String> {
     selectedDomainId != nil ? \.topicId : \.domainId
   }
 
-  private func groupByCurrentLevel(
+  // One BarChartColumn's segments: groups only include activity within this bucket,
+  // and groups with zero duration in this bucket are omitted.
+  private func barChartSegments(
     _ activities: [Activity],
     in bucket: DateInterval,
     domains: [Domain]
@@ -311,7 +334,7 @@ class ReportViewModel: ObservableObject {
       guard clamped > 0 else { continue }
 
       if groups[id] == nil {
-        groups[id] = (title: resolveTitle(id: id, domains: domains), duration: 0)
+        groups[id] = (title: timelineTitle(for: id, domains: domains), duration: 0)
       }
       groups[id]!.duration += clamped
     }
@@ -321,7 +344,9 @@ class ReportViewModel: ObservableObject {
     }
   }
 
-  private func durationFor(
+  // One ListRow.bucketDurations entry: unlike barChartSegments, always returns
+  // a value (0 if the group had no activity in this bucket).
+  private func listBucketDuration(
     groupId: String,
     activities: [Activity],
     in bucket: DateInterval
@@ -331,6 +356,7 @@ class ReportViewModel: ObservableObject {
       .reduce(0) { $0 + clampedDuration(activity: $1, in: bucket) }
   }
 
+  // Clips the activity's duration to the bucket's boundaries; 0 if there's no overlap.
   private func clampedDuration(
     activity: Activity,
     in bucket: DateInterval
@@ -340,33 +366,17 @@ class ReportViewModel: ObservableObject {
     return max(0, end.timeIntervalSince(start))
   }
 
-  private func uniqueGroups(
+  private func listGroups(
     in activities: [Activity],
     domains: [Domain]
   ) -> [(id: String, title: String)] {
     let ids = Set(activities.map { $0[keyPath: groupingKey] })
     return ids.map { id in
-      (id: id, title: resolveTitle(id: id, domains: domains))
+      (id: id, title: timelineTitle(for: id, domains: domains))
     }
   }
 
-  func resolveTitle(id: String, domains: [Domain]) -> String {
-    if selectedDomainId != nil {
-      let domain = domains.first { $0.id == selectedDomainId }
-      return domain?.topics.first { $0.id == id }?.title ?? id
-    }
-    else {
-      return domains.first { $0.id == id }?.title ?? id
-    }
-  }
-
-  func colorForActivity(_ activity: Activity, domains: [Domain]) -> Color {
-    let colorMap = buildColorMap(domains: domains)
-    let id = activity[keyPath: groupingKey]
-    return colorMap[id] ?? .gray
-  }
-
-  private func buildColorMap(domains: [Domain]) -> [String: Color] {
+  private func colorMap(domains: [Domain]) -> [String: Color] {
     var map: [String: Color] = [:]
     for (i, domain) in domains.enumerated() {
       let color = Self.palette[i % Self.palette.count]

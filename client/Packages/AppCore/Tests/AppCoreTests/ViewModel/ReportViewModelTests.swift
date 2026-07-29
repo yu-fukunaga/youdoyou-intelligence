@@ -90,7 +90,7 @@ struct ReportViewModel_DateIntervalTests {
 
 }
 
-struct ReportViewModel_DateRangeTextTests {
+struct ReportViewModel_HeaderDateRangeTextTests {
 
   static let cases:
     [(
@@ -122,7 +122,7 @@ struct ReportViewModel_DateRangeTextTests {
 
   @Test(arguments: cases)
   @MainActor
-  func dateRangeText_test(
+  func headerDateRangeText_test(
     periodType: PeriodType,
     currentDate: Date,
     expected: String
@@ -131,7 +131,7 @@ struct ReportViewModel_DateRangeTextTests {
     vm.periodType = periodType
     vm.currentDate = currentDate
 
-    #expect(vm.dateRangeText == expected)
+    #expect(vm.headerDateRangeText == expected)
   }
 
 }
@@ -227,7 +227,7 @@ struct ReportViewModel_BucketsTests {
 
   @Test(arguments: cases)
   @MainActor
-  func dateRangeText_test(
+  func buckets_test(
     periodType: PeriodType,
     currentDate: Date,
     expected: [DateInterval]
@@ -294,6 +294,8 @@ struct ReportViewModel_BucketLabelTests {
 
 struct ReportViewModel_LoadIfNeededTests {
 
+  private struct DummyError: Error {}
+
   @Test
   @MainActor
   func loadIfNeeded_test() async {
@@ -304,23 +306,17 @@ struct ReportViewModel_LoadIfNeededTests {
     #expect(mock.queryCallCount == 1)
   }
 
-}
-
-struct ReportViewModel_ReloadTests {
-
-  private struct DummyError: Error {}
-
   @Test
   @MainActor
-  func reload_whenQueryThrows_doesNotCacheAndRetriesNextTime() async {
+  func loadIfNeeded_whenQueryThrows_doesNotCacheAndRetriesNextTime() async {
     let mock = MockActivityRepository()
     mock.stubbedError = DummyError()
     let vm = ReportViewModel(repository: mock)
 
-    await vm.reload()
+    await vm.loadIfNeeded()
 
     #expect(mock.queryCallCount == 1)
-    #expect(vm.totalDuration == 0)
+    #expect(vm.headerTotalDuration == 0)
 
     // Not cached, so calling again triggers another query
     await vm.loadIfNeeded()
@@ -430,7 +426,7 @@ struct ReportViewModel_ToggleTopicTests {
 
 }
 
-struct ReportViewModel_TotalDurationTests {
+struct ReportViewModel_HeaderTotalDurationTests {
 
   struct TestCase: CustomTestStringConvertible {
     let name: String
@@ -477,25 +473,25 @@ struct ReportViewModel_TotalDurationTests {
 
   @Test(arguments: cases)
   @MainActor
-  func totalDuration_test(testCase: TestCase) async {
+  func headerTotalDuration_test(testCase: TestCase) async {
     let mock = MockActivityRepository()
     mock.activities = testCase.activities
     let vm = ReportViewModel(repository: mock)
     vm.selectedDomainId = testCase.selectedDomainId
     vm.selectedTopicId = testCase.selectedTopicId
 
-    await vm.reload()
+    await vm.loadIfNeeded()
 
-    #expect(vm.totalDuration == testCase.expected)
+    #expect(vm.headerTotalDuration == testCase.expected)
   }
 
 }
 
-struct ReportViewModel_DayActivitiesTests {
+struct ReportViewModel_TimelineActivitiesTests {
 
   @Test
   @MainActor
-  func dayActivities_test() async {
+  func timelineActivities_test() async {
     let mock = MockActivityRepository()
     mock.activities = [
       activity(domainId: "d1", topicId: "t3", startedAt: date(2026, 1, 1, 2), endedAt: date(2026, 1, 1, 3)),
@@ -504,14 +500,14 @@ struct ReportViewModel_DayActivitiesTests {
     ]
     let vm = ReportViewModel(repository: mock)
 
-    await vm.reload()
+    await vm.loadIfNeeded()
 
-    #expect(vm.dayActivities.map { $0.topicId } == ["t1", "t2", "t3"])
+    #expect(vm.timelineActivities.map { $0.topicId } == ["t1", "t2", "t3"])
   }
 
 }
 
-struct ReportViewModel_DayScrollStartTests {
+struct ReportViewModel_TimelineScrollStartTests {
 
   struct TestCase: CustomTestStringConvertible {
     let name: String
@@ -539,20 +535,20 @@ struct ReportViewModel_DayScrollStartTests {
 
   @Test(arguments: cases)
   @MainActor
-  func dayScrollStart_test(testCase: TestCase) async {
+  func timelineScrollStart_test(testCase: TestCase) async {
     let mock = MockActivityRepository()
     mock.activities = testCase.activities
     let vm = ReportViewModel(repository: mock)
     vm.currentDate = date(2026, 1, 1, 5)
 
-    await vm.reload()
+    await vm.loadIfNeeded()
 
-    #expect(vm.dayScrollStart == testCase.expected)
+    #expect(vm.timelineScrollStart == testCase.expected)
   }
 
 }
 
-struct ReportViewModel_ChartBarsTests {
+struct ReportViewModel_BarChartColumnsTests {
 
   struct ExpectedSegment: Equatable {
     let id: String
@@ -638,9 +634,9 @@ struct ReportViewModel_ChartBarsTests {
     vm.currentDate = date(2026, 1, 1)
     vm.selectedDomainId = testCase.selectedDomainId
 
-    await vm.reload()
+    await vm.loadIfNeeded()
 
-    let bars = vm.chartBars(domains: testCase.domains)
+    let bars = vm.barChartColumns(domains: testCase.domains)
     let segments =
       bars[testCase.targetBucketIndex].segments
       .map { ExpectedSegment(id: $0.id, title: $0.title, duration: $0.duration) }
@@ -651,7 +647,7 @@ struct ReportViewModel_ChartBarsTests {
 
 }
 
-struct ReportViewModel_SummaryRowsTests {
+struct ReportViewModel_ListRowsTests {
 
   struct ExpectedRow: Equatable {
     let id: String
@@ -727,10 +723,10 @@ struct ReportViewModel_SummaryRowsTests {
     vm.currentDate = date(2026, 1, 1)
     vm.selectedDomainId = testCase.selectedDomainId
 
-    await vm.reload()
+    await vm.loadIfNeeded()
 
     let rows =
-      vm.summaryRows(domains: testCase.domains)
+      vm.listRows(domains: testCase.domains)
       .map { ExpectedRow(id: $0.id, title: $0.title, bucketDurations: $0.bucketDurations) }
 
     #expect(rows == testCase.expectedRows)
@@ -738,7 +734,7 @@ struct ReportViewModel_SummaryRowsTests {
 
 }
 
-struct ReportViewModel_ResolveTitleTests {
+struct ReportViewModel_TimelineTitleTests {
 
   struct TestCase: CustomTestStringConvertible {
     let name: String
@@ -783,16 +779,16 @@ struct ReportViewModel_ResolveTitleTests {
 
   @Test(arguments: cases)
   @MainActor
-  func resolveTitle_test(testCase: TestCase) {
+  func timelineTitle_test(testCase: TestCase) {
     let vm = ReportViewModel(repository: MockActivityRepository())
     vm.selectedDomainId = testCase.selectedDomainId
 
-    #expect(vm.resolveTitle(id: testCase.id, domains: Self.domains) == testCase.expected)
+    #expect(vm.timelineTitle(for: testCase.id, domains: Self.domains) == testCase.expected)
   }
 
 }
 
-struct ReportViewModel_ColorForActivityTests {
+struct ReportViewModel_TimelineColorTests {
 
   struct TestCase: CustomTestStringConvertible {
     let name: String
@@ -831,11 +827,11 @@ struct ReportViewModel_ColorForActivityTests {
 
   @Test(arguments: cases)
   @MainActor
-  func colorForActivity_test(testCase: TestCase) {
+  func timelineColor_test(testCase: TestCase) {
     let vm = ReportViewModel(repository: MockActivityRepository())
     vm.selectedDomainId = testCase.selectedDomainId
 
-    #expect(vm.colorForActivity(testCase.activity, domains: Self.domains) == testCase.expected)
+    #expect(vm.timelineColor(for: testCase.activity, domains: Self.domains) == testCase.expected)
   }
 
 }
