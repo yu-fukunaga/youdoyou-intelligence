@@ -16,6 +16,7 @@ import (
 )
 
 var dataDir string
+var offsetDays int
 
 type SubcollectionConfig struct {
 	Key            string
@@ -52,8 +53,12 @@ var collectionsMap = map[string]CollectionConfig{
 
 func main() {
 	flag.StringVar(&dataDir, "dir", "./cmd/seed/collection_data", "Directory containing seed files")
+	flag.IntVar(&offsetDays, "offset-days", 0, "Shift the seed base date (today) by N days; can be negative")
 	flag.Parse()
 	ctx := context.Background()
+
+	setBaseDate(offsetDays)
+	log.Printf("Seed base date: %s (offset %+dd from today)", baseDate.Format("2006-01-02"), offsetDays)
 
 	cfg := config.LoadConfig()
 

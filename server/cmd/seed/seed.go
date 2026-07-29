@@ -6,6 +6,8 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"regexp"
+	"strconv"
 	"time"
 
 	"net/http"
@@ -13,6 +15,42 @@ import (
 	"cloud.google.com/go/firestore"
 	"gopkg.in/yaml.v3"
 )
+
+// baseDate is the seed base date ("today" by default, shiftable via -offset-days).
+// Seed YAML timestamps written as "{{base}}"/"{{base-Nd}}"/"{{base+Nd}}" templates
+// are resolved relative to it, so seeded data stays fresh regardless of when seed
+// is run. Set once via setBaseDate before seeding starts.
+var baseDate time.Time
+
+// setBaseDate computes the seed base date: today, shifted by offsetDays.
+func setBaseDate(offsetDays int) {
+	now := time.Now()
+	baseDate = time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, time.UTC).AddDate(0, 0, offsetDays)
+}
+
+var baseDateTemplateRe = regexp.MustCompile(`^\{\{base((?:[+-]\d+)d)?\}\}(.*)$`)
+
+// resolveBaseDateTemplate resolves a seed YAML date template such as
+// "{{base}}T09:00:00+09:00" or "{{base-3d}}T00:00:00Z" into a concrete time.Time,
+// with the date portion computed relative to baseDate and the time-of-day/zone
+// suffix kept as written.
+func resolveBaseDateTemplate(val string) (time.Time, bool) {
+	m := baseDateTemplateRe.FindStringSubmatch(val)
+	if m == nil {
+		return time.Time{}, false
+	}
+	offsetDays := 0
+	if m[1] != "" {
+		offsetDays, _ = strconv.Atoi(m[1][:len(m[1])-1]) // strip trailing "d"; regex guarantees a valid signed integer
+	}
+	resolved := baseDate.AddDate(0, 0, offsetDays).Format("2006-01-02") + m[2]
+	t, err := time.Parse(time.RFC3339, resolved)
+	if err != nil {
+		log.Printf("Warning: invalid base date template %q: %v", val, err)
+		return time.Time{}, false
+	}
+	return t, true
+}
 
 func seedCollectionGeneric[T any](ctx context.Context, client *firestore.Client, name string, config CollectionConfig) error {
 	// Load as map[string]any to ensure we don't lose keys (like subcollections) not defined in the struct T.
@@ -137,7 +175,9 @@ func convertTimestamps(data map[string]any) {
 	for k, v := range data {
 		switch val := v.(type) {
 		case string:
-			if t, err := time.Parse(time.RFC3339, val); err == nil {
+			if t, ok := resolveBaseDateTemplate(val); ok {
+				data[k] = t
+			} else if t, err := time.Parse(time.RFC3339, val); err == nil {
 				data[k] = t
 			}
 		case map[string]any:
