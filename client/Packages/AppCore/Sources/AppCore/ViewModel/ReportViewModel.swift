@@ -23,10 +23,18 @@ struct BarChartSegment: Identifiable {
 }
 
 struct BarChartColumn: Identifiable {
-  var id: Date { date }
+  // Positional (bucket index), not date-based: keeps the same identity across period
+  // navigation so SwiftUI's ForEach recognizes "same column, new value" and animates
+  // the bar's height in place instead of treating it as a brand new view.
+  let id: Int
   let date: Date
+  // Empty for padding columns beyond the current PeriodType's real bucket count (see
+  // ReportViewModel.maxBarSlots) - real bucket labels are never empty. Keeps the column
+  // count constant across PeriodType switches so bars animate in place instead of being
+  // inserted/removed.
   let label: String
   let segments: [BarChartSegment]
+  var isPlaceholder: Bool { label.isEmpty }
   var total: TimeInterval { segments.reduce(0) { $0 + $1.duration } }
 }
 
@@ -154,6 +162,12 @@ class ReportViewModel: ObservableObject {
     }
     return result
   }
+
+  // The largest bucket count across all non-Day PeriodTypes (Week's 7). Used to pad the
+  // bar chart's column array to a constant length so PeriodType switches never insert or
+  // remove columns (which would break their per-bar animation) - not used for `buckets`
+  // itself, which must stay the real, PeriodType-dependent count (e.g. for averaging).
+  static let maxBarSlots = 7
 
   func bucketLabel(for bucket: DateInterval) -> String {
     let cal = calendar
@@ -324,30 +338,55 @@ class ReportViewModel: ObservableObject {
 
   // MARK: - Bar Chart (Week / 6M / 5Y)
 
+  // Always includes every known group (domain or topic) per bucket, with 0 duration when
+  // absent, so a segment's identity is stable across period navigation (a group that had
+  // no activity before still "exists" at height 0, letting it grow from the bottom
+  // instead of being freshly inserted and fading in).
   func barChartColumns(domains: [Domain]) -> [BarChartColumn] {
     let activities = filteredActivities
     let colorMap = colorMap(domains: domains)
+    let allGroups = allGroupIds(domains: domains)
+    let realBuckets = buckets
 
-    return buckets.map { bucket in
+    return (0..<Self.maxBarSlots).map { index in
+      guard index < realBuckets.count else {
+        let placeholderSegments = allGroups.map { group in
+          BarChartSegment(id: group.id, title: group.title, color: colorMap[group.id] ?? .gray, duration: 0)
+        }
+        return BarChartColumn(
+          id: index, date: .distantPast, label: "", segments: placeholderSegments
+        )
+      }
+
+      let bucket = realBuckets[index]
       let inBucket = activities.filter {
         $0.startedAt < bucket.end && bucket.start < $0.endedAt
       }
 
       let grouped = barChartSegments(inBucket, in: bucket, domains: domains)
-      var segments = grouped.map {
+      let durationById = Dictionary(uniqueKeysWithValues: grouped.map { ($0.id, $0.duration) })
+
+      let segments = allGroups.map { group in
         BarChartSegment(
-          id: $0.id, title: $0.title,
-          color: colorMap[$0.id] ?? .gray, duration: $0.duration
+          id: group.id, title: group.title,
+          color: colorMap[group.id] ?? .gray, duration: durationById[group.id] ?? 0
         )
       }
 
-      if segments.isEmpty {
-        segments.append(BarChartSegment(id: "empty", title: "", color: .clear, duration: 0))
-      }
-
       return BarChartColumn(
-        date: bucket.start, label: bucketLabel(for: bucket), segments: segments
+        id: index, date: bucket.start, label: bucketLabel(for: bucket), segments: segments
       )
+    }
+  }
+
+  private func allGroupIds(domains: [Domain]) -> [(id: String, title: String)] {
+    switch groupingUnit {
+    case .domain:
+      return domains.map { (id: $0.id ?? "", title: $0.title) }
+    case .topic:
+      return domains.flatMap { domain in
+        domain.topics.map { (id: $0.id, title: $0.title) }
+      }
     }
   }
 

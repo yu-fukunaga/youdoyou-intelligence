@@ -197,36 +197,64 @@ struct ReportView: View {
 
   // MARK: - Bar Chart
 
+  // Custom-drawn (not Swift Charts): gridlines/labels are always computed fresh from
+  // live data with no animation, while each bar column animates its own height
+  // independently via `.animation(value:)`, so the background never gets swept into
+  // a bar's animation transaction.
+  private static let barChartPlotHeight: CGFloat = 90
+  private static let barSpacing: CGFloat = 10
+  private static let axisGutterWidth: CGFloat = 28
+  private static let labelAnimationDelay: TimeInterval = 0.1
+  private static let dataAnimationDelay: TimeInterval = 0.3
+  private static let dataAnimationDuration: TimeInterval = 0.5
+
+  // Compact "3h35m" form for the per-bar annotation, kept separate from the
+  // Japanese "3時間35分" used elsewhere (header, list, day chart).
+  private func compactDuration(_ duration: TimeInterval) -> String {
+    let totalMinutes = Int(duration) / 60
+    let hours = totalMinutes / 60
+    let minutes = totalMinutes % 60
+    if hours == 0 { return "\(minutes)m" }
+    if minutes == 0 { return "\(hours)h" }
+    return "\(hours)h\(minutes)m"
+  }
+
   private var barChart: some View {
     let bars = viewModel.barChartColumns(domains: appState.domains)
+    let maxHours = max((bars.map { $0.total / 3600 }.max() ?? 0) * 1.15, 1)
+    // Placeholder columns (beyond the current PeriodType's real bucket count) are
+    // squeezed to width 0 so only real columns share the available width - see
+    // ReportViewModel.maxBarSlots for why the column count itself never changes.
+    let realCount = max(bars.filter { !$0.isPlaceholder }.count, 1)
 
-    return Chart {
-      ForEach(bars) { bar in
-        ForEach(Array(bar.segments.enumerated()), id: \.element.id) { index, segment in
-          BarMark(
-            x: .value("Period", bar.label),
-            y: .value("Duration", segment.duration / 3600)
-          )
-          .foregroundStyle(segment.color)
-          .annotation(position: .top) {
-            if index == bar.segments.count - 1, bar.total > 0 {
-              Text(bar.total.reportText)
-                .font(.system(size: 9))
-                .foregroundStyle(.secondary)
+    return GeometryReader { geometry in
+      let plotWidth = geometry.size.width - Self.axisGutterWidth
+      let totalSpacing = Self.barSpacing * CGFloat(bars.count - 1)
+      let columnWidth = max((plotWidth - totalSpacing) / CGFloat(realCount), 0)
+
+      VStack(alignment: .leading, spacing: 4) {
+        ZStack(alignment: .topLeading) {
+          barChartGridlines(maxHours: maxHours, columnWidth: columnWidth, realCount: realCount)
+          HStack(alignment: .bottom, spacing: Self.barSpacing) {
+            ForEach(bars) { bar in
+              barColumn(bar, maxHours: maxHours, width: bar.isPlaceholder ? 0 : columnWidth)
             }
           }
         }
-      }
-    }
-    .chartYAxis {
-      AxisMarks(position: .trailing) { value in
-        AxisValueLabel {
-          if let hours = value.as(Double.self) {
-            Text("\(Int(hours))h")
+        .frame(height: Self.barChartPlotHeight)
+
+        HStack(spacing: Self.barSpacing) {
+          ForEach(bars) { bar in
+            Text(bar.label)
               .font(.caption2)
+              .foregroundStyle(.secondary)
+              .frame(width: bar.isPlaceholder ? 0 : columnWidth)
+              .clipped()
+              .contentTransition(.opacity)
+              .animation(.easeInOut.delay(Self.labelAnimationDelay), value: bar.label)
+              .animation(.easeInOut.delay(Self.labelAnimationDelay), value: columnWidth)
           }
         }
-        AxisGridLine()
       }
     }
     .frame(height: 120)
@@ -243,6 +271,78 @@ struct ReportView: View {
           }
         }
     )
+  }
+
+  // Gridline positions are fixed fractions of the plot height (never move, no
+  // dependency on data at all). Only the value label at each fixed position
+  // changes/animates as `maxHours` changes.
+  private static let gridlineFractions: [Double] = [0, 0.5, 1]
+
+  private func barChartGridlines(maxHours: Double, columnWidth: CGFloat, realCount: Int) -> some View {
+    GeometryReader { geometry in
+      ZStack(alignment: .topLeading) {
+        ForEach(Array(Self.gridlineFractions.enumerated()), id: \.offset) { _, fraction in
+          let y = geometry.size.height * (1 - CGFloat(fraction))
+          let tickValue = fraction * maxHours
+
+          Path { path in
+            path.move(to: CGPoint(x: 0, y: y))
+            path.addLine(to: CGPoint(x: geometry.size.width - Self.axisGutterWidth, y: y))
+          }
+          .stroke(Color(.separator), lineWidth: 0.5)
+
+          Text("\(Int(tickValue))h")
+            .font(.caption2)
+            .foregroundStyle(.secondary)
+            .frame(width: 26, alignment: .leading)
+            .position(x: geometry.size.width - 12, y: y)
+            .contentTransition(.numericText())
+            .animation(.easeInOut.delay(Self.labelAnimationDelay), value: tickValue)
+        }
+
+        // Dashed separator centered in the gap between each pair of real bars.
+        ForEach(1..<realCount, id: \.self) { index in
+          let x = CGFloat(index) * (columnWidth + Self.barSpacing) - Self.barSpacing / 2
+
+          Path { path in
+            path.move(to: CGPoint(x: x, y: 0))
+            path.addLine(to: CGPoint(x: x, y: geometry.size.height))
+          }
+          .stroke(Color(.separator), style: StrokeStyle(lineWidth: 0.5, dash: [3, 3]))
+          .animation(
+            .easeInOut(duration: Self.dataAnimationDuration).delay(Self.dataAnimationDelay), value: columnWidth)
+        }
+      }
+    }
+  }
+
+  private func barColumn(_ bar: BarChartColumn, maxHours: Double, width: CGFloat) -> some View {
+    VStack(spacing: 0) {
+      Spacer(minLength: 0)
+
+      VStack(spacing: 2) {
+        Text(bar.total > 0 ? compactDuration(bar.total) : "")
+          .font(.system(size: 9))
+          .foregroundStyle(.secondary)
+          .lineLimit(1)
+          .fixedSize(horizontal: true, vertical: false)
+          .contentTransition(.opacity)
+          .animation(.easeInOut(duration: Self.dataAnimationDuration).delay(Self.dataAnimationDelay), value: bar.total)
+
+        VStack(spacing: 0) {
+          ForEach(bar.segments) { segment in
+            Rectangle()
+              .fill(segment.color)
+              .frame(height: CGFloat(segment.duration / 3600 / maxHours) * Self.barChartPlotHeight)
+          }
+        }
+        .padding(.horizontal, 4)
+      }
+    }
+    .frame(width: width, height: Self.barChartPlotHeight)
+    .clipped()
+    .animation(.easeInOut(duration: Self.dataAnimationDuration).delay(Self.dataAnimationDelay), value: bar.total)
+    .animation(.easeInOut(duration: Self.dataAnimationDuration).delay(Self.dataAnimationDelay), value: width)
   }
 
   // MARK: - Summary List

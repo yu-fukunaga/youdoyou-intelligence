@@ -611,12 +611,15 @@ struct ReportViewModel_BarChartColumnsTests {
   // Week starting 2026/1/1: bucket 3 is the 2026/1/1 (Thu) day bucket
   static let cases: [TestCase] = [
     TestCase(
-      name: "bucket with no activities gets an empty placeholder segment",
+      name: "bucket with no activities still includes every known group at 0 duration",
       activities: [],
       domains: domains,
       groupingUnit: .domain,
       targetBucketIndex: 3,
-      expectedSegments: [ExpectedSegment(id: "empty", title: "", duration: 0)]
+      expectedSegments: [
+        ExpectedSegment(id: "d1", title: "Work", duration: 0),
+        ExpectedSegment(id: "d2", title: "Life", duration: 0),
+      ]
     ),
     TestCase(
       name: "groups by domain and sums duration within the bucket",
@@ -655,7 +658,8 @@ struct ReportViewModel_BarChartColumnsTests {
       groupingUnit: .domain,
       targetBucketIndex: 3,
       expectedSegments: [
-        ExpectedSegment(id: "d1", title: "Work", duration: 2 * 3600)
+        ExpectedSegment(id: "d1", title: "Work", duration: 2 * 3600),
+        ExpectedSegment(id: "d2", title: "Life", duration: 0),
       ]
     ),
   ]
