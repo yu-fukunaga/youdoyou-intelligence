@@ -6,8 +6,13 @@ import SwiftUI
 enum PeriodType: String, CaseIterable {
   case day = "Day"
   case week = "Week"
-  case quarter = "Quarter"
-  case year = "Year"
+  case sixMonths = "6M"
+  case fiveYears = "5Y"
+}
+
+enum GroupingUnit: String, CaseIterable {
+  case domain = "Domain"
+  case topic = "Topic"
 }
 
 struct BarChartSegment: Identifiable {
@@ -18,16 +23,31 @@ struct BarChartSegment: Identifiable {
 }
 
 struct BarChartColumn: Identifiable {
-  var id: Date { date }
+  // Positional (bucket index), not date-based: keeps the same identity across period
+  // navigation so SwiftUI's ForEach recognizes "same column, new value" and animates
+  // the bar's height in place instead of treating it as a brand new view.
+  let id: Int
   let date: Date
+  // Empty for padding columns beyond the current PeriodType's real bucket count (see
+  // ReportViewModel.maxBarSlots) - real bucket labels are never empty. Keeps the column
+  // count constant across PeriodType switches so bars animate in place instead of being
+  // inserted/removed.
   let label: String
   let segments: [BarChartSegment]
+  var isPlaceholder: Bool { label.isEmpty }
   var total: TimeInterval { segments.reduce(0) { $0 + $1.duration } }
+}
+
+struct ClockSegment: Identifiable {
+  let id: String
+  let color: Color
+  let duration: TimeInterval
 }
 
 struct ListRow: Identifiable {
   let id: String
   let title: String
+  let subtitle: String?
   let color: Color
   let bucketDurations: [TimeInterval]
   var total: TimeInterval { bucketDurations.reduce(0, +) }
@@ -39,8 +59,10 @@ struct ListRow: Identifiable {
 class ReportViewModel: ObservableObject {
   @Published var periodType: PeriodType = .week
   @Published var currentDate: Date = .now
-  @Published var selectedDomainId: String?
-  @Published var selectedTopicId: String?
+  @Published var groupingUnit: GroupingUnit = .domain {
+    didSet { selectedItemId = nil }
+  }
+  @Published var selectedItemId: String?
   @Published private(set) var isLoading = false
 
   private var cache: [String: [Activity]] = [:]
@@ -74,36 +96,49 @@ class ReportViewModel: ObservableObject {
       return DateInterval(start: start, duration: 86400)
     case .week:
       return cal.dateInterval(of: .weekOfYear, for: currentDate)!
-    case .quarter:
-      let weekEnd = cal.dateInterval(of: .weekOfYear, for: currentDate)!.end
-      let weekStart = cal.dateInterval(of: .weekOfYear, for: currentDate)!.start
-      let start = cal.date(byAdding: .weekOfYear, value: -11, to: weekStart)!
-      return DateInterval(start: start, end: weekEnd)
-    case .year:
-      return cal.dateInterval(of: .year, for: currentDate)!
+    case .sixMonths:
+      let year = cal.component(.year, from: currentDate)
+      let month = cal.component(.month, from: currentDate)
+      let startMonth = month <= 6 ? 1 : 7
+      let start = cal.date(from: DateComponents(year: year, month: startMonth, day: 1))!
+      let end = cal.date(byAdding: .month, value: 6, to: start)!
+      return DateInterval(start: start, end: end)
+    case .fiveYears:
+      let year = cal.component(.year, from: currentDate)
+      let start = cal.date(from: DateComponents(year: year - 4, month: 1, day: 1))!
+      let end = cal.date(from: DateComponents(year: year + 1, month: 1, day: 1))!
+      return DateInterval(start: start, end: end)
     }
   }
 
   var headerDateRangeText: String {
-    let f = DateFormatter()
     let interval = dateInterval
     let cal = calendar
     let lastDay = cal.date(byAdding: .day, value: -1, to: interval.end)!
 
     switch periodType {
     case .day:
+      let f = DateFormatter()
       f.dateFormat = "yyyy/MM/dd"
       return f.string(from: interval.start)
-    case .week, .quarter:
-      f.dateFormat = "yyyy/MM/dd"
-      return "\(f.string(from: interval.start)) - \(f.string(from: lastDay))"
-    case .year:
-      f.dateFormat = "yyyy年"
-      return f.string(from: interval.start)
+    case .week:
+      let startFormatter = DateFormatter()
+      startFormatter.dateFormat = "yyyy年M月d日"
+      let endFormatter = DateFormatter()
+      endFormatter.dateFormat = "M月d日"
+      return "\(startFormatter.string(from: interval.start))~\(endFormatter.string(from: lastDay))"
+    case .sixMonths:
+      let year = cal.component(.year, from: interval.start)
+      let half = cal.component(.month, from: interval.start) <= 6 ? "前期" : "後期"
+      return "\(year)年\(half)"
+    case .fiveYears:
+      let startYear = cal.component(.year, from: interval.start)
+      let endYear = cal.component(.year, from: lastDay)
+      return "\(startYear)年~\(endYear)年"
     }
   }
 
-  // MARK: - Buckets (Week / Quarter / Year only)
+  // MARK: - Buckets (Week / 6M / 5Y only)
 
   var buckets: [DateInterval] {
     let cal = calendar
@@ -115,8 +150,8 @@ class ReportViewModel: ObservableObject {
       switch periodType {
       case .day: return .hour  // unused
       case .week: return .day
-      case .quarter: return .weekOfYear
-      case .year: return .month
+      case .sixMonths: return .month
+      case .fiveYears: return .year
       }
     }()
 
@@ -128,6 +163,12 @@ class ReportViewModel: ObservableObject {
     return result
   }
 
+  // The largest bucket count across all non-Day PeriodTypes (Week's 7). Used to pad the
+  // bar chart's column array to a constant length so PeriodType switches never insert or
+  // remove columns (which would break their per-bar animation) - not used for `buckets`
+  // itself, which must stay the real, PeriodType-dependent count (e.g. for averaging).
+  static let maxBarSlots = 7
+
   func bucketLabel(for bucket: DateInterval) -> String {
     let cal = calendar
     switch periodType {
@@ -135,12 +176,10 @@ class ReportViewModel: ObservableObject {
       return ""
     case .week:
       return cal.shortWeekdaySymbols[cal.component(.weekday, from: bucket.start) - 1]
-    case .quarter:
-      let f = DateFormatter()
-      f.dateFormat = "M/d"
-      return f.string(from: bucket.start)
-    case .year:
+    case .sixMonths:
       return "\(cal.component(.month, from: bucket.start))月"
+    case .fiveYears:
+      return "\(cal.component(.year, from: bucket.start))年"
     }
   }
 
@@ -187,12 +226,12 @@ class ReportViewModel: ObservableObject {
     case .week:
       component = .weekOfYear
       value = offset
-    case .quarter:
-      component = .weekOfYear
-      value = 12 * offset
-    case .year:
+    case .sixMonths:
+      component = .month
+      value = 6 * offset
+    case .fiveYears:
       component = .year
-      value = offset
+      value = 5 * offset
     }
 
     currentDate = cal.date(byAdding: component, value: value, to: currentDate)!
@@ -201,29 +240,13 @@ class ReportViewModel: ObservableObject {
 
   // MARK: - Filter
 
-  func selectDomain(_ domainId: String?) {
-    if selectedDomainId == domainId {
-      selectedDomainId = nil
-    }
-    else {
-      selectedDomainId = domainId
-    }
-    selectedTopicId = nil
-  }
-
-  func toggleTopic(_ topicId: String) {
-    selectedTopicId = selectedTopicId == topicId ? nil : topicId
+  func toggleItem(_ id: String) {
+    selectedItemId = selectedItemId == id ? nil : id
   }
 
   private var filteredActivities: [Activity] {
-    var result = currentActivities
-    if let domainId = selectedDomainId {
-      result = result.filter { $0.domainId == domainId }
-    }
-    if let topicId = selectedTopicId {
-      result = result.filter { $0.topicId == topicId }
-    }
-    return result
+    guard let selectedItemId else { return currentActivities }
+    return currentActivities.filter { $0[keyPath: groupingKey] == selectedItemId }
   }
 
   // MARK: - Overall
@@ -234,27 +257,77 @@ class ReportViewModel: ObservableObject {
     }
   }
 
+  // Average per bucket (day for Week, month for 6M, year for 5Y). Day has no
+  // meaningful sub-bucket, so it's treated as a single bucket (average == total).
+  var headerAverageDuration: TimeInterval {
+    let count = periodType == .day ? 1 : buckets.count
+    guard count > 0 else { return 0 }
+    return headerTotalDuration / Double(count)
+  }
+
   // MARK: - Timeline (Day)
 
   var timelineActivities: [Activity] {
     filteredActivities.sorted { $0.startedAt < $1.startedAt }
   }
 
-  var timelineScrollStart: Date {
+  // The full day as an ordered sequence of segments covering all 24 hours (activities
+  // plus the gaps between them), so a SectorMark chart built from this list lines up
+  // with real clock positions instead of just being proportional slices.
+  func clockSegments(domains: [Domain]) -> [ClockSegment] {
     let cal = calendar
     let dayStart = cal.startOfDay(for: currentDate)
-    guard let first = timelineActivities.first else { return dayStart }
-    return cal.date(byAdding: .hour, value: -3, to: first.startedAt) ?? dayStart
+    let dayEnd = cal.date(byAdding: .day, value: 1, to: dayStart)!
+    let colorMap = colorMap(domains: domains)
+
+    var segments: [ClockSegment] = []
+    var cursor = dayStart
+
+    for activity in timelineActivities {
+      let start = max(max(activity.startedAt, dayStart), cursor)
+      let end = min(activity.endedAt, dayEnd)
+      guard start < end else { continue }
+
+      if start > cursor {
+        segments.append(
+          ClockSegment(
+            id: "gap-\(segments.count)", color: Color(.systemFill), duration: start.timeIntervalSince(cursor))
+        )
+      }
+
+      let colorId = groupId(for: activity)
+      segments.append(
+        ClockSegment(
+          id: activity.id ?? colorId, color: colorMap[colorId] ?? .gray, duration: end.timeIntervalSince(start))
+      )
+      cursor = end
+    }
+
+    if cursor < dayEnd {
+      segments.append(
+        ClockSegment(id: "gap-\(segments.count)", color: Color(.systemFill), duration: dayEnd.timeIntervalSince(cursor))
+      )
+    }
+
+    return segments
   }
 
   func timelineTitle(for id: String, domains: [Domain]) -> String {
-    if selectedDomainId != nil {
-      let domain = domains.first { $0.id == selectedDomainId }
-      return domain?.topics.first { $0.id == id }?.title ?? id
-    }
-    else {
+    switch groupingUnit {
+    case .domain:
       return domains.first { $0.id == id }?.title ?? id
+    case .topic:
+      for domain in domains {
+        if let topic = domain.topics.first(where: { $0.id == id }) {
+          return topic.title
+        }
+      }
+      return id
     }
+  }
+
+  func groupId(for activity: Activity) -> String {
+    activity[keyPath: groupingKey]
   }
 
   func timelineColor(for activity: Activity, domains: [Domain]) -> Color {
@@ -263,39 +336,74 @@ class ReportViewModel: ObservableObject {
     return colorMap[id] ?? .gray
   }
 
-  // MARK: - Bar Chart (Week / Quarter / Year)
+  // MARK: - Bar Chart (Week / 6M / 5Y)
 
+  // Always includes every known group (domain or topic) per bucket, with 0 duration when
+  // absent, so a segment's identity is stable across period navigation (a group that had
+  // no activity before still "exists" at height 0, letting it grow from the bottom
+  // instead of being freshly inserted and fading in).
   func barChartColumns(domains: [Domain]) -> [BarChartColumn] {
     let activities = filteredActivities
     let colorMap = colorMap(domains: domains)
+    let allGroups = allGroupIds(domains: domains)
+    let realBuckets = buckets
 
-    return buckets.map { bucket in
+    return (0..<Self.maxBarSlots).map { index in
+      guard index < realBuckets.count else {
+        let placeholderSegments = allGroups.map { group in
+          BarChartSegment(id: group.id, title: group.title, color: colorMap[group.id] ?? .gray, duration: 0)
+        }
+        return BarChartColumn(
+          id: index, date: .distantPast, label: "", segments: placeholderSegments
+        )
+      }
+
+      let bucket = realBuckets[index]
       let inBucket = activities.filter {
         $0.startedAt < bucket.end && bucket.start < $0.endedAt
       }
 
       let grouped = barChartSegments(inBucket, in: bucket, domains: domains)
-      var segments = grouped.map {
+      let durationById = Dictionary(uniqueKeysWithValues: grouped.map { ($0.id, $0.duration) })
+
+      let segments = allGroups.map { group in
         BarChartSegment(
-          id: $0.id, title: $0.title,
-          color: colorMap[$0.id] ?? .gray, duration: $0.duration
+          id: group.id, title: group.title,
+          color: colorMap[group.id] ?? .gray, duration: durationById[group.id] ?? 0
         )
       }
 
-      if segments.isEmpty {
-        segments.append(BarChartSegment(id: "empty", title: "", color: .clear, duration: 0))
-      }
-
       return BarChartColumn(
-        date: bucket.start, label: bucketLabel(for: bucket), segments: segments
+        id: index, date: bucket.start, label: bucketLabel(for: bucket), segments: segments
       )
+    }
+  }
+
+  private func allGroupIds(domains: [Domain]) -> [(id: String, title: String)] {
+    switch groupingUnit {
+    case .domain:
+      return domains.map { (id: $0.id ?? "", title: $0.title) }
+    case .topic:
+      return domains.flatMap { domain in
+        domain.topics.map { (id: $0.id, title: $0.title) }
+      }
     }
   }
 
   // MARK: - List
 
+  // Unfiltered total, used for the list's pinned "Total" row so it always
+  // reflects everything regardless of the current selection.
+  var listTotalDuration: TimeInterval {
+    currentActivities.reduce(0) {
+      $0 + $1.endedAt.timeIntervalSince($1.startedAt)
+    }
+  }
+
+  // Uses currentActivities (not filteredActivities) so every row stays visible
+  // for tapping even while another item is selected.
   func listRows(domains: [Domain]) -> [ListRow] {
-    let activities = filteredActivities
+    let activities = currentActivities
     let colorMap = colorMap(domains: domains)
     let allBuckets = buckets
     let groups = listGroups(in: activities, domains: domains)
@@ -304,8 +412,9 @@ class ReportViewModel: ObservableObject {
       let durations = allBuckets.map { bucket in
         listBucketDuration(groupId: group.id, activities: activities, in: bucket)
       }
+      let subtitle = groupingUnit == .topic ? domainTitle(forTopicId: group.id, domains: domains) : nil
       return ListRow(
-        id: group.id, title: group.title,
+        id: group.id, title: group.title, subtitle: subtitle,
         color: colorMap[group.id] ?? .gray, bucketDurations: durations
       )
     }
@@ -314,9 +423,8 @@ class ReportViewModel: ObservableObject {
 
   // MARK: - Helpers
 
-  // Groups by topic when a domain is selected, otherwise by domain.
   private var groupingKey: KeyPath<Activity, String> {
-    selectedDomainId != nil ? \.topicId : \.domainId
+    groupingUnit == .domain ? \.domainId : \.topicId
   }
 
   // One BarChartColumn's segments: groups only include activity within this bucket,
@@ -374,6 +482,10 @@ class ReportViewModel: ObservableObject {
     return ids.map { id in
       (id: id, title: timelineTitle(for: id, domains: domains))
     }
+  }
+
+  private func domainTitle(forTopicId topicId: String, domains: [Domain]) -> String? {
+    domains.first { $0.topics.contains { $0.id == topicId } }?.title
   }
 
   private func colorMap(domains: [Domain]) -> [String: Color] {

@@ -57,18 +57,26 @@ struct ReportViewModel_DateIntervalTests {
         )
       ),
       (
-        periodType: .quarter,
-        currentDate: date(2026, 1, 1),
-        expected: DateInterval(
-          start: date(2025, 10, 13),  // 12週前の月曜
-          end: date(2026, 1, 5)  // 今週の翌月曜
-        )
-      ),
-      (
-        periodType: .year,
+        periodType: .sixMonths,
         currentDate: date(2026, 1, 1),
         expected: DateInterval(
           start: date(2026, 1, 1),
+          end: date(2026, 7, 1)
+        )
+      ),
+      (
+        periodType: .sixMonths,
+        currentDate: date(2026, 8, 15),
+        expected: DateInterval(
+          start: date(2026, 7, 1),
+          end: date(2027, 1, 1)
+        )
+      ),
+      (
+        periodType: .fiveYears,
+        currentDate: date(2026, 1, 1),
+        expected: DateInterval(
+          start: date(2022, 1, 1),
           end: date(2027, 1, 1)
         )
       ),
@@ -106,17 +114,22 @@ struct ReportViewModel_HeaderDateRangeTextTests {
       (
         periodType: .week,
         currentDate: date(2026, 1, 1),
-        expected: "2025/12/29 - 2026/01/04"
+        expected: "2025年12月29日~1月4日"
       ),
       (
-        periodType: .quarter,
+        periodType: .sixMonths,
         currentDate: date(2026, 1, 1),
-        expected: "2025/10/13 - 2026/01/04",
+        expected: "2026年前期",
       ),
       (
-        periodType: .year,
+        periodType: .sixMonths,
+        currentDate: date(2026, 8, 15),
+        expected: "2026年後期",
+      ),
+      (
+        periodType: .fiveYears,
         currentDate: date(2026, 1, 1),
-        expected: "2026年"
+        expected: "2022年~2026年"
       ),
     ]
 
@@ -188,25 +201,7 @@ struct ReportViewModel_BucketsTests {
         ]
       ),
       (
-        periodType: .quarter,
-        currentDate: date(2026, 1, 1),
-        expected: [
-          DateInterval(start: date(2025, 10, 13), end: date(2025, 10, 20)),
-          DateInterval(start: date(2025, 10, 20), end: date(2025, 10, 27)),
-          DateInterval(start: date(2025, 10, 27), end: date(2025, 11, 3)),
-          DateInterval(start: date(2025, 11, 3), end: date(2025, 11, 10)),
-          DateInterval(start: date(2025, 11, 10), end: date(2025, 11, 17)),
-          DateInterval(start: date(2025, 11, 17), end: date(2025, 11, 24)),
-          DateInterval(start: date(2025, 11, 24), end: date(2025, 12, 1)),
-          DateInterval(start: date(2025, 12, 1), end: date(2025, 12, 8)),
-          DateInterval(start: date(2025, 12, 8), end: date(2025, 12, 15)),
-          DateInterval(start: date(2025, 12, 15), end: date(2025, 12, 22)),
-          DateInterval(start: date(2025, 12, 22), end: date(2025, 12, 29)),
-          DateInterval(start: date(2025, 12, 29), end: date(2026, 1, 5)),
-        ]
-      ),
-      (
-        periodType: .year,
+        periodType: .sixMonths,
         currentDate: date(2026, 1, 1),
         expected: [
           DateInterval(start: date(2026, 1, 1), end: date(2026, 2, 1)),
@@ -215,12 +210,17 @@ struct ReportViewModel_BucketsTests {
           DateInterval(start: date(2026, 4, 1), end: date(2026, 5, 1)),
           DateInterval(start: date(2026, 5, 1), end: date(2026, 6, 1)),
           DateInterval(start: date(2026, 6, 1), end: date(2026, 7, 1)),
-          DateInterval(start: date(2026, 7, 1), end: date(2026, 8, 1)),
-          DateInterval(start: date(2026, 8, 1), end: date(2026, 9, 1)),
-          DateInterval(start: date(2026, 9, 1), end: date(2026, 10, 1)),
-          DateInterval(start: date(2026, 10, 1), end: date(2026, 11, 1)),
-          DateInterval(start: date(2026, 11, 1), end: date(2026, 12, 1)),
-          DateInterval(start: date(2026, 12, 1), end: date(2027, 1, 1)),
+        ]
+      ),
+      (
+        periodType: .fiveYears,
+        currentDate: date(2026, 1, 1),
+        expected: [
+          DateInterval(start: date(2022, 1, 1), end: date(2023, 1, 1)),
+          DateInterval(start: date(2023, 1, 1), end: date(2024, 1, 1)),
+          DateInterval(start: date(2024, 1, 1), end: date(2025, 1, 1)),
+          DateInterval(start: date(2025, 1, 1), end: date(2026, 1, 1)),
+          DateInterval(start: date(2026, 1, 1), end: date(2027, 1, 1)),
         ]
       ),
     ]
@@ -260,14 +260,14 @@ struct ReportViewModel_BucketLabelTests {
         expected: "Thu"
       ),
       (
-        periodType: .quarter,
-        bucketStart: date(2026, 1, 1),
-        expected: "1/1"
-      ),
-      (
-        periodType: .year,
+        periodType: .sixMonths,
         bucketStart: date(2026, 1, 1),
         expected: "1月"
+      ),
+      (
+        periodType: .fiveYears,
+        bucketStart: date(2026, 1, 1),
+        expected: "2026年"
       ),
     ]
 
@@ -337,10 +337,10 @@ struct ReportViewModel_MovePeriodTests {
       (periodType: .day, offset: -1, expected: date(2025, 12, 31)),
       (periodType: .week, offset: 1, expected: date(2026, 1, 8)),
       (periodType: .week, offset: -1, expected: date(2025, 12, 25)),
-      (periodType: .quarter, offset: 1, expected: date(2026, 3, 26)),  // +12 weeks
-      (periodType: .quarter, offset: -1, expected: date(2025, 10, 9)),  // -12 weeks
-      (periodType: .year, offset: 1, expected: date(2027, 1, 1)),
-      (periodType: .year, offset: -1, expected: date(2025, 1, 1)),
+      (periodType: .sixMonths, offset: 1, expected: date(2026, 7, 1)),  // +6 months
+      (periodType: .sixMonths, offset: -1, expected: date(2025, 7, 1)),  // -6 months
+      (periodType: .fiveYears, offset: 1, expected: date(2031, 1, 1)),
+      (periodType: .fiveYears, offset: -1, expected: date(2021, 1, 1)),
     ]
 
   @Test(arguments: cases)
@@ -361,67 +361,47 @@ struct ReportViewModel_MovePeriodTests {
 
 }
 
-struct ReportViewModel_SelectDomainTests {
+struct ReportViewModel_ToggleItemTests {
 
   static let cases:
     [(
-      initialDomainId: String?,
-      initialTopicId: String?,
-      input: String?,
-      expectedDomainId: String?
-    )] = [
-      (initialDomainId: nil, initialTopicId: nil, input: "d1", expectedDomainId: "d1"),
-      (initialDomainId: "d1", initialTopicId: "t1", input: "d1", expectedDomainId: nil),
-      (initialDomainId: "d1", initialTopicId: "t1", input: "d2", expectedDomainId: "d2"),
-      (initialDomainId: "d1", initialTopicId: "t1", input: nil, expectedDomainId: nil),
-    ]
-
-  @Test(arguments: cases)
-  @MainActor
-  func selectDomain_test(
-    initialDomainId: String?,
-    initialTopicId: String?,
-    input: String?,
-    expectedDomainId: String?
-  ) {
-    let vm = ReportViewModel(repository: MockActivityRepository())
-    vm.selectedDomainId = initialDomainId
-    vm.selectedTopicId = initialTopicId
-
-    vm.selectDomain(input)
-
-    #expect(vm.selectedDomainId == expectedDomainId)
-    #expect(vm.selectedTopicId == nil)
-  }
-
-}
-
-struct ReportViewModel_ToggleTopicTests {
-
-  static let cases:
-    [(
-      initialTopicId: String?,
+      initialSelectedItemId: String?,
       input: String,
       expected: String?
     )] = [
-      (initialTopicId: nil, input: "t1", expected: "t1"),
-      (initialTopicId: "t1", input: "t1", expected: nil),
-      (initialTopicId: "t1", input: "t2", expected: "t2"),
+      (initialSelectedItemId: nil, input: "d1", expected: "d1"),
+      (initialSelectedItemId: "d1", input: "d1", expected: nil),
+      (initialSelectedItemId: "d1", input: "d2", expected: "d2"),
     ]
 
   @Test(arguments: cases)
   @MainActor
-  func toggleTopic_test(
-    initialTopicId: String?,
+  func toggleItem_test(
+    initialSelectedItemId: String?,
     input: String,
     expected: String?
   ) {
     let vm = ReportViewModel(repository: MockActivityRepository())
-    vm.selectedTopicId = initialTopicId
+    vm.selectedItemId = initialSelectedItemId
 
-    vm.toggleTopic(input)
+    vm.toggleItem(input)
 
-    #expect(vm.selectedTopicId == expected)
+    #expect(vm.selectedItemId == expected)
+  }
+
+}
+
+struct ReportViewModel_GroupingUnitTests {
+
+  @Test
+  @MainActor
+  func changingGroupingUnit_resetsSelectedItem() {
+    let vm = ReportViewModel(repository: MockActivityRepository())
+    vm.selectedItemId = "d1"
+
+    vm.groupingUnit = .topic
+
+    #expect(vm.selectedItemId == nil)
   }
 
 }
@@ -431,8 +411,8 @@ struct ReportViewModel_HeaderTotalDurationTests {
   struct TestCase: CustomTestStringConvertible {
     let name: String
     let activities: [Activity]
-    let selectedDomainId: String?
-    let selectedTopicId: String?
+    let groupingUnit: GroupingUnit
+    let selectedItemId: String?
     let expected: TimeInterval
 
     var testDescription: String { name }
@@ -445,28 +425,28 @@ struct ReportViewModel_HeaderTotalDurationTests {
         activity(domainId: "d1", topicId: "t1", startedAt: date(2026, 1, 1, 0), endedAt: date(2026, 1, 1, 1)),
         activity(domainId: "d2", topicId: "t2", startedAt: date(2026, 1, 1, 1), endedAt: date(2026, 1, 1, 3)),
       ],
-      selectedDomainId: nil,
-      selectedTopicId: nil,
+      groupingUnit: .domain,
+      selectedItemId: nil,
       expected: 3 * 3600
     ),
     TestCase(
-      name: "filters by domain",
+      name: "filters by selected domain",
       activities: [
         activity(domainId: "d1", topicId: "t1", startedAt: date(2026, 1, 1, 0), endedAt: date(2026, 1, 1, 1)),
         activity(domainId: "d2", topicId: "t2", startedAt: date(2026, 1, 1, 1), endedAt: date(2026, 1, 1, 3)),
       ],
-      selectedDomainId: "d1",
-      selectedTopicId: nil,
+      groupingUnit: .domain,
+      selectedItemId: "d1",
       expected: 1 * 3600
     ),
     TestCase(
-      name: "filters by domain and topic",
+      name: "filters by selected topic",
       activities: [
         activity(domainId: "d1", topicId: "t1", startedAt: date(2026, 1, 1, 0), endedAt: date(2026, 1, 1, 1)),
         activity(domainId: "d1", topicId: "t2", startedAt: date(2026, 1, 1, 1), endedAt: date(2026, 1, 1, 3)),
       ],
-      selectedDomainId: "d1",
-      selectedTopicId: "t2",
+      groupingUnit: .topic,
+      selectedItemId: "t2",
       expected: 2 * 3600
     ),
   ]
@@ -477,12 +457,48 @@ struct ReportViewModel_HeaderTotalDurationTests {
     let mock = MockActivityRepository()
     mock.activities = testCase.activities
     let vm = ReportViewModel(repository: mock)
-    vm.selectedDomainId = testCase.selectedDomainId
-    vm.selectedTopicId = testCase.selectedTopicId
+    vm.groupingUnit = testCase.groupingUnit
+    vm.selectedItemId = testCase.selectedItemId
 
     await vm.loadIfNeeded()
 
     #expect(vm.headerTotalDuration == testCase.expected)
+  }
+
+}
+
+struct ReportViewModel_HeaderAverageDurationTests {
+
+  @Test
+  @MainActor
+  func headerAverageDuration_day_equalsTotal() async {
+    let mock = MockActivityRepository()
+    mock.activities = [
+      activity(domainId: "d1", topicId: "t1", startedAt: date(2026, 1, 1, 0), endedAt: date(2026, 1, 1, 3))
+    ]
+    let vm = ReportViewModel(repository: mock)
+    vm.periodType = .day
+    vm.currentDate = date(2026, 1, 1)
+
+    await vm.loadIfNeeded()
+
+    #expect(vm.headerAverageDuration == vm.headerTotalDuration)
+  }
+
+  @Test
+  @MainActor
+  func headerAverageDuration_week_dividesByBucketCount() async {
+    let mock = MockActivityRepository()
+    mock.activities = [
+      activity(domainId: "d1", topicId: "t1", startedAt: date(2026, 1, 1, 0), endedAt: date(2026, 1, 1, 14))
+    ]
+    let vm = ReportViewModel(repository: mock)
+    vm.periodType = .week
+    vm.currentDate = date(2026, 1, 1)
+
+    await vm.loadIfNeeded()
+
+    #expect(vm.headerAverageDuration == 2 * 3600)  // 14h / 7 buckets
   }
 
 }
@@ -507,43 +523,63 @@ struct ReportViewModel_TimelineActivitiesTests {
 
 }
 
-struct ReportViewModel_TimelineScrollStartTests {
+struct ReportViewModel_ClockSegmentsTests {
 
-  struct TestCase: CustomTestStringConvertible {
-    let name: String
-    let activities: [Activity]
-    let expected: Date
-
-    var testDescription: String { name }
-  }
-
-  static let cases: [TestCase] = [
-    TestCase(
-      name: "falls back to start of day when there are no activities",
-      activities: [],
-      expected: date(2026, 1, 1, 0)
-    ),
-    TestCase(
-      name: "starts 3 hours before the first activity",
-      activities: [
-        activity(domainId: "d1", topicId: "t1", startedAt: date(2026, 1, 1, 5), endedAt: date(2026, 1, 1, 6)),
-        activity(domainId: "d1", topicId: "t2", startedAt: date(2026, 1, 1, 8), endedAt: date(2026, 1, 1, 9)),
-      ],
-      expected: date(2026, 1, 1, 2)
-    ),
+  static let domains: [Domain] = [
+    domain(id: "d1", title: "Work", topics: []),
+    domain(id: "d2", title: "Life", topics: []),
   ]
 
-  @Test(arguments: cases)
+  @Test
   @MainActor
-  func timelineScrollStart_test(testCase: TestCase) async {
+  func clockSegments_noActivities_isOneFullDayGap() async {
     let mock = MockActivityRepository()
-    mock.activities = testCase.activities
     let vm = ReportViewModel(repository: mock)
-    vm.currentDate = date(2026, 1, 1, 5)
+    vm.periodType = .day
+    vm.currentDate = date(2026, 1, 1)
 
     await vm.loadIfNeeded()
 
-    #expect(vm.timelineScrollStart == testCase.expected)
+    let segments = vm.clockSegments(domains: Self.domains)
+    #expect(segments.map(\.duration) == [86400])
+  }
+
+  @Test
+  @MainActor
+  func clockSegments_coversFullDayWithGapsAroundActivities() async {
+    let mock = MockActivityRepository()
+    mock.activities = [
+      activity(domainId: "d1", topicId: "t1", startedAt: date(2026, 1, 1, 10), endedAt: date(2026, 1, 1, 12))
+    ]
+    let vm = ReportViewModel(repository: mock)
+    vm.periodType = .day
+    vm.currentDate = date(2026, 1, 1)
+
+    await vm.loadIfNeeded()
+
+    let segments = vm.clockSegments(domains: Self.domains)
+    #expect(segments.map(\.duration) == [10 * 3600, 2 * 3600, 12 * 3600])
+    #expect(segments.reduce(0) { $0 + $1.duration } == 86400)
+  }
+
+  @Test
+  @MainActor
+  func clockSegments_clampsOverlappingActivityToStartAfterThePrevious() async {
+    let mock = MockActivityRepository()
+    mock.activities = [
+      activity(domainId: "d1", topicId: "t1", startedAt: date(2026, 1, 1, 10), endedAt: date(2026, 1, 1, 12)),
+      activity(domainId: "d2", topicId: "t2", startedAt: date(2026, 1, 1, 11), endedAt: date(2026, 1, 1, 13)),
+    ]
+    let vm = ReportViewModel(repository: mock)
+    vm.periodType = .day
+    vm.currentDate = date(2026, 1, 1)
+
+    await vm.loadIfNeeded()
+
+    let segments = vm.clockSegments(domains: Self.domains)
+    // gap(0-10), d1(10-12), d2 clamped to (12-13), gap(13-24)
+    #expect(segments.map(\.duration) == [10 * 3600, 2 * 3600, 1 * 3600, 11 * 3600])
+    #expect(segments.reduce(0) { $0 + $1.duration } == 86400)
   }
 
 }
@@ -560,7 +596,7 @@ struct ReportViewModel_BarChartColumnsTests {
     let name: String
     let activities: [Activity]
     let domains: [Domain]
-    let selectedDomainId: String?
+    let groupingUnit: GroupingUnit
     let targetBucketIndex: Int
     let expectedSegments: [ExpectedSegment]
 
@@ -575,12 +611,15 @@ struct ReportViewModel_BarChartColumnsTests {
   // Week starting 2026/1/1: bucket 3 is the 2026/1/1 (Thu) day bucket
   static let cases: [TestCase] = [
     TestCase(
-      name: "bucket with no activities gets an empty placeholder segment",
+      name: "bucket with no activities still includes every known group at 0 duration",
       activities: [],
       domains: domains,
-      selectedDomainId: nil,
+      groupingUnit: .domain,
       targetBucketIndex: 3,
-      expectedSegments: [ExpectedSegment(id: "empty", title: "", duration: 0)]
+      expectedSegments: [
+        ExpectedSegment(id: "d1", title: "Work", duration: 0),
+        ExpectedSegment(id: "d2", title: "Life", duration: 0),
+      ]
     ),
     TestCase(
       name: "groups by domain and sums duration within the bucket",
@@ -589,7 +628,7 @@ struct ReportViewModel_BarChartColumnsTests {
         activity(domainId: "d2", topicId: "t9", startedAt: date(2026, 1, 1, 5), endedAt: date(2026, 1, 1, 6)),
       ],
       domains: domains,
-      selectedDomainId: nil,
+      groupingUnit: .domain,
       targetBucketIndex: 3,
       expectedSegments: [
         ExpectedSegment(id: "d1", title: "Work", duration: 2 * 3600),
@@ -597,13 +636,13 @@ struct ReportViewModel_BarChartColumnsTests {
       ]
     ),
     TestCase(
-      name: "groups by topic when a domain is selected",
+      name: "groups by topic when grouping unit is topic",
       activities: [
         activity(domainId: "d1", topicId: "t1", startedAt: date(2026, 1, 1, 1), endedAt: date(2026, 1, 1, 3)),
         activity(domainId: "d1", topicId: "t2", startedAt: date(2026, 1, 1, 5), endedAt: date(2026, 1, 1, 6)),
       ],
       domains: domains,
-      selectedDomainId: "d1",
+      groupingUnit: .topic,
       targetBucketIndex: 3,
       expectedSegments: [
         ExpectedSegment(id: "t1", title: "Coding", duration: 2 * 3600),
@@ -616,10 +655,11 @@ struct ReportViewModel_BarChartColumnsTests {
         activity(domainId: "d1", topicId: "t1", startedAt: date(2025, 12, 31, 23), endedAt: date(2026, 1, 1, 2))
       ],
       domains: domains,
-      selectedDomainId: nil,
+      groupingUnit: .domain,
       targetBucketIndex: 3,
       expectedSegments: [
-        ExpectedSegment(id: "d1", title: "Work", duration: 2 * 3600)
+        ExpectedSegment(id: "d1", title: "Work", duration: 2 * 3600),
+        ExpectedSegment(id: "d2", title: "Life", duration: 0),
       ]
     ),
   ]
@@ -632,7 +672,7 @@ struct ReportViewModel_BarChartColumnsTests {
     let vm = ReportViewModel(repository: mock)
     vm.periodType = .week
     vm.currentDate = date(2026, 1, 1)
-    vm.selectedDomainId = testCase.selectedDomainId
+    vm.groupingUnit = testCase.groupingUnit
 
     await vm.loadIfNeeded()
 
@@ -652,6 +692,7 @@ struct ReportViewModel_ListRowsTests {
   struct ExpectedRow: Equatable {
     let id: String
     let title: String
+    let subtitle: String?
     let bucketDurations: [TimeInterval]
   }
 
@@ -659,7 +700,8 @@ struct ReportViewModel_ListRowsTests {
     let name: String
     let activities: [Activity]
     let domains: [Domain]
-    let selectedDomainId: String?
+    let groupingUnit: GroupingUnit
+    let selectedItemId: String?
     let expectedRows: [ExpectedRow]
 
     var testDescription: String { name }
@@ -680,33 +722,55 @@ struct ReportViewModel_ListRowsTests {
         activity(domainId: "d2", topicId: "t9", startedAt: date(2026, 1, 2, 1), endedAt: date(2026, 1, 2, 2)),
       ],
       domains: domains,
-      selectedDomainId: nil,
+      groupingUnit: .domain,
+      selectedItemId: nil,
       expectedRows: [
         ExpectedRow(
-          id: "d1", title: "Work",
+          id: "d1", title: "Work", subtitle: nil,
           bucketDurations: [0, 0, 0, 2 * 3600, 0, 1 * 3600, 0]
         ),
         ExpectedRow(
-          id: "d2", title: "Life",
+          id: "d2", title: "Life", subtitle: nil,
           bucketDurations: [0, 0, 0, 0, 1 * 3600, 0, 0]
         ),
       ]
     ),
     TestCase(
-      name: "groups by topic when a domain is selected",
+      name: "groups by topic when grouping unit is topic",
       activities: [
         activity(domainId: "d1", topicId: "t1", startedAt: date(2026, 1, 1, 1), endedAt: date(2026, 1, 1, 3)),
         activity(domainId: "d1", topicId: "t2", startedAt: date(2026, 1, 2, 1), endedAt: date(2026, 1, 2, 2)),
       ],
       domains: domains,
-      selectedDomainId: "d1",
+      groupingUnit: .topic,
+      selectedItemId: nil,
       expectedRows: [
         ExpectedRow(
-          id: "t1", title: "Coding",
+          id: "t1", title: "Coding", subtitle: "Work",
           bucketDurations: [0, 0, 0, 2 * 3600, 0, 0, 0]
         ),
         ExpectedRow(
-          id: "t2", title: "Meeting",
+          id: "t2", title: "Meeting", subtitle: "Work",
+          bucketDurations: [0, 0, 0, 0, 1 * 3600, 0, 0]
+        ),
+      ]
+    ),
+    TestCase(
+      name: "keeps every row visible (with its real total) even when an item is selected",
+      activities: [
+        activity(domainId: "d1", topicId: "t1", startedAt: date(2026, 1, 1, 1), endedAt: date(2026, 1, 1, 3)),
+        activity(domainId: "d2", topicId: "t9", startedAt: date(2026, 1, 2, 1), endedAt: date(2026, 1, 2, 2)),
+      ],
+      domains: domains,
+      groupingUnit: .domain,
+      selectedItemId: "d1",
+      expectedRows: [
+        ExpectedRow(
+          id: "d1", title: "Work", subtitle: nil,
+          bucketDurations: [0, 0, 0, 2 * 3600, 0, 0, 0]
+        ),
+        ExpectedRow(
+          id: "d2", title: "Life", subtitle: nil,
           bucketDurations: [0, 0, 0, 0, 1 * 3600, 0, 0]
         ),
       ]
@@ -721,13 +785,14 @@ struct ReportViewModel_ListRowsTests {
     let vm = ReportViewModel(repository: mock)
     vm.periodType = .week
     vm.currentDate = date(2026, 1, 1)
-    vm.selectedDomainId = testCase.selectedDomainId
+    vm.groupingUnit = testCase.groupingUnit
+    vm.selectedItemId = testCase.selectedItemId
 
     await vm.loadIfNeeded()
 
     let rows =
       vm.listRows(domains: testCase.domains)
-      .map { ExpectedRow(id: $0.id, title: $0.title, bucketDurations: $0.bucketDurations) }
+      .map { ExpectedRow(id: $0.id, title: $0.title, subtitle: $0.subtitle, bucketDurations: $0.bucketDurations) }
 
     #expect(rows == testCase.expectedRows)
   }
@@ -738,7 +803,7 @@ struct ReportViewModel_TimelineTitleTests {
 
   struct TestCase: CustomTestStringConvertible {
     let name: String
-    let selectedDomainId: String?
+    let groupingUnit: GroupingUnit
     let id: String
     let expected: String
 
@@ -752,26 +817,26 @@ struct ReportViewModel_TimelineTitleTests {
 
   static let cases: [TestCase] = [
     TestCase(
-      name: "resolves domain title when no domain is selected",
-      selectedDomainId: nil,
+      name: "resolves domain title when grouping unit is domain",
+      groupingUnit: .domain,
       id: "d1",
       expected: "Work"
     ),
     TestCase(
       name: "falls back to the id when no matching domain is found",
-      selectedDomainId: nil,
+      groupingUnit: .domain,
       id: "unknown",
       expected: "unknown"
     ),
     TestCase(
-      name: "resolves topic title within the selected domain",
-      selectedDomainId: "d1",
+      name: "resolves topic title by searching across all domains when grouping unit is topic",
+      groupingUnit: .topic,
       id: "t1",
       expected: "Coding"
     ),
     TestCase(
-      name: "falls back to the id when the topic isn't in the selected domain",
-      selectedDomainId: "d1",
+      name: "falls back to the id when no domain contains a matching topic",
+      groupingUnit: .topic,
       id: "unknown",
       expected: "unknown"
     ),
@@ -781,7 +846,7 @@ struct ReportViewModel_TimelineTitleTests {
   @MainActor
   func timelineTitle_test(testCase: TestCase) {
     let vm = ReportViewModel(repository: MockActivityRepository())
-    vm.selectedDomainId = testCase.selectedDomainId
+    vm.groupingUnit = testCase.groupingUnit
 
     #expect(vm.timelineTitle(for: testCase.id, domains: Self.domains) == testCase.expected)
   }
@@ -792,7 +857,7 @@ struct ReportViewModel_TimelineColorTests {
 
   struct TestCase: CustomTestStringConvertible {
     let name: String
-    let selectedDomainId: String?
+    let groupingUnit: GroupingUnit
     let activity: Activity
     let expected: Color
 
@@ -806,20 +871,20 @@ struct ReportViewModel_TimelineColorTests {
 
   static let cases: [TestCase] = [
     TestCase(
-      name: "colors by domain index when no domain is selected",
-      selectedDomainId: nil,
+      name: "colors by domain index when grouping unit is domain",
+      groupingUnit: .domain,
       activity: activity(domainId: "d2", topicId: "t9", startedAt: date(2026, 1, 1), endedAt: date(2026, 1, 1, 1)),
       expected: .orange
     ),
     TestCase(
-      name: "colors by topic index within the domain when a domain is selected",
-      selectedDomainId: "d1",
+      name: "colors by topic index when grouping unit is topic",
+      groupingUnit: .topic,
       activity: activity(domainId: "d1", topicId: "t2", startedAt: date(2026, 1, 1), endedAt: date(2026, 1, 1, 1)),
       expected: .orange
     ),
     TestCase(
       name: "falls back to gray when the id has no color mapping",
-      selectedDomainId: nil,
+      groupingUnit: .domain,
       activity: activity(domainId: "unknown", topicId: "t9", startedAt: date(2026, 1, 1), endedAt: date(2026, 1, 1, 1)),
       expected: .gray
     ),
@@ -829,7 +894,7 @@ struct ReportViewModel_TimelineColorTests {
   @MainActor
   func timelineColor_test(testCase: TestCase) {
     let vm = ReportViewModel(repository: MockActivityRepository())
-    vm.selectedDomainId = testCase.selectedDomainId
+    vm.groupingUnit = testCase.groupingUnit
 
     #expect(vm.timelineColor(for: testCase.activity, domains: Self.domains) == testCase.expected)
   }
