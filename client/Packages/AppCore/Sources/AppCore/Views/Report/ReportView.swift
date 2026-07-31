@@ -17,6 +17,7 @@ struct ReportView: View {
         else {
           dateRangeHeader
           barChart
+          totalsArea
         }
         summaryList
       }
@@ -349,6 +350,30 @@ struct ReportView: View {
     .clipped()
     .animation(.easeInOut(duration: Self.dataAnimationDuration).delay(Self.dataAnimationDelay), value: bar.total)
     .animation(.easeInOut(duration: Self.dataAnimationDuration).delay(Self.dataAnimationDelay), value: width)
+  }
+
+  // MARK: - Totals Area
+
+  private var totalsArea: some View {
+    HStack {
+      VStack(alignment: .leading, spacing: 4) {
+        Text("合計時間")
+          .font(.caption2)
+          .foregroundStyle(.secondary)
+        styledDuration(viewModel.headerTotalDuration)
+      }
+      Divider()
+        .frame(height: 32)
+      VStack(alignment: .leading, spacing: 4) {
+        Text("平均時間")
+          .font(.caption2)
+          .foregroundStyle(.secondary)
+        styledDuration(viewModel.headerAverageDuration)
+      }
+      Spacer()
+    }
+    .padding(.horizontal)
+    .padding(.vertical, 12)
   }
 
   // MARK: - Summary List
