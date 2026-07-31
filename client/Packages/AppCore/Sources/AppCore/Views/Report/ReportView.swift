@@ -354,26 +354,28 @@ struct ReportView: View {
 
   // MARK: - Totals Area
 
+  private static let cardCornerRadius: CGFloat = 16
+
   private var totalsArea: some View {
-    HStack {
-      VStack(alignment: .leading, spacing: 4) {
-        Text("合計時間")
-          .font(.caption2)
-          .foregroundStyle(.secondary)
-        styledDuration(viewModel.headerTotalDuration)
-      }
-      Divider()
-        .frame(height: 32)
-      VStack(alignment: .leading, spacing: 4) {
-        Text("平均時間")
-          .font(.caption2)
-          .foregroundStyle(.secondary)
-        styledDuration(viewModel.headerAverageDuration)
-      }
-      Spacer()
+    HStack(spacing: 12) {
+      totalsCard(title: "合計時間", duration: viewModel.headerTotalDuration)
+      totalsCard(title: "平均時間", duration: viewModel.headerAverageDuration)
     }
     .padding(.horizontal)
+  }
+
+  private func totalsCard(title: String, duration: TimeInterval) -> some View {
+    VStack(alignment: .leading, spacing: 4) {
+      Text(title)
+        .font(.caption2)
+        .foregroundStyle(.secondary)
+      styledDuration(duration)
+    }
+    .frame(maxWidth: .infinity, alignment: .leading)
+    .padding(.horizontal)
     .padding(.vertical, 12)
+    .background(Color(.secondarySystemGroupedBackground))
+    .clipShape(RoundedRectangle(cornerRadius: Self.cardCornerRadius))
   }
 
   // MARK: - Summary List
@@ -386,6 +388,9 @@ struct ReportView: View {
         summaryRowView(row)
       }
     }
+    .background(Color(.secondarySystemGroupedBackground))
+    .clipShape(RoundedRectangle(cornerRadius: Self.cardCornerRadius))
+    .padding(.horizontal)
     .padding(.top, 16)
   }
 
