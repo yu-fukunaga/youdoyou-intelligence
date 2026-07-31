@@ -65,12 +65,29 @@ struct ReportView: View {
         periodMoveButton(systemImage: "chevron.right", offset: 1)
       }
       HStack {
+        if !viewModel.isViewingToday {
+          todayButton
+        }
+        Spacer()
+      }
+      HStack {
         Spacer()
         groupingUnitButton
       }
     }
     .padding(.horizontal)
     .padding(.vertical, 12)
+  }
+
+  private var todayButton: some View {
+    Button {
+      viewModel.jumpToToday()
+    } label: {
+      Text("今日")
+        .font(.caption)
+        .fontWeight(.semibold)
+        .foregroundStyle(.secondary)
+    }
   }
 
   private func periodMoveButton(systemImage: String, offset: Int) -> some View {

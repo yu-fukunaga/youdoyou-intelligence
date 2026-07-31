@@ -238,6 +238,15 @@ class ReportViewModel: ObservableObject {
     Task { await loadIfNeeded() }
   }
 
+  var isViewingToday: Bool {
+    dateInterval.contains(.now)
+  }
+
+  func jumpToToday() {
+    currentDate = .now
+    Task { await loadIfNeeded() }
+  }
+
   // MARK: - Filter
 
   func toggleItem(_ id: String) {
