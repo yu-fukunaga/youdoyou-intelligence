@@ -54,33 +54,34 @@ struct ReportView: View {
   // MARK: - Date Range Header
 
   private var dateRangeHeader: some View {
-    HStack {
-      VStack(alignment: .leading) {
-        HStack {
-          VStack(alignment: .leading, spacing: 4) {
-            Text("合計時間")
-              .font(.caption2)
-              .foregroundStyle(.secondary)
-            styledDuration(viewModel.headerTotalDuration)
-          }
-          Divider()
-            .frame(height: 32)
-          VStack(alignment: .leading, spacing: 4) {
-            Text("平均時間")
-              .font(.caption2)
-              .foregroundStyle(.secondary)
-            styledDuration(viewModel.headerAverageDuration)
-          }
-        }
+    ZStack {
+      HStack(spacing: 4) {
+        periodMoveButton(systemImage: "chevron.left", offset: -1)
         Text(viewModel.headerDateRangeText)
-          .font(.caption)
+          .font(.subheadline)
           .foregroundStyle(.secondary)
+          .contentTransition(.opacity)
+          .animation(.easeInOut, value: viewModel.headerDateRangeText)
+        periodMoveButton(systemImage: "chevron.right", offset: 1)
       }
-      Spacer()
-      groupingUnitButton
+      HStack {
+        Spacer()
+        groupingUnitButton
+      }
     }
     .padding(.horizontal)
     .padding(.vertical, 12)
+  }
+
+  private func periodMoveButton(systemImage: String, offset: Int) -> some View {
+    Button {
+      viewModel.movePeriod(by: offset)
+    } label: {
+      Image(systemName: systemImage)
+        .font(.system(size: 13, weight: .semibold))
+        .foregroundStyle(.secondary)
+        .frame(width: 20, height: 20)
+    }
   }
 
   private func styledDuration(_ duration: TimeInterval) -> Text {
