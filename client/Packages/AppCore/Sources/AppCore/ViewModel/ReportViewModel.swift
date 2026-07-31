@@ -401,14 +401,6 @@ class ReportViewModel: ObservableObject {
 
   // MARK: - List
 
-  // Unfiltered total, used for the list's pinned "Total" row so it always
-  // reflects everything regardless of the current selection.
-  var listTotalDuration: TimeInterval {
-    currentActivities.reduce(0) {
-      $0 + $1.endedAt.timeIntervalSince($1.startedAt)
-    }
-  }
-
   // Uses currentActivities (not filteredActivities) so every row stays visible
   // for tapping even while another item is selected.
   func listRows(domains: [Domain]) -> [ListRow] {

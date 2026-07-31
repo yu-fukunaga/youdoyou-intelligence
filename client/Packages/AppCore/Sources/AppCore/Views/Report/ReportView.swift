@@ -381,38 +381,12 @@ struct ReportView: View {
   private var summaryList: some View {
     let rows = viewModel.listRows(domains: appState.domains)
 
-    return LazyVStack(spacing: 0, pinnedViews: [.sectionHeaders]) {
-      Section {
-        ForEach(rows) { row in
-          summaryRowView(row)
-        }
-      } header: {
-        totalRowView
+    return LazyVStack(spacing: 0) {
+      ForEach(rows) { row in
+        summaryRowView(row)
       }
     }
     .padding(.top, 16)
-  }
-
-  private var totalRowView: some View {
-    let isSelected = viewModel.selectedItemId == nil
-
-    return Button {
-      viewModel.selectedItemId = nil
-    } label: {
-      HStack(spacing: 10) {
-        Text("合計")
-          .font(.subheadline)
-          .fontWeight(.semibold)
-        Spacer()
-        Text(viewModel.listTotalDuration.reportText)
-          .font(.subheadline)
-          .foregroundStyle(.secondary)
-      }
-      .padding(.horizontal)
-      .padding(.vertical, 12)
-      .background(isSelected ? Color(.systemFill) : Color(.systemGroupedBackground))
-    }
-    .buttonStyle(.plain)
   }
 
   private func summaryRowView(_ row: ListRow) -> some View {
