@@ -260,18 +260,6 @@ struct ReportView: View {
     }
     .frame(height: 120)
     .padding(.horizontal)
-    .contentShape(Rectangle())
-    .gesture(
-      DragGesture(minimumDistance: 30)
-        .onEnded { value in
-          if value.translation.width < -30 {
-            viewModel.movePeriod(by: 1)
-          }
-          else if value.translation.width > 30 {
-            viewModel.movePeriod(by: -1)
-          }
-        }
-    )
   }
 
   // Gridline positions are fixed fractions of the plot height (never move, no
