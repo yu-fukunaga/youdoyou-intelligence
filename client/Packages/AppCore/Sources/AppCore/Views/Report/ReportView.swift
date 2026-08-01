@@ -431,17 +431,45 @@ struct ReportView: View {
   // MARK: - Summary List
 
   private var summaryList: some View {
-    let rows = viewModel.listRows(domains: appState.domains)
-
-    return LazyVStack(spacing: 0) {
-      ForEach(rows) { row in
-        summaryRowView(row)
+    Group {
+      if viewModel.groupingUnit == .topic {
+        let sections = viewModel.listSections(domains: appState.domains)
+        LazyVStack(spacing: 0) {
+          ForEach(sections) { section in
+            Section {
+              ForEach(section.rows) { row in
+                summaryRowView(row)
+              }
+            } header: {
+              sectionHeaderView(section.title)
+            }
+          }
+        }
+      }
+      else {
+        let rows = viewModel.listRows(domains: appState.domains)
+        LazyVStack(spacing: 0) {
+          ForEach(rows) { row in
+            summaryRowView(row)
+          }
+        }
       }
     }
     .background(Color(.secondarySystemGroupedBackground))
     .clipShape(RoundedRectangle(cornerRadius: Self.cardCornerRadius))
     .padding(.horizontal)
     .padding(.top, 16)
+  }
+
+  private func sectionHeaderView(_ title: String) -> some View {
+    Text(title)
+      .font(.caption)
+      .fontWeight(.semibold)
+      .foregroundStyle(.secondary)
+      .frame(maxWidth: .infinity, alignment: .leading)
+      .padding(.horizontal)
+      .padding(.top, 12)
+      .padding(.bottom, 4)
   }
 
   private func summaryRowView(_ row: ListRow) -> some View {
@@ -464,16 +492,9 @@ struct ReportView: View {
         Circle()
           .fill(row.color)
           .frame(width: 10, height: 10)
-        VStack(alignment: .leading, spacing: 1) {
-          if let subtitle = row.subtitle {
-            Text(subtitle)
-              .font(.caption2)
-              .foregroundStyle(.secondary)
-          }
-          Text(row.title)
-            .font(.subheadline)
-            .lineLimit(1)
-        }
+        Text(row.title)
+          .font(.subheadline)
+          .lineLimit(1)
         Spacer()
         Text(displayDuration.reportText)
           .font(.subheadline)

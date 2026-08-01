@@ -47,10 +47,17 @@ struct ClockSegment: Identifiable {
 struct ListRow: Identifiable {
   let id: String
   let title: String
-  let subtitle: String?
   let color: Color
   let bucketDurations: [TimeInterval]
   var total: TimeInterval { bucketDurations.reduce(0, +) }
+}
+
+// Topic-mode grouping of ListRow by its Domain, in Domain registration order,
+// with rows sorted by total within each section.
+struct ListSection: Identifiable {
+  let id: String
+  let title: String
+  let rows: [ListRow]
 }
 
 // MARK: - ViewModel
@@ -441,13 +448,25 @@ class ReportViewModel: ObservableObject {
       let durations = allBuckets.map { bucket in
         listBucketDuration(groupId: group.id, activities: activities, in: bucket)
       }
-      let subtitle = groupingUnit == .topic ? domainTitle(forTopicId: group.id, domains: domains) : nil
       return ListRow(
-        id: group.id, title: group.title, subtitle: subtitle,
+        id: group.id, title: group.title,
         color: colorMap[group.id] ?? .gray, bucketDurations: durations
       )
     }
     .sorted { $0.total > $1.total }
+  }
+
+  // Topic-mode only: groups `listRows` by Domain, in Domain registration order,
+  // with rows sorted by total within each section. Domains with no rows are omitted.
+  func listSections(domains: [Domain]) -> [ListSection] {
+    let rows = listRows(domains: domains)
+    let rowsByTopicId = Dictionary(uniqueKeysWithValues: rows.map { ($0.id, $0) })
+
+    return domains.compactMap { domain in
+      let sectionRows = domain.topics.compactMap { rowsByTopicId[$0.id] }.sorted { $0.total > $1.total }
+      guard !sectionRows.isEmpty else { return nil }
+      return ListSection(id: domain.id ?? domain.title, title: domain.title, rows: sectionRows)
+    }
   }
 
   // MARK: - Helpers
@@ -511,10 +530,6 @@ class ReportViewModel: ObservableObject {
     return ids.map { id in
       (id: id, title: timelineTitle(for: id, domains: domains))
     }
-  }
-
-  private func domainTitle(forTopicId topicId: String, domains: [Domain]) -> String? {
-    domains.first { $0.topics.contains { $0.id == topicId } }?.title
   }
 
   private func colorMap(domains: [Domain]) -> [String: Color] {

@@ -692,7 +692,6 @@ struct ReportViewModel_ListRowsTests {
   struct ExpectedRow: Equatable {
     let id: String
     let title: String
-    let subtitle: String?
     let bucketDurations: [TimeInterval]
   }
 
@@ -726,11 +725,11 @@ struct ReportViewModel_ListRowsTests {
       selectedItemId: nil,
       expectedRows: [
         ExpectedRow(
-          id: "d1", title: "Work", subtitle: nil,
+          id: "d1", title: "Work",
           bucketDurations: [0, 0, 0, 2 * 3600, 0, 1 * 3600, 0]
         ),
         ExpectedRow(
-          id: "d2", title: "Life", subtitle: nil,
+          id: "d2", title: "Life",
           bucketDurations: [0, 0, 0, 0, 1 * 3600, 0, 0]
         ),
       ]
@@ -746,11 +745,11 @@ struct ReportViewModel_ListRowsTests {
       selectedItemId: nil,
       expectedRows: [
         ExpectedRow(
-          id: "t1", title: "Coding", subtitle: "Work",
+          id: "t1", title: "Coding",
           bucketDurations: [0, 0, 0, 2 * 3600, 0, 0, 0]
         ),
         ExpectedRow(
-          id: "t2", title: "Meeting", subtitle: "Work",
+          id: "t2", title: "Meeting",
           bucketDurations: [0, 0, 0, 0, 1 * 3600, 0, 0]
         ),
       ]
@@ -766,11 +765,11 @@ struct ReportViewModel_ListRowsTests {
       selectedItemId: "d1",
       expectedRows: [
         ExpectedRow(
-          id: "d1", title: "Work", subtitle: nil,
+          id: "d1", title: "Work",
           bucketDurations: [0, 0, 0, 2 * 3600, 0, 0, 0]
         ),
         ExpectedRow(
-          id: "d2", title: "Life", subtitle: nil,
+          id: "d2", title: "Life",
           bucketDurations: [0, 0, 0, 0, 1 * 3600, 0, 0]
         ),
       ]
@@ -792,7 +791,7 @@ struct ReportViewModel_ListRowsTests {
 
     let rows =
       vm.listRows(domains: testCase.domains)
-      .map { ExpectedRow(id: $0.id, title: $0.title, subtitle: $0.subtitle, bucketDurations: $0.bucketDurations) }
+      .map { ExpectedRow(id: $0.id, title: $0.title, bucketDurations: $0.bucketDurations) }
 
     #expect(rows == testCase.expectedRows)
   }
