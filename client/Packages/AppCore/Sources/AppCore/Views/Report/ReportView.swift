@@ -66,7 +66,7 @@ struct ReportView: View {
         periodMoveButton(systemImage: "chevron.left", offset: -1)
         Text(viewModel.headerDateRangeText)
           .font(.subheadline)
-          .foregroundStyle(.secondary)
+          .foregroundStyle(.primary)
           .contentTransition(.opacity)
           .animation(.easeInOut, value: viewModel.headerDateRangeText)
         periodMoveButton(systemImage: "chevron.right", offset: 1)
@@ -83,7 +83,7 @@ struct ReportView: View {
       }
     }
     .padding(.horizontal)
-    .padding(.vertical, 12)
+    .padding(.vertical, 16)
   }
 
   private var todayButton: some View {
