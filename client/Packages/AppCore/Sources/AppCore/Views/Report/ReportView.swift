@@ -440,6 +440,7 @@ struct ReportView: View {
       }
     }
     .padding(.horizontal)
+    .padding(.top, 12)
   }
 
   private func totalsCard(title: String, duration: TimeInterval) -> some View {
