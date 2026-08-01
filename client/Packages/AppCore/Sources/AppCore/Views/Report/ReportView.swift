@@ -64,12 +64,16 @@ struct ReportView: View {
     ZStack {
       HStack(spacing: 4) {
         periodMoveButton(systemImage: "chevron.left", offset: -1)
+          .opacity(viewModel.isAtEarliestDate ? 0 : 1)
+          .disabled(viewModel.isAtEarliestDate)
         Text(viewModel.headerDateRangeText)
           .font(.subheadline)
           .foregroundStyle(.primary)
-          .contentTransition(.opacity)
+          .contentTransition(.numericText())
           .animation(.easeInOut, value: viewModel.headerDateRangeText)
         periodMoveButton(systemImage: "chevron.right", offset: 1)
+          .opacity(viewModel.isViewingToday ? 0 : 1)
+          .disabled(viewModel.isViewingToday)
       }
       HStack {
         if !viewModel.isViewingToday {

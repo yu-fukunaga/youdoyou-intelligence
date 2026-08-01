@@ -243,7 +243,18 @@ class ReportViewModel: ObservableObject {
 
   // MARK: - Navigation
 
+  // The earliest date the report can navigate back to (service start).
+  private static let earliestDate = DateComponents(
+    calendar: Calendar(identifier: .gregorian), year: 2020, month: 1, day: 1
+  ).date!
+
+  // movePeriod is only ever called with an offset of ±1 (the arrow buttons), so
+  // blocking any move that would cross either bound is enough to keep navigation
+  // within [earliestDate, now].
   func movePeriod(by offset: Int) {
+    guard offset < 0 || !isViewingToday else { return }
+    guard offset > 0 || !isAtEarliestDate else { return }
+
     let cal = calendar
     let component: Calendar.Component
     let value: Int
@@ -270,6 +281,10 @@ class ReportViewModel: ObservableObject {
 
   var isViewingToday: Bool {
     dateInterval.contains(.now)
+  }
+
+  var isAtEarliestDate: Bool {
+    dateInterval.start <= Self.earliestDate
   }
 
   func jumpToToday() {
