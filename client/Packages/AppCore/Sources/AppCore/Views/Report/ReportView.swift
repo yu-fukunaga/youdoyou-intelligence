@@ -6,6 +6,12 @@ struct ReportView: View {
   @StateObject private var viewModel = ReportViewModel()
   @EnvironmentObject private var appState: AppState
 
+  // Position and visibility are driven separately so a fresh selection (nil -> index)
+  // appears in place instead of sliding in from the last position, while switching
+  // between two selected bars (index -> index) still slides.
+  @State private var highlightedBarIndex: Int = 0
+  @State private var highlightOpacity: Double = 0
+
   var body: some View {
     ScrollView {
       VStack(spacing: 0) {
@@ -226,6 +232,7 @@ struct ReportView: View {
   private static let labelAnimationDelay: TimeInterval = 0.1
   private static let dataAnimationDelay: TimeInterval = 0.3
   private static let dataAnimationDuration: TimeInterval = 0.5
+  private static let highlightAnimationDuration: TimeInterval = 0.2
 
   // Compact "3h35m" form for the per-bar annotation, kept separate from the
   // Japanese "3時間35分" used elsewhere (header, list, day chart).
@@ -251,33 +258,49 @@ struct ReportView: View {
       let totalSpacing = Self.barSpacing * CGFloat(bars.count - 1)
       let columnWidth = max((plotWidth - totalSpacing) / CGFloat(realCount), 0)
 
-      VStack(alignment: .leading, spacing: 4) {
-        ZStack(alignment: .topLeading) {
-          barChartGridlines(maxHours: maxHours, columnWidth: columnWidth, realCount: realCount)
-          HStack(alignment: .bottom, spacing: Self.barSpacing) {
-            ForEach(bars) { bar in
-              barColumn(bar, maxHours: maxHours, width: bar.isPlaceholder ? 0 : columnWidth)
-            }
-          }
-        }
-        .frame(height: Self.barChartPlotHeight)
-
-        HStack(spacing: Self.barSpacing) {
+      ZStack(alignment: .topLeading) {
+        selectionHighlight(columnWidth: columnWidth, height: geometry.size.height)
+        barChartGridlines(maxHours: maxHours, columnWidth: columnWidth, realCount: realCount)
+          .frame(height: Self.barChartPlotHeight)
+        HStack(alignment: .top, spacing: Self.barSpacing) {
           ForEach(bars) { bar in
-            Text(bar.label)
-              .font(.caption2)
-              .foregroundStyle(.secondary)
-              .frame(width: bar.isPlaceholder ? 0 : columnWidth)
-              .clipped()
-              .contentTransition(.opacity)
-              .animation(.easeInOut.delay(Self.labelAnimationDelay), value: bar.label)
-              .animation(.easeInOut.delay(Self.labelAnimationDelay), value: columnWidth)
+            barColumn(bar, maxHours: maxHours, width: bar.isPlaceholder ? 0 : columnWidth)
           }
         }
       }
     }
     .frame(height: 120)
     .padding(.horizontal)
+    .onChange(of: viewModel.selectedBarIndex) { oldValue, newValue in
+      guard let newValue else {
+        // Deselecting: fade out in place, keep highlightedBarIndex where it was.
+        withAnimation(.easeInOut(duration: Self.highlightAnimationDuration)) { highlightOpacity = 0 }
+        return
+      }
+      if oldValue == nil {
+        // Fresh selection: snap to the new bar first, then fade in there -
+        // avoids sliding in from wherever the indicator last was.
+        var noAnimation = Transaction()
+        noAnimation.disablesAnimations = true
+        withTransaction(noAnimation) { highlightedBarIndex = newValue }
+        withAnimation(.easeInOut(duration: Self.highlightAnimationDuration)) { highlightOpacity = 1 }
+      }
+      else {
+        // Switching between two selected bars: slide.
+        withAnimation(.easeInOut(duration: Self.highlightAnimationDuration)) { highlightedBarIndex = newValue }
+      }
+    }
+  }
+
+  // A single highlight rectangle that slides to the selected bar's x position,
+  // rather than each bar toggling its own background - gives the selection a
+  // sense of motion when it moves from one bar to another.
+  private func selectionHighlight(columnWidth: CGFloat, height: CGFloat) -> some View {
+    Rectangle()
+      .fill(Color(.systemFill))
+      .frame(width: columnWidth, height: height)
+      .offset(x: CGFloat(highlightedBarIndex) * (columnWidth + Self.barSpacing))
+      .opacity(highlightOpacity)
   }
 
   // Gridline positions are fixed fractions of the plot height (never move, no
@@ -324,30 +347,46 @@ struct ReportView: View {
   }
 
   private func barColumn(_ bar: BarChartColumn, maxHours: Double, width: CGFloat) -> some View {
-    VStack(spacing: 0) {
-      Spacer(minLength: 0)
+    VStack(spacing: 4) {
+      VStack(spacing: 0) {
+        Spacer(minLength: 0)
 
-      VStack(spacing: 2) {
-        Text(bar.total > 0 ? compactDuration(bar.total) : "")
-          .font(.system(size: 9))
-          .foregroundStyle(.secondary)
-          .lineLimit(1)
-          .fixedSize(horizontal: true, vertical: false)
-          .contentTransition(.opacity)
-          .animation(.easeInOut(duration: Self.dataAnimationDuration).delay(Self.dataAnimationDelay), value: bar.total)
+        VStack(spacing: 2) {
+          Text(bar.total > 0 ? compactDuration(bar.total) : "")
+            .font(.system(size: 9))
+            .foregroundStyle(.secondary)
+            .lineLimit(1)
+            .fixedSize(horizontal: true, vertical: false)
+            .contentTransition(.opacity)
+            .animation(
+              .easeInOut(duration: Self.dataAnimationDuration).delay(Self.dataAnimationDelay), value: bar.total)
 
-        VStack(spacing: 0) {
-          ForEach(bar.segments) { segment in
-            Rectangle()
-              .fill(segment.color)
-              .frame(height: CGFloat(segment.duration / 3600 / maxHours) * Self.barChartPlotHeight)
+          VStack(spacing: 0) {
+            ForEach(bar.segments) { segment in
+              Rectangle()
+                .fill(segment.color)
+                .frame(height: CGFloat(segment.duration / 3600 / maxHours) * Self.barChartPlotHeight)
+            }
           }
+          .padding(.horizontal, 4)
         }
-        .padding(.horizontal, 4)
       }
+      .frame(width: width, height: Self.barChartPlotHeight)
+      .clipped()
+
+      Text(bar.label)
+        .font(.caption2)
+        .foregroundStyle(.secondary)
+        .frame(width: width)
+        .clipped()
+        .contentTransition(.opacity)
+        .animation(.easeInOut.delay(Self.labelAnimationDelay), value: bar.label)
+        .animation(.easeInOut.delay(Self.labelAnimationDelay), value: width)
     }
-    .frame(width: width, height: Self.barChartPlotHeight)
-    .clipped()
+    .contentShape(Rectangle())
+    .onTapGesture {
+      viewModel.toggleBar(bar.id)
+    }
     .animation(.easeInOut(duration: Self.dataAnimationDuration).delay(Self.dataAnimationDelay), value: bar.total)
     .animation(.easeInOut(duration: Self.dataAnimationDuration).delay(Self.dataAnimationDelay), value: width)
   }

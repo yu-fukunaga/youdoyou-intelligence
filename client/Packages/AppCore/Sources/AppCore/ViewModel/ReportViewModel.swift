@@ -57,12 +57,17 @@ struct ListRow: Identifiable {
 
 @MainActor
 class ReportViewModel: ObservableObject {
-  @Published var periodType: PeriodType = .week
+  @Published var periodType: PeriodType = .week {
+    didSet { selectedBarIndex = nil }
+  }
   @Published var currentDate: Date = .now
   @Published var groupingUnit: GroupingUnit = .domain {
     didSet { selectedItemId = nil }
   }
   @Published var selectedItemId: String?
+  // Independent from selectedItemId: selects a bar chart bucket rather than a
+  // domain/topic, and both can be active at once.
+  @Published var selectedBarIndex: Int?
   @Published private(set) var isLoading = false
 
   private var cache: [String: [Activity]] = [:]
@@ -235,6 +240,7 @@ class ReportViewModel: ObservableObject {
     }
 
     currentDate = cal.date(byAdding: component, value: value, to: currentDate)!
+    selectedBarIndex = nil
     Task { await loadIfNeeded() }
   }
 
@@ -244,10 +250,15 @@ class ReportViewModel: ObservableObject {
 
   func jumpToToday() {
     currentDate = .now
+    selectedBarIndex = nil
     Task { await loadIfNeeded() }
   }
 
   // MARK: - Filter
+
+  func toggleBar(_ index: Int) {
+    selectedBarIndex = selectedBarIndex == index ? nil : index
+  }
 
   func toggleItem(_ id: String) {
     selectedItemId = selectedItemId == id ? nil : id
