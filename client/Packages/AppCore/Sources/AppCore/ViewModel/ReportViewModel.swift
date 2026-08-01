@@ -174,18 +174,35 @@ class ReportViewModel: ObservableObject {
   // itself, which must stay the real, PeriodType-dependent count (e.g. for averaging).
   static let maxBarSlots = 7
 
+  // Fixed to Japanese regardless of device locale, matching the rest of the UI's
+  // hardcoded Japanese text (Calendar.shortWeekdaySymbols would otherwise follow
+  // the device locale, e.g. "Mon" instead of "月").
+  private static let japaneseShortWeekdaySymbols = ["日", "月", "火", "水", "木", "金", "土"]
+
   func bucketLabel(for bucket: DateInterval) -> String {
     let cal = calendar
     switch periodType {
     case .day:
       return ""
     case .week:
-      return cal.shortWeekdaySymbols[cal.component(.weekday, from: bucket.start) - 1]
+      return Self.japaneseShortWeekdaySymbols[cal.component(.weekday, from: bucket.start) - 1]
     case .sixMonths:
       return "\(cal.component(.month, from: bucket.start))月"
     case .fiveYears:
       return "\(cal.component(.year, from: bucket.start))年"
     }
+  }
+
+  // A more detailed label than `bucketLabel`, used where a single bar's date is
+  // called out on its own (e.g. the totals area's "◯◯の合計"). Week spells out
+  // the full date since a lone weekday initial ("月") reads ambiguously there.
+  func totalsAreaLabel(for bar: BarChartColumn) -> String {
+    guard periodType == .week else { return bar.label }
+    let cal = calendar
+    let month = cal.component(.month, from: bar.date)
+    let day = cal.component(.day, from: bar.date)
+    let weekday = Self.japaneseShortWeekdaySymbols[cal.component(.weekday, from: bar.date) - 1]
+    return "\(month)月\(day)日(\(weekday))"
   }
 
   // MARK: - Fetch

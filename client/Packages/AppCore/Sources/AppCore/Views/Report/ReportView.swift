@@ -396,9 +396,20 @@ struct ReportView: View {
   private static let cardCornerRadius: CGFloat = 16
 
   private var totalsArea: some View {
-    HStack(spacing: 12) {
-      totalsCard(title: "合計時間", duration: viewModel.headerTotalDuration)
-      totalsCard(title: "平均時間", duration: viewModel.headerAverageDuration)
+    let bars = viewModel.barChartColumns(domains: appState.domains)
+    let selectedBar = viewModel.selectedBarIndex.flatMap { index in bars.first { $0.id == index } }
+
+    return HStack(spacing: 12) {
+      if let selectedBar {
+        let cumulative = bars.filter { $0.id <= selectedBar.id }.reduce(0) { $0 + $1.total }
+        let label = viewModel.totalsAreaLabel(for: selectedBar)
+        totalsCard(title: "\(label)の合計", duration: selectedBar.total)
+        totalsCard(title: "\(label)までの累計", duration: cumulative)
+      }
+      else {
+        totalsCard(title: "合計時間", duration: viewModel.headerTotalDuration)
+        totalsCard(title: "平均時間", duration: viewModel.headerAverageDuration)
+      }
     }
     .padding(.horizontal)
   }
