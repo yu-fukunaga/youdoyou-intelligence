@@ -273,8 +273,10 @@ struct ReportView: View {
     .padding(.horizontal)
     .onChange(of: viewModel.selectedBarIndex) { oldValue, newValue in
       guard let newValue else {
-        // Deselecting: fade out in place, keep highlightedBarIndex where it was.
-        withAnimation(.easeInOut(duration: Self.highlightAnimationDuration)) { highlightOpacity = 0 }
+        // Deselecting: disappear instantly, no fade.
+        var noAnimation = Transaction()
+        noAnimation.disablesAnimations = true
+        withTransaction(noAnimation) { highlightOpacity = 0 }
         return
       }
       if oldValue == nil {
