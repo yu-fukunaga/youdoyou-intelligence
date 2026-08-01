@@ -3,7 +3,7 @@ id: "0014"
 status: "done"
 priority: "medium"
 assignee: null
-epic: null
+epic: "🍀 機能追加・改善"
 dueDate: null
 created: "2026-07-29T02:03:05.000Z"
 modified: "2026-07-29T06:56:44.263Z"

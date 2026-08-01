@@ -5,6 +5,7 @@ created: "2026-07-28T03:58:27.000Z"
 modified: "2026-07-28T03:58:27.000Z"
 completedAt: null
 labels: ["client"]
+epic: "🐤 リファクタリング"
 order: ""
 ---
 
