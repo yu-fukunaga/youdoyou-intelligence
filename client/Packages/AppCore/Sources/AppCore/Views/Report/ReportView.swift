@@ -446,6 +446,16 @@ struct ReportView: View {
 
   private func summaryRowView(_ row: ListRow) -> some View {
     let isSelected = viewModel.selectedItemId == row.id
+    // While a bar is selected, show that bucket's duration instead of the row's
+    // full-period total - falls back to the total if the index is out of range
+    // (shouldn't happen since selectedBarIndex only ever targets a real bucket).
+    let displayDuration: TimeInterval =
+      if let index = viewModel.selectedBarIndex, row.bucketDurations.indices.contains(index) {
+        row.bucketDurations[index]
+      }
+      else {
+        row.total
+      }
 
     return Button {
       viewModel.toggleItem(row.id)
@@ -465,7 +475,7 @@ struct ReportView: View {
             .lineLimit(1)
         }
         Spacer()
-        Text(row.total.reportText)
+        Text(displayDuration.reportText)
           .font(.subheadline)
           .foregroundStyle(.secondary)
       }
