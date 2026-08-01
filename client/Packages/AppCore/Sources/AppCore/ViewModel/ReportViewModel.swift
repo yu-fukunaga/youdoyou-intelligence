@@ -47,22 +47,34 @@ struct ClockSegment: Identifiable {
 struct ListRow: Identifiable {
   let id: String
   let title: String
-  let subtitle: String?
   let color: Color
   let bucketDurations: [TimeInterval]
   var total: TimeInterval { bucketDurations.reduce(0, +) }
+}
+
+// Topic-mode grouping of ListRow by its Domain, in Domain registration order,
+// with rows sorted by total within each section.
+struct ListSection: Identifiable {
+  let id: String
+  let title: String
+  let rows: [ListRow]
 }
 
 // MARK: - ViewModel
 
 @MainActor
 class ReportViewModel: ObservableObject {
-  @Published var periodType: PeriodType = .week
+  @Published var periodType: PeriodType = .week {
+    didSet { selectedBarIndex = nil }
+  }
   @Published var currentDate: Date = .now
   @Published var groupingUnit: GroupingUnit = .domain {
     didSet { selectedItemId = nil }
   }
   @Published var selectedItemId: String?
+  // Independent from selectedItemId: selects a bar chart bucket rather than a
+  // domain/topic, and both can be active at once.
+  @Published var selectedBarIndex: Int?
   @Published private(set) var isLoading = false
 
   private var cache: [String: [Activity]] = [:]
@@ -169,18 +181,35 @@ class ReportViewModel: ObservableObject {
   // itself, which must stay the real, PeriodType-dependent count (e.g. for averaging).
   static let maxBarSlots = 7
 
+  // Fixed to Japanese regardless of device locale, matching the rest of the UI's
+  // hardcoded Japanese text (Calendar.shortWeekdaySymbols would otherwise follow
+  // the device locale, e.g. "Mon" instead of "月").
+  private static let japaneseShortWeekdaySymbols = ["日", "月", "火", "水", "木", "金", "土"]
+
   func bucketLabel(for bucket: DateInterval) -> String {
     let cal = calendar
     switch periodType {
     case .day:
       return ""
     case .week:
-      return cal.shortWeekdaySymbols[cal.component(.weekday, from: bucket.start) - 1]
+      return Self.japaneseShortWeekdaySymbols[cal.component(.weekday, from: bucket.start) - 1]
     case .sixMonths:
       return "\(cal.component(.month, from: bucket.start))月"
     case .fiveYears:
       return "\(cal.component(.year, from: bucket.start))年"
     }
+  }
+
+  // A more detailed label than `bucketLabel`, used where a single bar's date is
+  // called out on its own (e.g. the totals area's "◯◯の合計"). Week spells out
+  // the full date since a lone weekday initial ("月") reads ambiguously there.
+  func totalsAreaLabel(for bar: BarChartColumn) -> String {
+    guard periodType == .week else { return bar.label }
+    let cal = calendar
+    let month = cal.component(.month, from: bar.date)
+    let day = cal.component(.day, from: bar.date)
+    let weekday = Self.japaneseShortWeekdaySymbols[cal.component(.weekday, from: bar.date) - 1]
+    return "\(month)月\(day)日(\(weekday))"
   }
 
   // MARK: - Fetch
@@ -214,7 +243,18 @@ class ReportViewModel: ObservableObject {
 
   // MARK: - Navigation
 
+  // The earliest date the report can navigate back to (service start).
+  private static let earliestDate = DateComponents(
+    calendar: Calendar(identifier: .gregorian), year: 2020, month: 1, day: 1
+  ).date!
+
+  // movePeriod is only ever called with an offset of ±1 (the arrow buttons), so
+  // blocking any move that would cross either bound is enough to keep navigation
+  // within [earliestDate, now].
   func movePeriod(by offset: Int) {
+    guard offset < 0 || !isViewingToday else { return }
+    guard offset > 0 || !isAtEarliestDate else { return }
+
     let cal = calendar
     let component: Calendar.Component
     let value: Int
@@ -235,10 +275,29 @@ class ReportViewModel: ObservableObject {
     }
 
     currentDate = cal.date(byAdding: component, value: value, to: currentDate)!
+    selectedBarIndex = nil
+    Task { await loadIfNeeded() }
+  }
+
+  var isViewingToday: Bool {
+    dateInterval.contains(.now)
+  }
+
+  var isAtEarliestDate: Bool {
+    dateInterval.start <= Self.earliestDate
+  }
+
+  func jumpToToday() {
+    currentDate = .now
+    selectedBarIndex = nil
     Task { await loadIfNeeded() }
   }
 
   // MARK: - Filter
+
+  func toggleBar(_ index: Int) {
+    selectedBarIndex = selectedBarIndex == index ? nil : index
+  }
 
   func toggleItem(_ id: String) {
     selectedItemId = selectedItemId == id ? nil : id
@@ -392,14 +451,6 @@ class ReportViewModel: ObservableObject {
 
   // MARK: - List
 
-  // Unfiltered total, used for the list's pinned "Total" row so it always
-  // reflects everything regardless of the current selection.
-  var listTotalDuration: TimeInterval {
-    currentActivities.reduce(0) {
-      $0 + $1.endedAt.timeIntervalSince($1.startedAt)
-    }
-  }
-
   // Uses currentActivities (not filteredActivities) so every row stays visible
   // for tapping even while another item is selected.
   func listRows(domains: [Domain]) -> [ListRow] {
@@ -412,13 +463,25 @@ class ReportViewModel: ObservableObject {
       let durations = allBuckets.map { bucket in
         listBucketDuration(groupId: group.id, activities: activities, in: bucket)
       }
-      let subtitle = groupingUnit == .topic ? domainTitle(forTopicId: group.id, domains: domains) : nil
       return ListRow(
-        id: group.id, title: group.title, subtitle: subtitle,
+        id: group.id, title: group.title,
         color: colorMap[group.id] ?? .gray, bucketDurations: durations
       )
     }
     .sorted { $0.total > $1.total }
+  }
+
+  // Topic-mode only: groups `listRows` by Domain, in Domain registration order,
+  // with rows sorted by total within each section. Domains with no rows are omitted.
+  func listSections(domains: [Domain]) -> [ListSection] {
+    let rows = listRows(domains: domains)
+    let rowsByTopicId = Dictionary(uniqueKeysWithValues: rows.map { ($0.id, $0) })
+
+    return domains.compactMap { domain in
+      let sectionRows = domain.topics.compactMap { rowsByTopicId[$0.id] }.sorted { $0.total > $1.total }
+      guard !sectionRows.isEmpty else { return nil }
+      return ListSection(id: domain.id ?? domain.title, title: domain.title, rows: sectionRows)
+    }
   }
 
   // MARK: - Helpers
@@ -482,10 +545,6 @@ class ReportViewModel: ObservableObject {
     return ids.map { id in
       (id: id, title: timelineTitle(for: id, domains: domains))
     }
-  }
-
-  private func domainTitle(forTopicId topicId: String, domains: [Domain]) -> String? {
-    domains.first { $0.topics.contains { $0.id == topicId } }?.title
   }
 
   private func colorMap(domains: [Domain]) -> [String: Color] {
