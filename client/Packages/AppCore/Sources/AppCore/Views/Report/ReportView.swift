@@ -249,9 +249,31 @@ struct ReportView: View {
     return "\(hours)h\(minutes)m"
   }
 
+  // Rounds up to a clean axis value so the top and midpoint gridlines are always
+  // whole numbers instead of an arbitrary decimal like 2.4. Week's bars are daily
+  // totals (capped at 24h) so it uses its own small-scale tiers; 6M/5Y bars are
+  // monthly/yearly totals that can run much higher, so those round up to the next
+  // multiple of 20h instead (minimum 20h).
+  private static let weekAxisTiers: [Double] = [6, 12, 18, 24]
+  private static let axisStepHours: Double = 20
+
+  private func niceMaxHours(_ rawMaxHours: Double) -> Double {
+    let buffered = rawMaxHours * 1.2
+
+    guard viewModel.periodType == .week else {
+      return max((buffered / Self.axisStepHours).rounded(.up) * Self.axisStepHours, Self.axisStepHours)
+    }
+    if let tier = Self.weekAxisTiers.first(where: { $0 >= buffered }) {
+      return tier
+    }
+    var tier = Self.weekAxisTiers.last!
+    while tier < buffered { tier *= 2 }
+    return tier
+  }
+
   private var barChart: some View {
     let bars = viewModel.barChartColumns(domains: appState.domains)
-    let maxHours = max((bars.map { $0.total / 3600 }.max() ?? 0) * 1.15, 1)
+    let maxHours = niceMaxHours(bars.map { $0.total / 3600 }.max() ?? 0)
     // Placeholder columns (beyond the current PeriodType's real bucket count) are
     // squeezed to width 0 so only real columns share the available width - see
     // ReportViewModel.maxBarSlots for why the column count itself never changes.
