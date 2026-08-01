@@ -1,4 +1,3 @@
-import Charts
 import Foundation
 import SwiftUI
 
@@ -16,15 +15,9 @@ struct ReportView: View {
     ScrollView {
       VStack(spacing: 0) {
         periodPicker
-        if viewModel.periodType == .day {
-          dayHeader
-          dayClockChart
-        }
-        else {
-          dateRangeHeader
-          barChart
-          totalsArea
-        }
+        dateRangeHeader
+        barChart
+        totalsArea
         summaryList
       }
     }
@@ -148,86 +141,6 @@ struct ReportView: View {
     }
   }
 
-  // MARK: - Day Header
-
-  private static let clockChartSize: CGFloat = 200
-
-  private var dayHeader: some View {
-    HStack {
-      Text(viewModel.headerDateRangeText)
-        .font(.caption)
-        .foregroundStyle(.secondary)
-      Spacer()
-      groupingUnitButton
-    }
-    .padding(.horizontal)
-    .padding(.vertical, 12)
-  }
-
-  // MARK: - Day Clock Chart
-
-  private var dayClockChart: some View {
-    let segments = viewModel.clockSegments(domains: appState.domains)
-
-    return ZStack {
-      clockHourLabels
-        .frame(width: Self.clockChartSize + 40, height: Self.clockChartSize + 40)
-
-      Chart(segments) { segment in
-        SectorMark(
-          angle: .value("Duration", segment.duration),
-          innerRadius: .ratio(0.72),
-          angularInset: 0
-        )
-        .foregroundStyle(segment.color)
-      }
-      .frame(width: Self.clockChartSize, height: Self.clockChartSize)
-
-      VStack(spacing: 2) {
-        Text("合計")
-          .font(.caption2)
-          .foregroundStyle(.secondary)
-        Text(viewModel.headerTotalDuration.reportText)
-          .font(.title2)
-          .fontWeight(.bold)
-      }
-    }
-    .padding(.vertical, 8)
-    .frame(maxWidth: .infinity)
-    .contentShape(Rectangle())
-    .gesture(
-      DragGesture(minimumDistance: 30)
-        .onEnded { value in
-          if value.translation.width < -30 {
-            viewModel.movePeriod(by: 1)
-          }
-          else if value.translation.width > 30 {
-            viewModel.movePeriod(by: -1)
-          }
-        }
-    )
-  }
-
-  // Hour numbers (0-23) around the chart's outer edge, like a clock face.
-  private var clockHourLabels: some View {
-    Canvas { context, size in
-      let center = CGPoint(x: size.width / 2, y: size.height / 2)
-      let radius = Self.clockChartSize / 2 + 12
-
-      for hour in 0..<24 {
-        let angle = Angle(degrees: Double(hour) / 24 * 360 - 90).radians
-        let point = CGPoint(
-          x: center.x + CGFloat(cos(angle)) * radius,
-          y: center.y + CGFloat(sin(angle)) * radius
-        )
-        let text = Text("\(hour)")
-          .font(.system(size: 9))
-          .foregroundStyle(.secondary)
-        context.draw(text, at: point)
-      }
-    }
-  }
-
   // MARK: - Bar Chart
 
   // Custom-drawn (not Swift Charts): gridlines/labels are always computed fresh from
@@ -254,23 +167,23 @@ struct ReportView: View {
   }
 
   // Rounds up to a clean axis value so the top and midpoint gridlines are always
-  // whole numbers instead of an arbitrary decimal like 2.4. Week's bars are daily
-  // totals (capped at 24h) so it uses its own small-scale tiers; 6M/5Y bars are
+  // whole numbers instead of an arbitrary decimal like 2.4. Day's bars are daily
+  // totals (capped at 24h) so it uses its own small-scale tiers; Month/Year bars are
   // monthly/yearly totals that can run much higher, so those round up to the next
   // multiple of 20h instead (minimum 20h).
-  private static let weekAxisTiers: [Double] = [6, 12, 18, 24]
+  private static let dayAxisTiers: [Double] = [6, 12, 18, 24]
   private static let axisStepHours: Double = 20
 
   private func niceMaxHours(_ rawMaxHours: Double) -> Double {
     let buffered = rawMaxHours * 1.2
 
-    guard viewModel.periodType == .week else {
+    guard viewModel.periodType == .day else {
       return max((buffered / Self.axisStepHours).rounded(.up) * Self.axisStepHours, Self.axisStepHours)
     }
-    if let tier = Self.weekAxisTiers.first(where: { $0 >= buffered }) {
+    if let tier = Self.dayAxisTiers.first(where: { $0 >= buffered }) {
       return tier
     }
-    var tier = Self.weekAxisTiers.last!
+    var tier = Self.dayAxisTiers.last!
     while tier < buffered { tier *= 2 }
     return tier
   }

@@ -5,9 +5,8 @@ import SwiftUI
 
 enum PeriodType: String, CaseIterable {
   case day = "Day"
-  case week = "Week"
-  case sixMonths = "6M"
-  case fiveYears = "5Y"
+  case month = "Month"
+  case year = "Year"
 }
 
 enum GroupingUnit: String, CaseIterable {
@@ -38,12 +37,6 @@ struct BarChartColumn: Identifiable {
   var total: TimeInterval { segments.reduce(0) { $0 + $1.duration } }
 }
 
-struct ClockSegment: Identifiable {
-  let id: String
-  let color: Color
-  let duration: TimeInterval
-}
-
 struct ListRow: Identifiable {
   let id: String
   let title: String
@@ -64,7 +57,7 @@ struct ListSection: Identifiable {
 
 @MainActor
 class ReportViewModel: ObservableObject {
-  @Published var periodType: PeriodType = .week {
+  @Published var periodType: PeriodType = .day {
     didSet { selectedBarIndex = nil }
   }
   @Published var currentDate: Date = .now
@@ -104,18 +97,15 @@ class ReportViewModel: ObservableObject {
     let cal = calendar
     switch periodType {
     case .day:
-      let start = cal.startOfDay(for: currentDate)
-      return DateInterval(start: start, duration: 86400)
-    case .week:
       return cal.dateInterval(of: .weekOfYear, for: currentDate)!
-    case .sixMonths:
+    case .month:
       let year = cal.component(.year, from: currentDate)
       let month = cal.component(.month, from: currentDate)
       let startMonth = month <= 6 ? 1 : 7
       let start = cal.date(from: DateComponents(year: year, month: startMonth, day: 1))!
       let end = cal.date(byAdding: .month, value: 6, to: start)!
       return DateInterval(start: start, end: end)
-    case .fiveYears:
+    case .year:
       let year = cal.component(.year, from: currentDate)
       let start = cal.date(from: DateComponents(year: year - 4, month: 1, day: 1))!
       let end = cal.date(from: DateComponents(year: year + 1, month: 1, day: 1))!
@@ -130,27 +120,23 @@ class ReportViewModel: ObservableObject {
 
     switch periodType {
     case .day:
-      let f = DateFormatter()
-      f.dateFormat = "yyyy/MM/dd"
-      return f.string(from: interval.start)
-    case .week:
       let startFormatter = DateFormatter()
       startFormatter.dateFormat = "yyyy年M月d日"
       let endFormatter = DateFormatter()
       endFormatter.dateFormat = "M月d日"
       return "\(startFormatter.string(from: interval.start))~\(endFormatter.string(from: lastDay))"
-    case .sixMonths:
+    case .month:
       let year = cal.component(.year, from: interval.start)
       let half = cal.component(.month, from: interval.start) <= 6 ? "前期" : "後期"
       return "\(year)年\(half)"
-    case .fiveYears:
+    case .year:
       let startYear = cal.component(.year, from: interval.start)
       let endYear = cal.component(.year, from: lastDay)
       return "\(startYear)年~\(endYear)年"
     }
   }
 
-  // MARK: - Buckets (Week / 6M / 5Y only)
+  // MARK: - Buckets (Day / Month / Year only)
 
   var buckets: [DateInterval] {
     let cal = calendar
@@ -160,10 +146,9 @@ class ReportViewModel: ObservableObject {
 
     let component: Calendar.Component = {
       switch periodType {
-      case .day: return .hour  // unused
-      case .week: return .day
-      case .sixMonths: return .month
-      case .fiveYears: return .year
+      case .day: return .day
+      case .month: return .month
+      case .year: return .year
       }
     }()
 
@@ -175,7 +160,7 @@ class ReportViewModel: ObservableObject {
     return result
   }
 
-  // The largest bucket count across all non-Day PeriodTypes (Week's 7). Used to pad the
+  // The largest bucket count across all PeriodTypes (Day's 7). Used to pad the
   // bar chart's column array to a constant length so PeriodType switches never insert or
   // remove columns (which would break their per-bar animation) - not used for `buckets`
   // itself, which must stay the real, PeriodType-dependent count (e.g. for averaging).
@@ -190,21 +175,19 @@ class ReportViewModel: ObservableObject {
     let cal = calendar
     switch periodType {
     case .day:
-      return ""
-    case .week:
       return Self.japaneseShortWeekdaySymbols[cal.component(.weekday, from: bucket.start) - 1]
-    case .sixMonths:
+    case .month:
       return "\(cal.component(.month, from: bucket.start))月"
-    case .fiveYears:
+    case .year:
       return "\(cal.component(.year, from: bucket.start))年"
     }
   }
 
   // A more detailed label than `bucketLabel`, used where a single bar's date is
-  // called out on its own (e.g. the totals area's "◯◯の合計"). Week spells out
+  // called out on its own (e.g. the totals area's "◯◯の合計"). Day spells out
   // the full date since a lone weekday initial ("月") reads ambiguously there.
   func totalsAreaLabel(for bar: BarChartColumn) -> String {
-    guard periodType == .week else { return bar.label }
+    guard periodType == .day else { return bar.label }
     let cal = calendar
     let month = cal.component(.month, from: bar.date)
     let day = cal.component(.day, from: bar.date)
@@ -261,15 +244,12 @@ class ReportViewModel: ObservableObject {
 
     switch periodType {
     case .day:
-      component = .day
-      value = offset
-    case .week:
       component = .weekOfYear
       value = offset
-    case .sixMonths:
+    case .month:
       component = .month
       value = 6 * offset
-    case .fiveYears:
+    case .year:
       component = .year
       value = 5 * offset
     }
@@ -316,59 +296,11 @@ class ReportViewModel: ObservableObject {
     }
   }
 
-  // Average per bucket (day for Week, month for 6M, year for 5Y). Day has no
-  // meaningful sub-bucket, so it's treated as a single bucket (average == total).
+  // Average per bucket (day for Day, month for Month, year for Year).
   var headerAverageDuration: TimeInterval {
-    let count = periodType == .day ? 1 : buckets.count
+    let count = buckets.count
     guard count > 0 else { return 0 }
     return headerTotalDuration / Double(count)
-  }
-
-  // MARK: - Timeline (Day)
-
-  var timelineActivities: [Activity] {
-    filteredActivities.sorted { $0.startedAt < $1.startedAt }
-  }
-
-  // The full day as an ordered sequence of segments covering all 24 hours (activities
-  // plus the gaps between them), so a SectorMark chart built from this list lines up
-  // with real clock positions instead of just being proportional slices.
-  func clockSegments(domains: [Domain]) -> [ClockSegment] {
-    let cal = calendar
-    let dayStart = cal.startOfDay(for: currentDate)
-    let dayEnd = cal.date(byAdding: .day, value: 1, to: dayStart)!
-    let colorMap = colorMap(domains: domains)
-
-    var segments: [ClockSegment] = []
-    var cursor = dayStart
-
-    for activity in timelineActivities {
-      let start = max(max(activity.startedAt, dayStart), cursor)
-      let end = min(activity.endedAt, dayEnd)
-      guard start < end else { continue }
-
-      if start > cursor {
-        segments.append(
-          ClockSegment(
-            id: "gap-\(segments.count)", color: Color(.systemFill), duration: start.timeIntervalSince(cursor))
-        )
-      }
-
-      let colorId = groupId(for: activity)
-      segments.append(
-        ClockSegment(
-          id: activity.id ?? colorId, color: colorMap[colorId] ?? .gray, duration: end.timeIntervalSince(start))
-      )
-      cursor = end
-    }
-
-    if cursor < dayEnd {
-      segments.append(
-        ClockSegment(id: "gap-\(segments.count)", color: Color(.systemFill), duration: dayEnd.timeIntervalSince(cursor))
-      )
-    }
-
-    return segments
   }
 
   func timelineTitle(for id: String, domains: [Domain]) -> String {
@@ -385,17 +317,7 @@ class ReportViewModel: ObservableObject {
     }
   }
 
-  func groupId(for activity: Activity) -> String {
-    activity[keyPath: groupingKey]
-  }
-
-  func timelineColor(for activity: Activity, domains: [Domain]) -> Color {
-    let colorMap = colorMap(domains: domains)
-    let id = activity[keyPath: groupingKey]
-    return colorMap[id] ?? .gray
-  }
-
-  // MARK: - Bar Chart (Week / 6M / 5Y)
+  // MARK: - Bar Chart (Day / Month / Year)
 
   // Always includes every known group (domain or topic) per bucket, with 0 duration when
   // absent, so a segment's identity is stable across period navigation (a group that had
