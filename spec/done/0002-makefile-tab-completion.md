@@ -3,7 +3,7 @@ id: "0002"
 status: "done"
 priority: "medium"
 assignee: null
-epic: null
+epic: "🪼 開発ツール整備"
 dueDate: null
 created: "2026-07-25T01:56:51.000Z"
 modified: "2026-07-27T00:29:16.448Z"

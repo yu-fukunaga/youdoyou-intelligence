@@ -3,7 +3,7 @@ id: "0001"
 status: "done"
 priority: "medium"
 assignee: null
-epic: null
+epic: "🐤 リファクタリング"
 dueDate: null
 created: "2026-07-14T14:01:19.387Z"
 modified: "2026-07-22T12:46:10.839Z"

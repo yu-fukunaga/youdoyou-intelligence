@@ -5,7 +5,7 @@ created: "2026-07-31T00:50:19.000Z"
 modified: "2026-08-01T11:42:05.000Z"
 completedAt: "2026-08-01T11:42:05.000Z"
 labels: ["client"]
-epic: "機能追加・改善"
+epic: "🍀 機能追加・改善"
 order: ""
 ---
 

@@ -3,7 +3,7 @@ id: "0006"
 status: "done"
 priority: "medium"
 assignee: null
-epic: null
+epic: "🦔 品質基盤整備"
 dueDate: null
 created: "2026-07-25T00:37:18.993Z"
 modified: "2026-07-28T05:51:35.792Z"
