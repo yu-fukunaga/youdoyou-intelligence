@@ -94,6 +94,10 @@ struct ReportView: View {
         .font(.caption)
         .fontWeight(.semibold)
         .foregroundStyle(.secondary)
+        .padding(.horizontal, 10)
+        .padding(.vertical, 4)
+        .background(Color(.systemFill))
+        .clipShape(Capsule())
     }
   }
 
