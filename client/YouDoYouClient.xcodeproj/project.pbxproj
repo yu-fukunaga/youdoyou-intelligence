@@ -43,7 +43,7 @@
 			);
 			target = 496B2DE62F5B3E93009735E3 /* YouDoYou_iOS */;
 		};
-		49E704522FA0E9FA00F0FD59 /* Exceptions for "YouDoYouClient" folder in "YouDoYou_iOS" target */ = {
+		49E704522FA0E9FA00F0FD59 /* Exceptions for "YouDoYou_iOS" folder in "YouDoYou_iOS" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
@@ -53,12 +53,12 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		496B2DE92F5B3E93009735E3 /* YouDoYouClient */ = {
+		496B2DE92F5B3E93009735E3 /* YouDoYou_iOS */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				49E704522FA0E9FA00F0FD59 /* Exceptions for "YouDoYouClient" folder in "YouDoYou_iOS" target */,
+				49E704522FA0E9FA00F0FD59 /* Exceptions for "YouDoYou_iOS" folder in "YouDoYou_iOS" target */,
 			);
-			path = YouDoYouClient;
+			path = YouDoYou_iOS;
 			sourceTree = "<group>";
 		};
 		496B2E012F5B3E95009735E3 /* YouDoYouClientUITests */ = {
@@ -108,7 +108,7 @@
 			children = (
 				49F1FE5E2FBB337C00450E6C /* YouDoYouClient_Test.xctestplan */,
 				49894E502F5B43B300F3EAAC /* Packages */,
-				496B2DE92F5B3E93009735E3 /* YouDoYouClient */,
+				496B2DE92F5B3E93009735E3 /* YouDoYou_iOS */,
 				496B2E012F5B3E95009735E3 /* YouDoYouClientUITests */,
 				49894E532F5BCBD600F3EAAC /* Frameworks */,
 				496B2DE82F5B3E93009735E3 /* Products */,
@@ -149,7 +149,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				496B2DE92F5B3E93009735E3 /* YouDoYouClient */,
+				496B2DE92F5B3E93009735E3 /* YouDoYou_iOS */,
 				49894E502F5B43B300F3EAAC /* Packages */,
 			);
 			name = YouDoYou_iOS;
@@ -284,9 +284,9 @@
 			inputFileListPaths = (
 			);
 			inputPaths = (
-				"$(PROJECT_DIR)/YouDoYouClient/env/plists/GoogleService-Info-emu.plist",
-				"$(PROJECT_DIR)/YouDoYouClient/env/plists/GoogleService-Info-dev.plist",
-				"$(PROJECT_DIR)/YouDoYouClient/env/plists/GoogleService-Info-prod.plist",
+				"$(PROJECT_DIR)/YouDoYou_iOS/env/plists/GoogleService-Info-emu.plist",
+				"$(PROJECT_DIR)/YouDoYou_iOS/env/plists/GoogleService-Info-dev.plist",
+				"$(PROJECT_DIR)/YouDoYou_iOS/env/plists/GoogleService-Info-prod.plist",
 			);
 			name = "Copy GoogleService-Info.plist";
 			outputFileListPaths = (
@@ -459,7 +459,7 @@
 		};
 		496B2E092F5B3E95009735E3 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReferenceAnchor = 496B2DE92F5B3E93009735E3 /* YouDoYouClient */;
+			baseConfigurationReferenceAnchor = 496B2DE92F5B3E93009735E3 /* YouDoYou_iOS */;
 			baseConfigurationReferenceRelativePath = env/xcconfigs/Debug.xcconfig;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -468,7 +468,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = YouDoYouClient/Info.plist;
+				INFOPLIST_FILE = YouDoYou_iOS/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -493,7 +493,7 @@
 		};
 		496B2E0A2F5B3E95009735E3 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReferenceAnchor = 496B2DE92F5B3E93009735E3 /* YouDoYouClient */;
+			baseConfigurationReferenceAnchor = 496B2DE92F5B3E93009735E3 /* YouDoYou_iOS */;
 			baseConfigurationReferenceRelativePath = env/xcconfigs/Release.xcconfig;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -502,7 +502,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = YouDoYouClient/Info.plist;
+				INFOPLIST_FILE = YouDoYou_iOS/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -664,7 +664,7 @@
 		};
 		49BC573B2F9F94510050A02D /* Test */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReferenceAnchor = 496B2DE92F5B3E93009735E3 /* YouDoYouClient */;
+			baseConfigurationReferenceAnchor = 496B2DE92F5B3E93009735E3 /* YouDoYou_iOS */;
 			baseConfigurationReferenceRelativePath = env/xcconfigs/Test.xcconfig;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -673,7 +673,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = YouDoYouClient/Info.plist;
+				INFOPLIST_FILE = YouDoYou_iOS/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
