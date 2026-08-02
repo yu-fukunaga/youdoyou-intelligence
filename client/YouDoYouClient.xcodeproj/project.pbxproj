@@ -24,7 +24,7 @@
 /* Begin PBXFileReference section */
 		496B2DE72F5B3E93009735E3 /* YouDoYou_iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = YouDoYou_iOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		496B2DFE2F5B3E95009735E3 /* YouDoYou_iOS_UITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = YouDoYou_iOS_UITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		49F1FE5E2FBB337C00450E6C /* YouDoYouClient_Test.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = YouDoYouClient_Test.xctestplan; sourceTree = "<group>"; };
+		49F1FE5E2FBB337C00450E6C /* YouDoYou_iOS_Test.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = YouDoYou_iOS_Test.xctestplan; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -91,7 +91,7 @@
 		496B2DDE2F5B3E93009735E3 = {
 			isa = PBXGroup;
 			children = (
-				49F1FE5E2FBB337C00450E6C /* YouDoYouClient_Test.xctestplan */,
+				49F1FE5E2FBB337C00450E6C /* YouDoYou_iOS_Test.xctestplan */,
 				49894E502F5B43B300F3EAAC /* Packages */,
 				496B2DE92F5B3E93009735E3 /* YouDoYou_iOS */,
 				496B2E012F5B3E95009735E3 /* YouDoYou_iOS_UITests */,
