@@ -22,15 +22,6 @@
       "parallelizable" : true,
       "target" : {
         "containerPath" : "container:YouDoYouClient.xcodeproj",
-        "identifier" : "496B2DF32F5B3E95009735E3",
-        "name" : "YouDoYouClientTests"
-      }
-    },
-    {
-      "enabled" : false,
-      "parallelizable" : true,
-      "target" : {
-        "containerPath" : "container:YouDoYouClient.xcodeproj",
         "identifier" : "496B2DFD2F5B3E95009735E3",
         "name" : "YouDoYouClientUITests"
       }

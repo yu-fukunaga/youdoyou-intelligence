@@ -40,17 +40,6 @@
             parallelizable = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "496B2DF32F5B3E95009735E3"
-               BuildableName = "YouDoYouClientTests.xctest"
-               BlueprintName = "YouDoYouClientTests"
-               ReferencedContainer = "container:YouDoYouClient.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO"
-            parallelizable = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
                BlueprintIdentifier = "496B2DFD2F5B3E95009735E3"
                BuildableName = "YouDoYouClientUITests.xctest"
                BlueprintName = "YouDoYouClientUITests"
