@@ -53,9 +53,9 @@
 			path = YouDoYou_iOS;
 			sourceTree = "<group>";
 		};
-		496B2E012F5B3E95009735E3 /* YouDoYouClientUITests */ = {
+		496B2E012F5B3E95009735E3 /* YouDoYou_iOS_UITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = YouDoYouClientUITests;
+			path = YouDoYou_iOS_UITests;
 			sourceTree = "<group>";
 		};
 		49894E502F5B43B300F3EAAC /* Packages */ = {
@@ -94,7 +94,7 @@
 				49F1FE5E2FBB337C00450E6C /* YouDoYouClient_Test.xctestplan */,
 				49894E502F5B43B300F3EAAC /* Packages */,
 				496B2DE92F5B3E93009735E3 /* YouDoYou_iOS */,
-				496B2E012F5B3E95009735E3 /* YouDoYouClientUITests */,
+				496B2E012F5B3E95009735E3 /* YouDoYou_iOS_UITests */,
 				49894E532F5BCBD600F3EAAC /* Frameworks */,
 				496B2DE82F5B3E93009735E3 /* Products */,
 			);
@@ -159,7 +159,7 @@
 				496B2E002F5B3E95009735E3 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				496B2E012F5B3E95009735E3 /* YouDoYouClientUITests */,
+				496B2E012F5B3E95009735E3 /* YouDoYou_iOS_UITests */,
 			);
 			name = YouDoYou_iOS_UITests;
 			packageProductDependencies = (
