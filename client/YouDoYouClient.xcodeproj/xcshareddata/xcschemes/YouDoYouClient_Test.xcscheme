@@ -16,8 +16,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "496B2DE62F5B3E93009735E3"
-               BuildableName = "YouDoYouClient.app"
-               BlueprintName = "YouDoYouClient"
+               BuildableName = "YouDoYou_iOS.app"
+               BlueprintName = "YouDoYou_iOS"
                ReferencedContainer = "container:YouDoYouClient.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -75,8 +75,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "496B2DE62F5B3E93009735E3"
-            BuildableName = "YouDoYouClient.app"
-            BlueprintName = "YouDoYouClient"
+            BuildableName = "YouDoYou_iOS.app"
+            BlueprintName = "YouDoYou_iOS"
             ReferencedContainer = "container:YouDoYouClient.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -92,8 +92,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "496B2DE62F5B3E93009735E3"
-            BuildableName = "YouDoYouClient.app"
-            BlueprintName = "YouDoYouClient"
+            BuildableName = "YouDoYou_iOS.app"
+            BlueprintName = "YouDoYou_iOS"
             ReferencedContainer = "container:YouDoYouClient.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
