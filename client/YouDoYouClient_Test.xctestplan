@@ -23,7 +23,7 @@
       "target" : {
         "containerPath" : "container:YouDoYouClient.xcodeproj",
         "identifier" : "496B2DFD2F5B3E95009735E3",
-        "name" : "YouDoYouClientUITests"
+        "name" : "YouDoYou_iOS_UITests"
       }
     },
     {
