@@ -1,6 +1,8 @@
+import ActivityKit
 import FirebaseAuth
 import FirebaseFirestore
 import Foundation
+import TimerLiveActivityAttributes
 
 @MainActor
 class ActivityCreateViewModel: ObservableObject {
@@ -32,6 +34,16 @@ class ActivityCreateViewModel: ObservableObject {
   func startTimer() {
     activityState.start(domainId: domainId, topicId: topicId)
     error = nil
+    do {
+      try ActivityKit.Activity<TimerLiveActivityAttributes>.request(
+        attributes: TimerLiveActivityAttributes(name: domain?.title ?? ""),
+        contentState: TimerLiveActivityAttributes.ContentState(emoji: topic?.title ?? ""),
+        pushType: nil
+      )
+    }
+    catch {
+      self.error = error.localizedDescription
+    }
   }
 
   func stopTimer() {
