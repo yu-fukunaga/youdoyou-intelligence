@@ -4,7 +4,7 @@
 import PackageDescription
 
 let package = Package(
-  name: "AppCore",
+  name: "YouDoYou",
   platforms: [
     .iOS(.v26),
     .macOS(.v26),

@@ -28,7 +28,7 @@
     },
     {
       "target" : {
-        "containerPath" : "container:Packages\/AppCore",
+        "containerPath" : "container:Packages\/YouDoYou",
         "identifier" : "AppCoreTests",
         "name" : "AppCoreTests"
       }

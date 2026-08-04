@@ -31,7 +31,7 @@
 		49894E522F5B44A800F3EAAC /* Exceptions for "Packages" folder in "YouDoYou_iOS" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				AppCore,
+				YouDoYou,
 			);
 			target = 496B2DE62F5B3E93009735E3 /* YouDoYou_iOS */;
 		};
