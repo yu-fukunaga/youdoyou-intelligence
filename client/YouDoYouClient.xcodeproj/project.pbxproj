@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		49894E552F5BCBD600F3EAAC /* AppCore in Frameworks */ = {isa = PBXBuildFile; productRef = 49894E542F5BCBD600F3EAAC /* AppCore */; };
 		49894EA82F5DA28400F3EAAC /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 49894EA72F5DA28400F3EAAC /* FirebaseCore */; };
+		499F8EF130221CB100E8E893 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 499F8EF030221CB100E8E893 /* WidgetKit.framework */; };
+		499F8EF330221CB100E8E893 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 499F8EF230221CB100E8E893 /* SwiftUI.framework */; };
+		499F8F0030221CB200E8E893 /* YouDoYou_WidgetsExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 499F8EEF30221CB100E8E893 /* YouDoYou_WidgetsExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -19,11 +22,35 @@
 			remoteGlobalIDString = 496B2DE62F5B3E93009735E3;
 			remoteInfo = YouDoYou_iOS;
 		};
+		499F8EFE30221CB200E8E893 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 496B2DDF2F5B3E93009735E3 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 499F8EEE30221CB100E8E893;
+			remoteInfo = YouDoYou_WidgetsExtension;
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		499F8F0630221CB200E8E893 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				499F8F0030221CB200E8E893 /* YouDoYou_WidgetsExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		496B2DE72F5B3E93009735E3 /* YouDoYou_iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = YouDoYou_iOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		496B2DFE2F5B3E95009735E3 /* YouDoYou_iOS_UITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = YouDoYou_iOS_UITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		499F8EEF30221CB100E8E893 /* YouDoYou_WidgetsExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = YouDoYou_WidgetsExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		499F8EF030221CB100E8E893 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		499F8EF230221CB100E8E893 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		49F1FE5E2FBB337C00450E6C /* YouDoYou_iOS_Test.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = YouDoYou_iOS_Test.xctestplan; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -34,6 +61,13 @@
 				YouDoYou,
 			);
 			target = 496B2DE62F5B3E93009735E3 /* YouDoYou_iOS */;
+		};
+		499F8F0530221CB200E8E893 /* Exceptions for "YouDoYou_Widgets" folder in "YouDoYou_WidgetsExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 499F8EEE30221CB100E8E893 /* YouDoYou_WidgetsExtension */;
 		};
 		49E704522FA0E9FA00F0FD59 /* Exceptions for "YouDoYou_iOS" folder in "YouDoYou_iOS" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
@@ -66,6 +100,14 @@
 			path = Packages;
 			sourceTree = "<group>";
 		};
+		499F8EF430221CB100E8E893 /* YouDoYou_Widgets */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				499F8F0530221CB200E8E893 /* Exceptions for "YouDoYou_Widgets" folder in "YouDoYou_WidgetsExtension" target */,
+			);
+			path = YouDoYou_Widgets;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -85,6 +127,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		499F8EEC30221CB100E8E893 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				499F8EF330221CB100E8E893 /* SwiftUI.framework in Frameworks */,
+				499F8EF130221CB100E8E893 /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -95,6 +146,7 @@
 				49894E502F5B43B300F3EAAC /* Packages */,
 				496B2DE92F5B3E93009735E3 /* YouDoYou_iOS */,
 				496B2E012F5B3E95009735E3 /* YouDoYou_iOS_UITests */,
+				499F8EF430221CB100E8E893 /* YouDoYou_Widgets */,
 				49894E532F5BCBD600F3EAAC /* Frameworks */,
 				496B2DE82F5B3E93009735E3 /* Products */,
 			);
@@ -105,6 +157,7 @@
 			children = (
 				496B2DE72F5B3E93009735E3 /* YouDoYou_iOS.app */,
 				496B2DFE2F5B3E95009735E3 /* YouDoYou_iOS_UITests.xctest */,
+				499F8EEF30221CB100E8E893 /* YouDoYou_WidgetsExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -112,6 +165,8 @@
 		49894E532F5BCBD600F3EAAC /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				499F8EF030221CB100E8E893 /* WidgetKit.framework */,
+				499F8EF230221CB100E8E893 /* SwiftUI.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -127,10 +182,12 @@
 				496B2DE42F5B3E93009735E3 /* Frameworks */,
 				496B2DE52F5B3E93009735E3 /* Resources */,
 				49E704E92FA3C22E00F0FD59 /* Copy GoogleService-Info.plist */,
+				499F8F0630221CB200E8E893 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				499F8EFF30221CB200E8E893 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				496B2DE92F5B3E93009735E3 /* YouDoYou_iOS */,
@@ -168,6 +225,28 @@
 			productReference = 496B2DFE2F5B3E95009735E3 /* YouDoYou_iOS_UITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
+		499F8EEE30221CB100E8E893 /* YouDoYou_WidgetsExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 499F8F0130221CB200E8E893 /* Build configuration list for PBXNativeTarget "YouDoYou_WidgetsExtension" */;
+			buildPhases = (
+				499F8EEB30221CB100E8E893 /* Sources */,
+				499F8EEC30221CB100E8E893 /* Frameworks */,
+				499F8EED30221CB100E8E893 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				499F8EF430221CB100E8E893 /* YouDoYou_Widgets */,
+			);
+			name = YouDoYou_WidgetsExtension;
+			packageProductDependencies = (
+			);
+			productName = YouDoYou_WidgetsExtension;
+			productReference = 499F8EEF30221CB100E8E893 /* YouDoYou_WidgetsExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -175,7 +254,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 2630;
+				LastSwiftUpdateCheck = 2660;
 				LastUpgradeCheck = 2630;
 				TargetAttributes = {
 					496B2DE62F5B3E93009735E3 = {
@@ -184,6 +263,9 @@
 					496B2DFD2F5B3E95009735E3 = {
 						CreatedOnToolsVersion = 26.3;
 						TestTargetID = 496B2DE62F5B3E93009735E3;
+					};
+					499F8EEE30221CB100E8E893 = {
+						CreatedOnToolsVersion = 26.6;
 					};
 				};
 			};
@@ -206,6 +288,7 @@
 			targets = (
 				496B2DE62F5B3E93009735E3 /* YouDoYou_iOS */,
 				496B2DFD2F5B3E95009735E3 /* YouDoYou_iOS_UITests */,
+				499F8EEE30221CB100E8E893 /* YouDoYou_WidgetsExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -219,6 +302,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		496B2DFC2F5B3E95009735E3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		499F8EED30221CB100E8E893 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -267,6 +357,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		499F8EEB30221CB100E8E893 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -274,6 +371,11 @@
 			isa = PBXTargetDependency;
 			target = 496B2DE62F5B3E93009735E3 /* YouDoYou_iOS */;
 			targetProxy = 496B2DFF2F5B3E95009735E3 /* PBXContainerItemProxy */;
+		};
+		499F8EFF30221CB200E8E893 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 499F8EEE30221CB100E8E893 /* YouDoYou_WidgetsExtension */;
+			targetProxy = 499F8EFE30221CB200E8E893 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -519,6 +621,99 @@
 			};
 			name = Release;
 		};
+		499F8F0230221CB200E8E893 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = YouDoYou_Widgets/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = YouDoYou_Widgets;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "jp.co.youdoyou.client.YouDoYou-Widgets";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		499F8F0330221CB200E8E893 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = YouDoYou_Widgets/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = YouDoYou_Widgets;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "jp.co.youdoyou.client.YouDoYou-Widgets";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		499F8F0430221CB200E8E893 /* Test */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = YouDoYou_Widgets/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = YouDoYou_Widgets;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "jp.co.youdoyou.client.YouDoYou-Widgets";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Test;
+		};
 		49BC573A2F9F94510050A02D /* Test */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -666,6 +861,16 @@
 				496B2E0F2F5B3E95009735E3 /* Debug */,
 				496B2E102F5B3E95009735E3 /* Release */,
 				49BC573D2F9F94510050A02D /* Test */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		499F8F0130221CB200E8E893 /* Build configuration list for PBXNativeTarget "YouDoYou_WidgetsExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				499F8F0230221CB200E8E893 /* Debug */,
+				499F8F0330221CB200E8E893 /* Release */,
+				499F8F0430221CB200E8E893 /* Test */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
