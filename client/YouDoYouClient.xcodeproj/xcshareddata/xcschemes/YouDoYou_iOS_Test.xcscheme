@@ -16,8 +16,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "496B2DE62F5B3E93009735E3"
-               BuildableName = "YouDoYouClient.app"
-               BlueprintName = "YouDoYouClient"
+               BuildableName = "YouDoYou_iOS.app"
+               BlueprintName = "YouDoYou_iOS"
                ReferencedContainer = "container:YouDoYouClient.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -30,7 +30,7 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <TestPlans>
          <TestPlanReference
-            reference = "container:YouDoYouClient_Test.xctestplan"
+            reference = "container:YouDoYou_iOS_Test.xctestplan"
             default = "YES">
          </TestPlanReference>
       </TestPlans>
@@ -40,20 +40,9 @@
             parallelizable = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "496B2DF32F5B3E95009735E3"
-               BuildableName = "YouDoYouClientTests.xctest"
-               BlueprintName = "YouDoYouClientTests"
-               ReferencedContainer = "container:YouDoYouClient.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO"
-            parallelizable = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
                BlueprintIdentifier = "496B2DFD2F5B3E95009735E3"
-               BuildableName = "YouDoYouClientUITests.xctest"
-               BlueprintName = "YouDoYouClientUITests"
+               BuildableName = "YouDoYou_iOS_UITests.xctest"
+               BlueprintName = "YouDoYou_iOS_UITests"
                ReferencedContainer = "container:YouDoYouClient.xcodeproj">
             </BuildableReference>
          </TestableReference>
@@ -75,8 +64,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "496B2DE62F5B3E93009735E3"
-            BuildableName = "YouDoYouClient.app"
-            BlueprintName = "YouDoYouClient"
+            BuildableName = "YouDoYou_iOS.app"
+            BlueprintName = "YouDoYou_iOS"
             ReferencedContainer = "container:YouDoYouClient.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -92,8 +81,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "496B2DE62F5B3E93009735E3"
-            BuildableName = "YouDoYouClient.app"
-            BlueprintName = "YouDoYouClient"
+            BuildableName = "YouDoYou_iOS.app"
+            BlueprintName = "YouDoYou_iOS"
             ReferencedContainer = "container:YouDoYouClient.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

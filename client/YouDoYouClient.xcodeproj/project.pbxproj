@@ -12,64 +12,56 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		496B2DF52F5B3E95009735E3 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 496B2DDF2F5B3E93009735E3 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 496B2DE62F5B3E93009735E3;
-			remoteInfo = YouDoYouClient;
-		};
 		496B2DFF2F5B3E95009735E3 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 496B2DDF2F5B3E93009735E3 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 496B2DE62F5B3E93009735E3;
-			remoteInfo = YouDoYouClient;
+			remoteInfo = YouDoYou_iOS;
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		496B2DE72F5B3E93009735E3 /* YouDoYouClient.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = YouDoYouClient.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		496B2DF42F5B3E95009735E3 /* YouDoYouClientTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = YouDoYouClientTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		496B2DFE2F5B3E95009735E3 /* YouDoYouClientUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = YouDoYouClientUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		49F1FE5E2FBB337C00450E6C /* YouDoYouClient_Test.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = YouDoYouClient_Test.xctestplan; sourceTree = "<group>"; };
+		496B2DE72F5B3E93009735E3 /* YouDoYou_iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = YouDoYou_iOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		496B2DFE2F5B3E95009735E3 /* YouDoYou_iOS_UITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = YouDoYou_iOS_UITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		49F1FE5E2FBB337C00450E6C /* YouDoYou_iOS_Test.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = YouDoYou_iOS_Test.xctestplan; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		49894E522F5B44A800F3EAAC /* Exceptions for "Packages" folder in "YouDoYouClient" target */ = {
+		49894E522F5B44A800F3EAAC /* Exceptions for "Packages" folder in "YouDoYou_iOS" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				AppCore,
+				YouDoYou,
 			);
-			target = 496B2DE62F5B3E93009735E3 /* YouDoYouClient */;
+			target = 496B2DE62F5B3E93009735E3 /* YouDoYou_iOS */;
 		};
-		49E704522FA0E9FA00F0FD59 /* Exceptions for "YouDoYouClient" folder in "YouDoYouClient" target */ = {
+		49E704522FA0E9FA00F0FD59 /* Exceptions for "YouDoYou_iOS" folder in "YouDoYou_iOS" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
 			);
-			target = 496B2DE62F5B3E93009735E3 /* YouDoYouClient */;
+			target = 496B2DE62F5B3E93009735E3 /* YouDoYou_iOS */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		496B2DE92F5B3E93009735E3 /* YouDoYouClient */ = {
+		496B2DE92F5B3E93009735E3 /* YouDoYou_iOS */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				49E704522FA0E9FA00F0FD59 /* Exceptions for "YouDoYouClient" folder in "YouDoYouClient" target */,
+				49E704522FA0E9FA00F0FD59 /* Exceptions for "YouDoYou_iOS" folder in "YouDoYou_iOS" target */,
 			);
-			path = YouDoYouClient;
+			path = YouDoYou_iOS;
 			sourceTree = "<group>";
 		};
-		496B2E012F5B3E95009735E3 /* YouDoYouClientUITests */ = {
+		496B2E012F5B3E95009735E3 /* YouDoYou_iOS_UITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = YouDoYouClientUITests;
+			path = YouDoYou_iOS_UITests;
 			sourceTree = "<group>";
 		};
 		49894E502F5B43B300F3EAAC /* Packages */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				49894E522F5B44A800F3EAAC /* Exceptions for "Packages" folder in "YouDoYouClient" target */,
+				49894E522F5B44A800F3EAAC /* Exceptions for "Packages" folder in "YouDoYou_iOS" target */,
 			);
 			path = Packages;
 			sourceTree = "<group>";
@@ -86,13 +78,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		496B2DF12F5B3E95009735E3 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		496B2DFB2F5B3E95009735E3 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -106,10 +91,10 @@
 		496B2DDE2F5B3E93009735E3 = {
 			isa = PBXGroup;
 			children = (
-				49F1FE5E2FBB337C00450E6C /* YouDoYouClient_Test.xctestplan */,
+				49F1FE5E2FBB337C00450E6C /* YouDoYou_iOS_Test.xctestplan */,
 				49894E502F5B43B300F3EAAC /* Packages */,
-				496B2DE92F5B3E93009735E3 /* YouDoYouClient */,
-				496B2E012F5B3E95009735E3 /* YouDoYouClientUITests */,
+				496B2DE92F5B3E93009735E3 /* YouDoYou_iOS */,
+				496B2E012F5B3E95009735E3 /* YouDoYou_iOS_UITests */,
 				49894E532F5BCBD600F3EAAC /* Frameworks */,
 				496B2DE82F5B3E93009735E3 /* Products */,
 			);
@@ -118,9 +103,8 @@
 		496B2DE82F5B3E93009735E3 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				496B2DE72F5B3E93009735E3 /* YouDoYouClient.app */,
-				496B2DF42F5B3E95009735E3 /* YouDoYouClientTests.xctest */,
-				496B2DFE2F5B3E95009735E3 /* YouDoYouClientUITests.xctest */,
+				496B2DE72F5B3E93009735E3 /* YouDoYou_iOS.app */,
+				496B2DFE2F5B3E95009735E3 /* YouDoYou_iOS_UITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -135,9 +119,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		496B2DE62F5B3E93009735E3 /* YouDoYouClient */ = {
+		496B2DE62F5B3E93009735E3 /* YouDoYou_iOS */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 496B2E082F5B3E95009735E3 /* Build configuration list for PBXNativeTarget "YouDoYouClient" */;
+			buildConfigurationList = 496B2E082F5B3E95009735E3 /* Build configuration list for PBXNativeTarget "YouDoYou_iOS" */;
 			buildPhases = (
 				496B2DE32F5B3E93009735E3 /* Sources */,
 				496B2DE42F5B3E93009735E3 /* Frameworks */,
@@ -149,41 +133,21 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				496B2DE92F5B3E93009735E3 /* YouDoYouClient */,
+				496B2DE92F5B3E93009735E3 /* YouDoYou_iOS */,
 				49894E502F5B43B300F3EAAC /* Packages */,
 			);
-			name = YouDoYouClient;
+			name = YouDoYou_iOS;
 			packageProductDependencies = (
 				49894E542F5BCBD600F3EAAC /* AppCore */,
 				49894EA72F5DA28400F3EAAC /* FirebaseCore */,
 			);
-			productName = YouDoYouClient;
-			productReference = 496B2DE72F5B3E93009735E3 /* YouDoYouClient.app */;
+			productName = YouDoYou_iOS;
+			productReference = 496B2DE72F5B3E93009735E3 /* YouDoYou_iOS.app */;
 			productType = "com.apple.product-type.application";
 		};
-		496B2DF32F5B3E95009735E3 /* YouDoYouClientTests */ = {
+		496B2DFD2F5B3E95009735E3 /* YouDoYou_iOS_UITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 496B2E0B2F5B3E95009735E3 /* Build configuration list for PBXNativeTarget "YouDoYouClientTests" */;
-			buildPhases = (
-				496B2DF02F5B3E95009735E3 /* Sources */,
-				496B2DF12F5B3E95009735E3 /* Frameworks */,
-				496B2DF22F5B3E95009735E3 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				496B2DF62F5B3E95009735E3 /* PBXTargetDependency */,
-			);
-			name = YouDoYouClientTests;
-			packageProductDependencies = (
-			);
-			productName = YouDoYouClientTests;
-			productReference = 496B2DF42F5B3E95009735E3 /* YouDoYouClientTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
-		496B2DFD2F5B3E95009735E3 /* YouDoYouClientUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 496B2E0E2F5B3E95009735E3 /* Build configuration list for PBXNativeTarget "YouDoYouClientUITests" */;
+			buildConfigurationList = 496B2E0E2F5B3E95009735E3 /* Build configuration list for PBXNativeTarget "YouDoYou_iOS_UITests" */;
 			buildPhases = (
 				496B2DFA2F5B3E95009735E3 /* Sources */,
 				496B2DFB2F5B3E95009735E3 /* Frameworks */,
@@ -195,13 +159,13 @@
 				496B2E002F5B3E95009735E3 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				496B2E012F5B3E95009735E3 /* YouDoYouClientUITests */,
+				496B2E012F5B3E95009735E3 /* YouDoYou_iOS_UITests */,
 			);
-			name = YouDoYouClientUITests;
+			name = YouDoYou_iOS_UITests;
 			packageProductDependencies = (
 			);
-			productName = YouDoYouClientUITests;
-			productReference = 496B2DFE2F5B3E95009735E3 /* YouDoYouClientUITests.xctest */;
+			productName = YouDoYou_iOS_UITests;
+			productReference = 496B2DFE2F5B3E95009735E3 /* YouDoYou_iOS_UITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
@@ -216,10 +180,6 @@
 				TargetAttributes = {
 					496B2DE62F5B3E93009735E3 = {
 						CreatedOnToolsVersion = 26.3;
-					};
-					496B2DF32F5B3E95009735E3 = {
-						CreatedOnToolsVersion = 26.3;
-						TestTargetID = 496B2DE62F5B3E93009735E3;
 					};
 					496B2DFD2F5B3E95009735E3 = {
 						CreatedOnToolsVersion = 26.3;
@@ -244,22 +204,14 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				496B2DE62F5B3E93009735E3 /* YouDoYouClient */,
-				496B2DF32F5B3E95009735E3 /* YouDoYouClientTests */,
-				496B2DFD2F5B3E95009735E3 /* YouDoYouClientUITests */,
+				496B2DE62F5B3E93009735E3 /* YouDoYou_iOS */,
+				496B2DFD2F5B3E95009735E3 /* YouDoYou_iOS_UITests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		496B2DE52F5B3E93009735E3 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		496B2DF22F5B3E95009735E3 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -284,9 +236,9 @@
 			inputFileListPaths = (
 			);
 			inputPaths = (
-				"$(PROJECT_DIR)/YouDoYouClient/env/plists/GoogleService-Info-emu.plist",
-				"$(PROJECT_DIR)/YouDoYouClient/env/plists/GoogleService-Info-dev.plist",
-				"$(PROJECT_DIR)/YouDoYouClient/env/plists/GoogleService-Info-prod.plist",
+				"$(PROJECT_DIR)/YouDoYou_iOS/env/plists/GoogleService-Info-emu.plist",
+				"$(PROJECT_DIR)/YouDoYou_iOS/env/plists/GoogleService-Info-dev.plist",
+				"$(PROJECT_DIR)/YouDoYou_iOS/env/plists/GoogleService-Info-prod.plist",
 			);
 			name = "Copy GoogleService-Info.plist";
 			outputFileListPaths = (
@@ -308,13 +260,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		496B2DF02F5B3E95009735E3 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		496B2DFA2F5B3E95009735E3 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -325,14 +270,9 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		496B2DF62F5B3E95009735E3 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 496B2DE62F5B3E93009735E3 /* YouDoYouClient */;
-			targetProxy = 496B2DF52F5B3E95009735E3 /* PBXContainerItemProxy */;
-		};
 		496B2E002F5B3E95009735E3 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 496B2DE62F5B3E93009735E3 /* YouDoYouClient */;
+			target = 496B2DE62F5B3E93009735E3 /* YouDoYou_iOS */;
 			targetProxy = 496B2DFF2F5B3E95009735E3 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -459,7 +399,7 @@
 		};
 		496B2E092F5B3E95009735E3 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReferenceAnchor = 496B2DE92F5B3E93009735E3 /* YouDoYouClient */;
+			baseConfigurationReferenceAnchor = 496B2DE92F5B3E93009735E3 /* YouDoYou_iOS */;
 			baseConfigurationReferenceRelativePath = env/xcconfigs/Debug.xcconfig;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -468,7 +408,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = YouDoYouClient/Info.plist;
+				INFOPLIST_FILE = YouDoYou_iOS/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -479,9 +419,13 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = jp.co.youdoyou.client.test;
+				PRODUCT_BUNDLE_IDENTIFIER = jp.co.youdoyou.client.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -493,7 +437,7 @@
 		};
 		496B2E0A2F5B3E95009735E3 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReferenceAnchor = 496B2DE92F5B3E93009735E3 /* YouDoYouClient */;
+			baseConfigurationReferenceAnchor = 496B2DE92F5B3E93009735E3 /* YouDoYou_iOS */;
 			baseConfigurationReferenceRelativePath = env/xcconfigs/Release.xcconfig;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -502,7 +446,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = YouDoYouClient/Info.plist;
+				INFOPLIST_FILE = YouDoYou_iOS/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -516,54 +460,16 @@
 				PRODUCT_BUNDLE_IDENTIFIER = jp.co.youdoyou.client;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
-		};
-		496B2E0C2F5B3E95009735E3 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = jp.co.youdoyou.YouDoYouClientTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				STRING_CATALOG_GENERATE_SYMBOLS = NO;
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/YouDoYouClient.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/YouDoYouClient";
-			};
-			name = Debug;
-		};
-		496B2E0D2F5B3E95009735E3 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = jp.co.youdoyou.YouDoYouClientTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				STRING_CATALOG_GENERATE_SYMBOLS = NO;
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/YouDoYouClient.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/YouDoYouClient";
 			};
 			name = Release;
 		};
@@ -574,15 +480,19 @@
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = jp.co.youdoyou.YouDoYouClientUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = jp.co.youdoyou.YouDoYou_iOS_UITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = YouDoYouClient;
+				TEST_TARGET_NAME = YouDoYou_iOS;
 			};
 			name = Debug;
 		};
@@ -593,15 +503,19 @@
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = jp.co.youdoyou.YouDoYouClientUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = jp.co.youdoyou.YouDoYou_iOS_UITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = YouDoYouClient;
+				TEST_TARGET_NAME = YouDoYou_iOS;
 			};
 			name = Release;
 		};
@@ -664,7 +578,7 @@
 		};
 		49BC573B2F9F94510050A02D /* Test */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReferenceAnchor = 496B2DE92F5B3E93009735E3 /* YouDoYouClient */;
+			baseConfigurationReferenceAnchor = 496B2DE92F5B3E93009735E3 /* YouDoYou_iOS */;
 			baseConfigurationReferenceRelativePath = env/xcconfigs/Test.xcconfig;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -673,7 +587,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = YouDoYouClient/Info.plist;
+				INFOPLIST_FILE = YouDoYou_iOS/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -684,36 +598,19 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = jp.co.youdoyou.client.test;
+				PRODUCT_BUNDLE_IDENTIFIER = jp.co.youdoyou.client.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Test;
-		};
-		49BC573C2F9F94510050A02D /* Test */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = jp.co.youdoyou.YouDoYouClientTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				STRING_CATALOG_GENERATE_SYMBOLS = NO;
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/YouDoYouClient.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/YouDoYouClient";
 			};
 			name = Test;
 		};
@@ -724,15 +621,19 @@
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = jp.co.youdoyou.YouDoYouClientUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = jp.co.youdoyou.YouDoYou_iOS_UITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = YouDoYouClient;
+				TEST_TARGET_NAME = YouDoYou_iOS;
 			};
 			name = Test;
 		};
@@ -749,7 +650,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		496B2E082F5B3E95009735E3 /* Build configuration list for PBXNativeTarget "YouDoYouClient" */ = {
+		496B2E082F5B3E95009735E3 /* Build configuration list for PBXNativeTarget "YouDoYou_iOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				496B2E092F5B3E95009735E3 /* Debug */,
@@ -759,17 +660,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		496B2E0B2F5B3E95009735E3 /* Build configuration list for PBXNativeTarget "YouDoYouClientTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				496B2E0C2F5B3E95009735E3 /* Debug */,
-				496B2E0D2F5B3E95009735E3 /* Release */,
-				49BC573C2F9F94510050A02D /* Test */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		496B2E0E2F5B3E95009735E3 /* Build configuration list for PBXNativeTarget "YouDoYouClientUITests" */ = {
+		496B2E0E2F5B3E95009735E3 /* Build configuration list for PBXNativeTarget "YouDoYou_iOS_UITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				496B2E0F2F5B3E95009735E3 /* Debug */,

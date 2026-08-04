@@ -2,13 +2,13 @@
 case "${CONFIGURATION}" in
   "Debug"|"Test")
     if [ "${PLATFORM_NAME}" = "iphonesimulator" ] || [ -n "${MAC_IP_ADDRESS}" ]; then
-      PLIST_SOURCE="${PROJECT_DIR}/YouDoYouClient/env/plists/GoogleService-Info-emu.plist"
+      PLIST_SOURCE="${PROJECT_DIR}/YouDoYou_iOS/env/plists/GoogleService-Info-emu.plist"
     else
-      PLIST_SOURCE="${PROJECT_DIR}/YouDoYouClient/env/plists/GoogleService-Info-dev.plist"
+      PLIST_SOURCE="${PROJECT_DIR}/YouDoYou_iOS/env/plists/GoogleService-Info-dev.plist"
     fi
     ;;
   "Release")
-    PLIST_SOURCE="${PROJECT_DIR}/YouDoYouClient/env/plists/GoogleService-Info-prod.plist"
+    PLIST_SOURCE="${PROJECT_DIR}/YouDoYou_iOS/env/plists/GoogleService-Info-prod.plist"
     ;;
 esac
 
