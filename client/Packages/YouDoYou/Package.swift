@@ -14,7 +14,11 @@ let package = Package(
     .library(
       name: "AppCore",
       targets: ["AppCore"]
-    )
+    ),
+    .library(
+      name: "TimerLiveActivityCore",
+      targets: ["TimerLiveActivityCore"]
+    ),
   ],
   dependencies: [
     .package(url: "https://github.com/firebase/firebase-ios-sdk.git", from: "12.0.0"),
@@ -30,11 +34,22 @@ let package = Package(
         .product(name: "FirebaseAuth", package: "firebase-ios-sdk"),
         .product(name: "FirebaseStorage", package: "firebase-ios-sdk"),
         .product(name: "GoogleSignIn", package: "GoogleSignIn-iOS"),
+        "TimerLiveActivityAttributes",
       ]
     ),
     .testTarget(
       name: "AppCoreTests",
       dependencies: ["AppCore"]
+    ),
+    .target(
+      name: "TimerLiveActivityCore",
+      dependencies: [
+        "TimerLiveActivityAttributes"
+      ]
+    ),
+    .target(
+      name: "TimerLiveActivityAttributes",
+      dependencies: []
     ),
   ]
 )
