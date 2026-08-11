@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct DomainsView: View {
+struct TopicSelectionView: View {
   @EnvironmentObject var appState: AppState
   @State private var isShowingCreate = false
 
@@ -14,7 +14,7 @@ struct DomainsView: View {
           }
         }
       }
-      .navigationTitle("Domains")
+      .navigationTitle("Topics")
       .navigationBarTitleDisplayMode(.large)
       .toolbarBackground(.hidden, for: .navigationBar)
       .background(Color(.systemGroupedBackground))

@@ -30,20 +30,12 @@ public struct RootView: View {
     ZStack(alignment: .bottom) {
       TabView(selection: $selectedTab) {
         NavigationStack {
-          ActivitiesView()
+          HomeView()
         }
         .tabItem {
-          Label("Activities", systemImage: "clock")
+          Label("Home", systemImage: "house")
         }
         .tag(0)
-
-        NavigationStack {
-          DomainsView()
-        }
-        .tabItem {
-          Label("Domains", systemImage: "folder")
-        }
-        .tag(1)
 
         NavigationStack {
           ReportView()
@@ -51,7 +43,7 @@ public struct RootView: View {
         .tabItem {
           Label("Reports", systemImage: "chart.bar.xaxis")
         }
-        .tag(2)
+        .tag(1)
       }
       .environmentObject(activityState)
       .environmentObject(appState)
