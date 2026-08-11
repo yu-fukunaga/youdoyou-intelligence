@@ -6,7 +6,7 @@ replace github.com/yu-fukunaga/youdoyou-intelligence/gen-go => ../gen-go
 
 require (
 	cloud.google.com/go/compute/metadata v0.9.0
-	cloud.google.com/go/firestore v1.24.0
+	cloud.google.com/go/firestore v1.25.0
 	firebase.google.com/go/v4 v4.21.0
 	github.com/bradleyfalzon/ghinstallation/v2 v2.19.0
 	github.com/firebase/genkit/go v1.11.0
