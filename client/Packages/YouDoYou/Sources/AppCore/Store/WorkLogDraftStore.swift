@@ -78,7 +78,11 @@ final class WorkLogDraftStore {
     start(domainId: domainId, topicId: topicId)
     do {
       try ActivityKit.Activity<TimerLiveActivityAttributes>.request(
-        attributes: TimerLiveActivityAttributes(name: domainTitle),
+        attributes: TimerLiveActivityAttributes(
+          domainTitle: domainTitle,
+          topicTitle: topicTitle,
+          startDate: startDate ?? Date()
+        ),
         contentState: TimerLiveActivityAttributes.ContentState(emoji: topicTitle),
         pushType: nil
       )

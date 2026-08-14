@@ -3,15 +3,34 @@ import SwiftUI
 import TimerLiveActivityAttributes
 import WidgetKit
 
-public struct TimerLiveActivity: Widget {
+public struct TimerLiveActivityConfiguration: Widget {
   public var body: some WidgetConfiguration {
     ActivityConfiguration(for: TimerLiveActivityAttributes.self) { context in
       // Lock screen/banner UI goes here
-      VStack {
-        Text("Hello \(context.state.emoji)")
+      HStack(spacing: 12) {
+        Image("YouDoYouClientAppIcon")
+          .resizable()
+          .frame(width: 36, height: 36)
+          .clipShape(RoundedRectangle(cornerRadius: 8))
+
+        VStack(alignment: .leading, spacing: 2) {
+          Text(context.attributes.domainTitle)
+            .font(.caption)
+            .foregroundStyle(.secondary)
+          Text(context.attributes.topicTitle)
+            .font(.headline)
+            .fontWeight(.semibold)
+        }
+        Spacer()
+        Text(timerInterval: context.attributes.startDate...Date.distantFuture, countsDown: false)
+          .font(.system(.title3, design: .monospaced))
+          .fontWeight(.bold)
+          .foregroundStyle(.red)
+          .frame(width: 72, alignment: .trailing)
       }
-      .activityBackgroundTint(Color.cyan)
-      .activitySystemActionForegroundColor(Color.black)
+      .padding(16)
+      .activityBackgroundTint(Color(.systemBackground))
+      .activitySystemActionForegroundColor(.primary)
 
     } dynamicIsland: { context in
       DynamicIsland {
@@ -44,7 +63,7 @@ public struct TimerLiveActivity: Widget {
 
 extension TimerLiveActivityAttributes {
   fileprivate static var preview: TimerLiveActivityAttributes {
-    TimerLiveActivityAttributes(name: "World")
+    TimerLiveActivityAttributes(domainTitle: "Work", topicTitle: "World", startDate: Date())
   }
 }
 
@@ -59,7 +78,7 @@ extension TimerLiveActivityAttributes.ContentState {
 }
 
 #Preview("Notification", as: .content, using: TimerLiveActivityAttributes.preview) {
-  TimerLiveActivity()
+  TimerLiveActivityConfiguration()
 } contentStates: {
   TimerLiveActivityAttributes.ContentState.smiley
   TimerLiveActivityAttributes.ContentState.starEyes
