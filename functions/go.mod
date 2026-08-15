@@ -1,6 +1,6 @@
 module github.com/yu-fukunaga/youdoyou-intelligence/functions
 
-go 1.26.5
+go 1.26.6
 
 require (
 	github.com/GoogleCloudPlatform/functions-framework-go v1.9.2
