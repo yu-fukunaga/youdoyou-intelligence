@@ -8,13 +8,13 @@ private func date(_ y: Int, _ m: Int, _ d: Int, _ h: Int = 0) -> Date {
   Calendar.current.date(from: DateComponents(year: y, month: m, day: d, hour: h))!
 }
 
-private func activity(
+private func workLog(
   domainId: String,
   topicId: String,
   startedAt: Date,
   endedAt: Date
-) -> Activity {
-  Activity(
+) -> WorkLog {
+  WorkLog(
     domainId: domainId,
     topicId: topicId,
     content: "",
@@ -81,7 +81,7 @@ struct ReportViewModel_DateIntervalTests {
     currentDate: Date,
     expected: DateInterval
   ) {
-    let vm = ReportViewModel(repository: MockActivityRepository())
+    let vm = ReportViewModel(repository: MockWorkLogRepository())
     vm.periodType = periodType
     vm.currentDate = currentDate
 
@@ -127,7 +127,7 @@ struct ReportViewModel_HeaderDateRangeTextTests {
     currentDate: Date,
     expected: String
   ) {
-    let vm = ReportViewModel(repository: MockActivityRepository())
+    let vm = ReportViewModel(repository: MockWorkLogRepository())
     vm.periodType = periodType
     vm.currentDate = currentDate
 
@@ -189,7 +189,7 @@ struct ReportViewModel_BucketsTests {
     currentDate: Date,
     expected: [DateInterval]
   ) {
-    let vm = ReportViewModel(repository: MockActivityRepository())
+    let vm = ReportViewModel(repository: MockWorkLogRepository())
     vm.periodType = periodType
     vm.currentDate = currentDate
 
@@ -235,7 +235,7 @@ struct ReportViewModel_BucketLabelTests {
     calendar.locale = Locale(identifier: "en_US")
     calendar.firstWeekday = 2
 
-    let vm = ReportViewModel(repository: MockActivityRepository(), calendar: calendar)
+    let vm = ReportViewModel(repository: MockWorkLogRepository(), calendar: calendar)
     vm.periodType = periodType
 
     let bucket = DateInterval(start: bucketStart, end: bucketStart)
@@ -251,7 +251,7 @@ struct ReportViewModel_LoadIfNeededTests {
   @Test
   @MainActor
   func loadIfNeeded_test() async {
-    let mock = MockActivityRepository()
+    let mock = MockWorkLogRepository()
     let vm = ReportViewModel(repository: mock)
 
     await vm.loadIfNeeded()
@@ -261,7 +261,7 @@ struct ReportViewModel_LoadIfNeededTests {
   @Test
   @MainActor
   func loadIfNeeded_whenQueryThrows_doesNotCacheAndRetriesNextTime() async {
-    let mock = MockActivityRepository()
+    let mock = MockWorkLogRepository()
     mock.stubbedError = DummyError()
     let vm = ReportViewModel(repository: mock)
 
@@ -300,7 +300,7 @@ struct ReportViewModel_MovePeriodTests {
     offset: Int,
     expected: Date
   ) {
-    let vm = ReportViewModel(repository: MockActivityRepository())
+    let vm = ReportViewModel(repository: MockWorkLogRepository())
     vm.periodType = periodType
     vm.currentDate = date(2026, 1, 1)
 
@@ -331,7 +331,7 @@ struct ReportViewModel_ToggleItemTests {
     input: String,
     expected: String?
   ) {
-    let vm = ReportViewModel(repository: MockActivityRepository())
+    let vm = ReportViewModel(repository: MockWorkLogRepository())
     vm.selectedItemId = initialSelectedItemId
 
     vm.toggleItem(input)
@@ -346,7 +346,7 @@ struct ReportViewModel_GroupingUnitTests {
   @Test
   @MainActor
   func changingGroupingUnit_resetsSelectedItem() {
-    let vm = ReportViewModel(repository: MockActivityRepository())
+    let vm = ReportViewModel(repository: MockWorkLogRepository())
     vm.selectedItemId = "d1"
 
     vm.groupingUnit = .topic
@@ -360,7 +360,7 @@ struct ReportViewModel_HeaderTotalDurationTests {
 
   struct TestCase: CustomTestStringConvertible {
     let name: String
-    let activities: [Activity]
+    let workLogs: [WorkLog]
     let groupingUnit: GroupingUnit
     let selectedItemId: String?
     let expected: TimeInterval
@@ -370,10 +370,10 @@ struct ReportViewModel_HeaderTotalDurationTests {
 
   static let cases: [TestCase] = [
     TestCase(
-      name: "sums all activities without filter",
-      activities: [
-        activity(domainId: "d1", topicId: "t1", startedAt: date(2026, 1, 1, 0), endedAt: date(2026, 1, 1, 1)),
-        activity(domainId: "d2", topicId: "t2", startedAt: date(2026, 1, 1, 1), endedAt: date(2026, 1, 1, 3)),
+      name: "sums all workLogs without filter",
+      workLogs: [
+        workLog(domainId: "d1", topicId: "t1", startedAt: date(2026, 1, 1, 0), endedAt: date(2026, 1, 1, 1)),
+        workLog(domainId: "d2", topicId: "t2", startedAt: date(2026, 1, 1, 1), endedAt: date(2026, 1, 1, 3)),
       ],
       groupingUnit: .domain,
       selectedItemId: nil,
@@ -381,9 +381,9 @@ struct ReportViewModel_HeaderTotalDurationTests {
     ),
     TestCase(
       name: "filters by selected domain",
-      activities: [
-        activity(domainId: "d1", topicId: "t1", startedAt: date(2026, 1, 1, 0), endedAt: date(2026, 1, 1, 1)),
-        activity(domainId: "d2", topicId: "t2", startedAt: date(2026, 1, 1, 1), endedAt: date(2026, 1, 1, 3)),
+      workLogs: [
+        workLog(domainId: "d1", topicId: "t1", startedAt: date(2026, 1, 1, 0), endedAt: date(2026, 1, 1, 1)),
+        workLog(domainId: "d2", topicId: "t2", startedAt: date(2026, 1, 1, 1), endedAt: date(2026, 1, 1, 3)),
       ],
       groupingUnit: .domain,
       selectedItemId: "d1",
@@ -391,9 +391,9 @@ struct ReportViewModel_HeaderTotalDurationTests {
     ),
     TestCase(
       name: "filters by selected topic",
-      activities: [
-        activity(domainId: "d1", topicId: "t1", startedAt: date(2026, 1, 1, 0), endedAt: date(2026, 1, 1, 1)),
-        activity(domainId: "d1", topicId: "t2", startedAt: date(2026, 1, 1, 1), endedAt: date(2026, 1, 1, 3)),
+      workLogs: [
+        workLog(domainId: "d1", topicId: "t1", startedAt: date(2026, 1, 1, 0), endedAt: date(2026, 1, 1, 1)),
+        workLog(domainId: "d1", topicId: "t2", startedAt: date(2026, 1, 1, 1), endedAt: date(2026, 1, 1, 3)),
       ],
       groupingUnit: .topic,
       selectedItemId: "t2",
@@ -404,8 +404,8 @@ struct ReportViewModel_HeaderTotalDurationTests {
   @Test(arguments: cases)
   @MainActor
   func headerTotalDuration_test(testCase: TestCase) async {
-    let mock = MockActivityRepository()
-    mock.activities = testCase.activities
+    let mock = MockWorkLogRepository()
+    mock.workLogs = testCase.workLogs
     let vm = ReportViewModel(repository: mock)
     vm.groupingUnit = testCase.groupingUnit
     vm.selectedItemId = testCase.selectedItemId
@@ -422,9 +422,9 @@ struct ReportViewModel_HeaderAverageDurationTests {
   @Test
   @MainActor
   func headerAverageDuration_dividesByBucketCount() async {
-    let mock = MockActivityRepository()
-    mock.activities = [
-      activity(domainId: "d1", topicId: "t1", startedAt: date(2026, 1, 1, 0), endedAt: date(2026, 1, 1, 14))
+    let mock = MockWorkLogRepository()
+    mock.workLogs = [
+      workLog(domainId: "d1", topicId: "t1", startedAt: date(2026, 1, 1, 0), endedAt: date(2026, 1, 1, 14))
     ]
     let vm = ReportViewModel(repository: mock)
     vm.periodType = .day
@@ -447,7 +447,7 @@ struct ReportViewModel_BarChartColumnsTests {
 
   struct TestCase: CustomTestStringConvertible {
     let name: String
-    let activities: [Activity]
+    let workLogs: [WorkLog]
     let domains: [Domain]
     let groupingUnit: GroupingUnit
     let targetBucketIndex: Int
@@ -464,8 +464,8 @@ struct ReportViewModel_BarChartColumnsTests {
   // Day period starting 2026/1/1: bucket 3 is the 2026/1/1 (Thu) day bucket
   static let cases: [TestCase] = [
     TestCase(
-      name: "bucket with no activities still includes every known group at 0 duration",
-      activities: [],
+      name: "bucket with no workLogs still includes every known group at 0 duration",
+      workLogs: [],
       domains: domains,
       groupingUnit: .domain,
       targetBucketIndex: 3,
@@ -476,9 +476,9 @@ struct ReportViewModel_BarChartColumnsTests {
     ),
     TestCase(
       name: "groups by domain and sums duration within the bucket",
-      activities: [
-        activity(domainId: "d1", topicId: "t1", startedAt: date(2026, 1, 1, 1), endedAt: date(2026, 1, 1, 3)),
-        activity(domainId: "d2", topicId: "t9", startedAt: date(2026, 1, 1, 5), endedAt: date(2026, 1, 1, 6)),
+      workLogs: [
+        workLog(domainId: "d1", topicId: "t1", startedAt: date(2026, 1, 1, 1), endedAt: date(2026, 1, 1, 3)),
+        workLog(domainId: "d2", topicId: "t9", startedAt: date(2026, 1, 1, 5), endedAt: date(2026, 1, 1, 6)),
       ],
       domains: domains,
       groupingUnit: .domain,
@@ -490,9 +490,9 @@ struct ReportViewModel_BarChartColumnsTests {
     ),
     TestCase(
       name: "groups by topic when grouping unit is topic",
-      activities: [
-        activity(domainId: "d1", topicId: "t1", startedAt: date(2026, 1, 1, 1), endedAt: date(2026, 1, 1, 3)),
-        activity(domainId: "d1", topicId: "t2", startedAt: date(2026, 1, 1, 5), endedAt: date(2026, 1, 1, 6)),
+      workLogs: [
+        workLog(domainId: "d1", topicId: "t1", startedAt: date(2026, 1, 1, 1), endedAt: date(2026, 1, 1, 3)),
+        workLog(domainId: "d1", topicId: "t2", startedAt: date(2026, 1, 1, 5), endedAt: date(2026, 1, 1, 6)),
       ],
       domains: domains,
       groupingUnit: .topic,
@@ -503,9 +503,9 @@ struct ReportViewModel_BarChartColumnsTests {
       ]
     ),
     TestCase(
-      name: "clamps duration to the bucket when an activity spans two buckets",
-      activities: [
-        activity(domainId: "d1", topicId: "t1", startedAt: date(2025, 12, 31, 23), endedAt: date(2026, 1, 1, 2))
+      name: "clamps duration to the bucket when an workLog spans two buckets",
+      workLogs: [
+        workLog(domainId: "d1", topicId: "t1", startedAt: date(2025, 12, 31, 23), endedAt: date(2026, 1, 1, 2))
       ],
       domains: domains,
       groupingUnit: .domain,
@@ -520,8 +520,8 @@ struct ReportViewModel_BarChartColumnsTests {
   @Test(arguments: cases)
   @MainActor
   func chartBars_test(testCase: TestCase) async {
-    let mock = MockActivityRepository()
-    mock.activities = testCase.activities
+    let mock = MockWorkLogRepository()
+    mock.workLogs = testCase.workLogs
     let vm = ReportViewModel(repository: mock)
     vm.periodType = .day
     vm.currentDate = date(2026, 1, 1)
@@ -550,7 +550,7 @@ struct ReportViewModel_ListRowsTests {
 
   struct TestCase: CustomTestStringConvertible {
     let name: String
-    let activities: [Activity]
+    let workLogs: [WorkLog]
     let domains: [Domain]
     let groupingUnit: GroupingUnit
     let selectedItemId: String?
@@ -568,10 +568,10 @@ struct ReportViewModel_ListRowsTests {
   static let cases: [TestCase] = [
     TestCase(
       name: "groups by domain per bucket and sorts by total descending",
-      activities: [
-        activity(domainId: "d1", topicId: "t1", startedAt: date(2026, 1, 1, 1), endedAt: date(2026, 1, 1, 3)),
-        activity(domainId: "d1", topicId: "t1", startedAt: date(2026, 1, 3, 1), endedAt: date(2026, 1, 3, 2)),
-        activity(domainId: "d2", topicId: "t9", startedAt: date(2026, 1, 2, 1), endedAt: date(2026, 1, 2, 2)),
+      workLogs: [
+        workLog(domainId: "d1", topicId: "t1", startedAt: date(2026, 1, 1, 1), endedAt: date(2026, 1, 1, 3)),
+        workLog(domainId: "d1", topicId: "t1", startedAt: date(2026, 1, 3, 1), endedAt: date(2026, 1, 3, 2)),
+        workLog(domainId: "d2", topicId: "t9", startedAt: date(2026, 1, 2, 1), endedAt: date(2026, 1, 2, 2)),
       ],
       domains: domains,
       groupingUnit: .domain,
@@ -589,9 +589,9 @@ struct ReportViewModel_ListRowsTests {
     ),
     TestCase(
       name: "groups by topic when grouping unit is topic",
-      activities: [
-        activity(domainId: "d1", topicId: "t1", startedAt: date(2026, 1, 1, 1), endedAt: date(2026, 1, 1, 3)),
-        activity(domainId: "d1", topicId: "t2", startedAt: date(2026, 1, 2, 1), endedAt: date(2026, 1, 2, 2)),
+      workLogs: [
+        workLog(domainId: "d1", topicId: "t1", startedAt: date(2026, 1, 1, 1), endedAt: date(2026, 1, 1, 3)),
+        workLog(domainId: "d1", topicId: "t2", startedAt: date(2026, 1, 2, 1), endedAt: date(2026, 1, 2, 2)),
       ],
       domains: domains,
       groupingUnit: .topic,
@@ -609,9 +609,9 @@ struct ReportViewModel_ListRowsTests {
     ),
     TestCase(
       name: "keeps every row visible (with its real total) even when an item is selected",
-      activities: [
-        activity(domainId: "d1", topicId: "t1", startedAt: date(2026, 1, 1, 1), endedAt: date(2026, 1, 1, 3)),
-        activity(domainId: "d2", topicId: "t9", startedAt: date(2026, 1, 2, 1), endedAt: date(2026, 1, 2, 2)),
+      workLogs: [
+        workLog(domainId: "d1", topicId: "t1", startedAt: date(2026, 1, 1, 1), endedAt: date(2026, 1, 1, 3)),
+        workLog(domainId: "d2", topicId: "t9", startedAt: date(2026, 1, 2, 1), endedAt: date(2026, 1, 2, 2)),
       ],
       domains: domains,
       groupingUnit: .domain,
@@ -632,8 +632,8 @@ struct ReportViewModel_ListRowsTests {
   @Test(arguments: cases)
   @MainActor
   func summaryRows_test(testCase: TestCase) async {
-    let mock = MockActivityRepository()
-    mock.activities = testCase.activities
+    let mock = MockWorkLogRepository()
+    mock.workLogs = testCase.workLogs
     let vm = ReportViewModel(repository: mock)
     vm.periodType = .day
     vm.currentDate = date(2026, 1, 1)
@@ -697,7 +697,7 @@ struct ReportViewModel_TimelineTitleTests {
   @Test(arguments: cases)
   @MainActor
   func timelineTitle_test(testCase: TestCase) {
-    let vm = ReportViewModel(repository: MockActivityRepository())
+    let vm = ReportViewModel(repository: MockWorkLogRepository())
     vm.groupingUnit = testCase.groupingUnit
 
     #expect(vm.timelineTitle(for: testCase.id, domains: Self.domains) == testCase.expected)

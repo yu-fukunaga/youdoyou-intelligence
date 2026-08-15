@@ -2,23 +2,23 @@ import FirebaseFirestore
 import Foundation
 
 @MainActor
-class ActivityDetailViewModel: ObservableObject {
+class WorkLogDetailViewModel: ObservableObject {
   @Published var isDeleted = false
   @Published var isUpdated = false
   @Published var error: String?
   @Published var domain: Domain?
   @Published var topic: Topic?
-  @Published var activity: Activity
+  @Published var workLog: WorkLog
 
   // 編集用
   @Published var content: String
   @Published var startDate: Date
   @Published var endDate: Date
 
-  private let repository: any ActivityRepositoryProtocol
+  private let repository: any WorkLogRepositoryProtocol
 
   var isEdited: Bool {
-    content != activity.content || startDate != activity.startedAt || endDate != activity.endedAt
+    content != workLog.content || startDate != workLog.startedAt || endDate != workLog.endedAt
   }
 
   var isValid: Bool {
@@ -26,21 +26,21 @@ class ActivityDetailViewModel: ObservableObject {
   }
 
   init(
-    activity: Activity,
+    workLog: WorkLog,
     appState: AppState,
-    repository: any ActivityRepositoryProtocol = ActivityRepository()
+    repository: any WorkLogRepositoryProtocol = WorkLogRepository()
   ) {
-    self.activity = activity
+    self.workLog = workLog
     self.repository = repository
-    self.content = activity.content
-    self.startDate = activity.startedAt
-    self.endDate = activity.endedAt
-    self.domain = appState.domains.first { $0.id == activity.domainId }
-    self.topic = domain?.topics.first { $0.id == activity.topicId }
+    self.content = workLog.content
+    self.startDate = workLog.startedAt
+    self.endDate = workLog.endedAt
+    self.domain = appState.domains.first { $0.id == workLog.domainId }
+    self.topic = domain?.topics.first { $0.id == workLog.topicId }
   }
 
   func delete() async {
-    guard let id = activity.id else { return }
+    guard let id = workLog.id else { return }
     do {
       try await repository.delete(id: id)
       isDeleted = true
@@ -56,14 +56,14 @@ class ActivityDetailViewModel: ObservableObject {
       return
     }
 
-    var updated = activity
+    var updated = workLog
     updated.content = content
     updated.startedAt = startDate
     updated.endedAt = endDate
 
     do {
       try await repository.update(updated)
-      activity = updated
+      workLog = updated
       isUpdated = true
     }
     catch {

@@ -54,8 +54,8 @@ order: "Zy"
 
 ### Task 4: タイマー開始時にLive Activityを開始する
 
-`ActivityCreateViewModel.startTimer()`に`ActivityKit.Activity<TimerLiveActivityAttributes>.request()`を追加する
+`WorkLogCreateViewModel.startTimer()`に`ActivityKit.Activity<TimerLiveActivityAttributes>.request()`を追加する
 
-注意: `AppCore`には既存のドメインモデル`Activity`(Firestoreに保存する作業記録)が存在し、`ActivityKit.Activity`と型名が衝突する。`ActivityKit.Activity<...>`とモジュール名を明示して回避する
+注意: `AppCore`には既存のドメインモデル`WorkLog`(旧`Activity`。Firestoreに保存する作業記録)が存在し、`ActivityKit.Activity`と型名が衝突する。`ActivityKit.Activity<...>`とモジュール名を明示して回避する
 
 注意: `request()`は`throws`(非async)なので`do/catch`で囲む

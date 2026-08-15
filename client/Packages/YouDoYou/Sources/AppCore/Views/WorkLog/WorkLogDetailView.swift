@@ -1,13 +1,13 @@
 import SwiftUI
 
-struct ActivityDetailView: View {
+struct WorkLogDetailView: View {
   @Environment(\.dismiss) var dismiss
   @EnvironmentObject var appState: AppState
-  @StateObject var viewModel: ActivityDetailViewModel
+  @StateObject var viewModel: WorkLogDetailViewModel
   @State private var isShowingEdit = false
 
   private var durationText: String {
-    let seconds = viewModel.activity.endedAt.timeIntervalSince(viewModel.activity.startedAt)
+    let seconds = viewModel.workLog.endedAt.timeIntervalSince(viewModel.workLog.startedAt)
     let hours = Int(seconds) / 3600
     let minutes = Int(seconds) % 3600 / 60
     return "\(hours)h \(minutes)m"
@@ -17,11 +17,11 @@ struct ActivityDetailView: View {
     let formatter = DateFormatter()
     formatter.dateFormat = "yyyy/MM/dd (EEE) HH:mm"
     formatter.locale = Locale(identifier: "ja_JP")
-    return formatter.string(from: viewModel.activity.startedAt)
+    return formatter.string(from: viewModel.workLog.startedAt)
   }
 
   private var domain: Domain? {
-    appState.domains.first { $0.id == viewModel.activity.domainId }
+    appState.domains.first { $0.id == viewModel.workLog.domainId }
   }
 
   var body: some View {
@@ -34,7 +34,7 @@ struct ActivityDetailView: View {
             .fill(Color(.systemGray5))
             .frame(width: 40, height: 40)
           VStack(alignment: .leading, spacing: 2) {
-            Text(viewModel.activity.userName)
+            Text(viewModel.workLog.userName)
               .font(.subheadline)
               .fontWeight(.medium)
             Text(formattedDate)
@@ -55,7 +55,7 @@ struct ActivityDetailView: View {
                 .fill(Color(.systemGray5))
                 .frame(width: 56, height: 56)
               VStack(alignment: .leading, spacing: 2) {
-                Text(domain?.title ?? viewModel.activity.domainId)
+                Text(domain?.title ?? viewModel.workLog.domainId)
                   .font(.caption)
                   .fontWeight(.bold)
                   .foregroundColor(.secondary)
@@ -74,7 +74,7 @@ struct ActivityDetailView: View {
               .foregroundColor(.secondary)
             }
 
-            Text(viewModel.activity.content)
+            Text(viewModel.workLog.content)
               .font(.body)
               .foregroundColor(.primary)
           }
@@ -121,7 +121,7 @@ struct ActivityDetailView: View {
       .padding(20)
     }
     .background(Color(.systemGroupedBackground))
-    .navigationTitle("Activity")
+    .navigationTitle("WorkLog")
     .navigationBarTitleDisplayMode(.inline)
     .onChange(of: viewModel.isDeleted) {
       if viewModel.isDeleted {
@@ -129,7 +129,7 @@ struct ActivityDetailView: View {
       }
     }
     .sheet(isPresented: $isShowingEdit) {
-      ActivityEditView(viewModel: viewModel)
+      WorkLogEditView(viewModel: viewModel)
     }
   }
 }

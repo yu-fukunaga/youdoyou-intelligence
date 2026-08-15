@@ -1,4 +1,4 @@
-- id: "activity-001"
+- id: "work-log-001"
   domainId: "domain-006"
   topicId: "topic-006-4"
   content: "コードジェネレーターの実行をCIパイプラインに組み込んだ。スキーマ変更時に自動で差分検出するようにした。"
@@ -10,7 +10,7 @@
   createdAt: "{{base}}T10:20:00+09:00"
   updatedAt: "{{base}}T10:20:00+09:00"
 
-- id: "activity-002"
+- id: "work-log-002"
   domainId: "domain-006"
   topicId: "topic-006-5"
   content: "ジェネレーターのゴールデンテストを整備した。生成結果のスナップショットと比較する仕組み。"
@@ -22,7 +22,7 @@
   createdAt: "{{base}}T16:09:00+09:00"
   updatedAt: "{{base}}T16:09:00+09:00"
 
-- id: "activity-003"
+- id: "work-log-003"
   domainId: "domain-002"
   topicId: "topic-002-2"
   content: "Firestoreのバックアップ・リストア手順をドキュメント化した。"
@@ -34,7 +34,7 @@
   createdAt: "{{base-1d}}T11:59:00+09:00"
   updatedAt: "{{base-1d}}T11:59:00+09:00"
 
-- id: "activity-004"
+- id: "work-log-004"
   domainId: "domain-002"
   topicId: "topic-002-2"
   content: "トランザクション処理の実装でリトライロジックを追加した。"
@@ -46,7 +46,7 @@
   createdAt: "{{base-1d}}T15:31:00+09:00"
   updatedAt: "{{base-1d}}T15:31:00+09:00"
 
-- id: "activity-005"
+- id: "work-log-005"
   domainId: "domain-006"
   topicId: "topic-006-3"
   content: "生成前のYAMLバリデーションでエラーメッセージを分かりやすく改善した。"
@@ -58,10 +58,10 @@
   createdAt: "{{base-6d}}T11:53:00+09:00"
   updatedAt: "{{base-6d}}T11:53:00+09:00"
 
-- id: "activity-006"
+- id: "work-log-006"
   domainId: "domain-006"
   topicId: "topic-006-1"
-  content: "Goのジェネレーターにフィールド名定数の生成機能を追加した。ThreadFieldsやDomainFieldsと同じパターンでActivityFieldsを生成できるようにした。"
+  content: "Goのジェネレーターにフィールド名定数の生成機能を追加した。ThreadFieldsやDomainFieldsと同じパターンでWorkLogFieldsを生成できるようにした。"
   startedAt: "{{base-7d}}T09:54:00+09:00"
   endedAt: "{{base-7d}}T10:46:00+09:00"
   userId: "demo-user-001"
@@ -70,7 +70,7 @@
   createdAt: "{{base-7d}}T10:46:00+09:00"
   updatedAt: "{{base-7d}}T10:46:00+09:00"
 
-- id: "activity-007"
+- id: "work-log-007"
   domainId: "domain-006"
   topicId: "topic-006-1"
   content: "YAMLスキーマからSwiftコードを生成するジェネレーターの設計を行った。PackageSwiftの生成は固定にしてソースファイルのみ生成する方針に決定。"
@@ -82,7 +82,7 @@
   createdAt: "{{base-10d}}T11:46:00+09:00"
   updatedAt: "{{base-10d}}T11:46:00+09:00"
 
-- id: "activity-008"
+- id: "work-log-008"
   domainId: "domain-001"
   topicId: "topic-001-1"
   content: "ログイン画面のエラーハンドリングを見直した。ネットワークエラーと認証エラーを区別して表示するようにした。"
@@ -94,7 +94,7 @@
   createdAt: "{{base-11d}}T10:54:00+09:00"
   updatedAt: "{{base-11d}}T10:54:00+09:00"
 
-- id: "activity-009"
+- id: "work-log-009"
   domainId: "domain-001"
   topicId: "topic-001-3"
   content: "TopicCardの編集・削除UIを実装した。スワイプアクションで操作できるようにした。"
@@ -106,7 +106,7 @@
   createdAt: "{{base-12d}}T09:33:00+09:00"
   updatedAt: "{{base-12d}}T09:33:00+09:00"
 
-- id: "activity-010"
+- id: "work-log-010"
   domainId: "domain-006"
   topicId: "topic-006-1"
   content: "スキーマの循環参照を検出するバリデーションを実装した。"
@@ -118,7 +118,7 @@
   createdAt: "{{base-15d}}T10:55:00+09:00"
   updatedAt: "{{base-15d}}T10:55:00+09:00"
 
-- id: "activity-011"
+- id: "work-log-011"
   domainId: "domain-006"
   topicId: "topic-006-4"
   content: "コードジェネレーターの実行をCIパイプラインに組み込んだ。スキーマ変更時に自動で差分検出するようにした。"
@@ -130,7 +130,7 @@
   createdAt: "{{base-18d}}T10:54:00+09:00"
   updatedAt: "{{base-18d}}T10:54:00+09:00"
 
-- id: "activity-012"
+- id: "work-log-012"
   domainId: "domain-006"
   topicId: "topic-006-4"
   content: "生成コードのフォーマットチェックをpre-commitフックに追加した。"
@@ -142,7 +142,7 @@
   createdAt: "{{base-24d}}T12:16:00+09:00"
   updatedAt: "{{base-24d}}T12:16:00+09:00"
 
-- id: "activity-013"
+- id: "work-log-013"
   domainId: "domain-006"
   topicId: "topic-006-4"
   content: "コードジェネレーターの実行をCIパイプラインに組み込んだ。スキーマ変更時に自動で差分検出するようにした。"
@@ -154,7 +154,7 @@
   createdAt: "{{base-25d}}T13:37:00+09:00"
   updatedAt: "{{base-25d}}T13:37:00+09:00"
 
-- id: "activity-014"
+- id: "work-log-014"
   domainId: "domain-006"
   topicId: "topic-006-5"
   content: "エッジケース(空のスキーマ、深いネスト)のテストケースを追加した。"
@@ -166,7 +166,7 @@
   createdAt: "{{base-26d}}T09:44:00+09:00"
   updatedAt: "{{base-26d}}T09:44:00+09:00"
 
-- id: "activity-015"
+- id: "work-log-015"
   domainId: "domain-006"
   topicId: "topic-006-3"
   content: "スキーマ定義の必須フィールドチェックを強化した。"
@@ -178,7 +178,7 @@
   createdAt: "{{base-26d}}T11:38:00+09:00"
   updatedAt: "{{base-26d}}T11:38:00+09:00"
 
-- id: "activity-016"
+- id: "work-log-016"
   domainId: "domain-002"
   topicId: "topic-002-1"
   content: "Firebase Admin SDKを使ったIDトークン検証ミドルウェアを実装した。"
@@ -190,7 +190,7 @@
   createdAt: "{{base-29d}}T12:45:00+09:00"
   updatedAt: "{{base-29d}}T12:45:00+09:00"
 
-- id: "activity-017"
+- id: "work-log-017"
   domainId: "domain-006"
   topicId: "topic-006-2"
   content: "SwiftのSPMローカルパッケージの設定でハマった。ディレクトリ名とパッケージ名の不一致問題を解決してyoudoyou-firestore-gen-swiftに統一した。"
@@ -202,7 +202,7 @@
   createdAt: "{{base-34d}}T10:01:00+09:00"
   updatedAt: "{{base-34d}}T10:01:00+09:00"
 
-- id: "activity-018"
+- id: "work-log-018"
   domainId: "domain-001"
   topicId: "topic-001-1"
   content: "Sign in with AppleのFirebase Auth連携を実装した。トークンのリフレッシュ処理も含めて動作確認した。"
@@ -214,7 +214,7 @@
   createdAt: "{{base-37d}}T09:07:00+09:00"
   updatedAt: "{{base-37d}}T09:07:00+09:00"
 
-- id: "activity-019"
+- id: "work-log-019"
   domainId: "domain-006"
   topicId: "topic-006-5"
   content: "エッジケース(空のスキーマ、深いネスト)のテストケースを追加した。"
@@ -226,10 +226,10 @@
   createdAt: "{{base-39d}}T11:04:00+09:00"
   updatedAt: "{{base-39d}}T11:04:00+09:00"
 
-- id: "activity-020"
+- id: "work-log-020"
   domainId: "domain-006"
   topicId: "topic-006-1"
-  content: "Goのジェネレーターにフィールド名定数の生成機能を追加した。ThreadFieldsやDomainFieldsと同じパターンでActivityFieldsを生成できるようにした。"
+  content: "Goのジェネレーターにフィールド名定数の生成機能を追加した。ThreadFieldsやDomainFieldsと同じパターンでWorkLogFieldsを生成できるようにした。"
   startedAt: "{{base-43d}}T09:19:00+09:00"
   endedAt: "{{base-43d}}T09:46:00+09:00"
   userId: "demo-user-001"
@@ -238,10 +238,10 @@
   createdAt: "{{base-43d}}T09:46:00+09:00"
   updatedAt: "{{base-43d}}T09:46:00+09:00"
 
-- id: "activity-021"
+- id: "work-log-021"
   domainId: "domain-006"
   topicId: "topic-006-1"
-  content: "Goのジェネレーターにフィールド名定数の生成機能を追加した。ThreadFieldsやDomainFieldsと同じパターンでActivityFieldsを生成できるようにした。"
+  content: "Goのジェネレーターにフィールド名定数の生成機能を追加した。ThreadFieldsやDomainFieldsと同じパターンでWorkLogFieldsを生成できるようにした。"
   startedAt: "{{base-45d}}T08:27:00+09:00"
   endedAt: "{{base-45d}}T10:06:00+09:00"
   userId: "demo-user-001"
@@ -250,7 +250,7 @@
   createdAt: "{{base-45d}}T10:06:00+09:00"
   updatedAt: "{{base-45d}}T10:06:00+09:00"
 
-- id: "activity-022"
+- id: "work-log-022"
   domainId: "domain-006"
   topicId: "topic-006-4"
   content: "コードジェネレーターの実行をCIパイプラインに組み込んだ。スキーマ変更時に自動で差分検出するようにした。"
@@ -262,7 +262,7 @@
   createdAt: "{{base-53d}}T11:35:00+09:00"
   updatedAt: "{{base-53d}}T11:35:00+09:00"
 
-- id: "activity-023"
+- id: "work-log-023"
   domainId: "domain-006"
   topicId: "topic-006-2"
   content: "SwiftのSPMローカルパッケージの設定でハマった。ディレクトリ名とパッケージ名の不一致問題を解決してyoudoyou-firestore-gen-swiftに統一した。"
@@ -274,7 +274,7 @@
   createdAt: "{{base-54d}}T10:31:00+09:00"
   updatedAt: "{{base-54d}}T10:31:00+09:00"
 
-- id: "activity-024"
+- id: "work-log-024"
   domainId: "domain-006"
   topicId: "topic-006-5"
   content: "エッジケース(空のスキーマ、深いネスト)のテストケースを追加した。"
@@ -286,7 +286,7 @@
   createdAt: "{{base-56d}}T11:06:00+09:00"
   updatedAt: "{{base-56d}}T11:06:00+09:00"
 
-- id: "activity-025"
+- id: "work-log-025"
   domainId: "domain-002"
   topicId: "topic-002-2"
   content: "複合インデックスの設定漏れでクエリが失敗する問題を修正した。"
@@ -298,7 +298,7 @@
   createdAt: "{{base-59d}}T11:00:00+09:00"
   updatedAt: "{{base-59d}}T11:00:00+09:00"
 
-- id: "activity-026"
+- id: "work-log-026"
   domainId: "domain-002"
   topicId: "topic-002-1"
   content: "APIキー認証とFirebase Auth認証を両立させる仕組みを実装した。"
@@ -310,7 +310,7 @@
   createdAt: "{{base-60d}}T12:09:00+09:00"
   updatedAt: "{{base-60d}}T12:09:00+09:00"
 
-- id: "activity-027"
+- id: "work-log-027"
   domainId: "domain-001"
   topicId: "topic-001-1"
   content: "認証状態の永続化にKeychainを使う実装に切り替えた。UserDefaultsだとセキュリティ的に問題があったため。"
@@ -322,10 +322,10 @@
   createdAt: "{{base-66d}}T10:53:00+09:00"
   updatedAt: "{{base-66d}}T10:53:00+09:00"
 
-- id: "activity-028"
+- id: "work-log-028"
   domainId: "domain-001"
   topicId: "topic-001-2"
-  content: "ActivityFeedのセル描画パフォーマンスを改善した。LazyVStackへの切り替えとImage読み込みの最適化を実施。"
+  content: "WorkLogFeedのセル描画パフォーマンスを改善した。LazyVStackへの切り替えとImage読み込みの最適化を実施。"
   startedAt: "{{base-66d}}T11:15:00+09:00"
   endedAt: "{{base-66d}}T11:49:00+09:00"
   userId: "demo-user-001"
@@ -334,10 +334,10 @@
   createdAt: "{{base-66d}}T11:49:00+09:00"
   updatedAt: "{{base-66d}}T11:49:00+09:00"
 
-- id: "activity-029"
+- id: "work-log-029"
   domainId: "domain-006"
   topicId: "topic-006-1"
-  content: "Goのジェネレーターにフィールド名定数の生成機能を追加した。ThreadFieldsやDomainFieldsと同じパターンでActivityFieldsを生成できるようにした。"
+  content: "Goのジェネレーターにフィールド名定数の生成機能を追加した。ThreadFieldsやDomainFieldsと同じパターンでWorkLogFieldsを生成できるようにした。"
   startedAt: "{{base-68d}}T08:17:00+09:00"
   endedAt: "{{base-68d}}T09:07:00+09:00"
   userId: "demo-user-001"
@@ -346,7 +346,7 @@
   createdAt: "{{base-68d}}T09:07:00+09:00"
   updatedAt: "{{base-68d}}T09:07:00+09:00"
 
-- id: "activity-030"
+- id: "work-log-030"
   domainId: "domain-006"
   topicId: "topic-006-1"
   content: "YAMLスキーマからSwiftコードを生成するジェネレーターの設計を行った。PackageSwiftの生成は固定にしてソースファイルのみ生成する方針に決定。"
@@ -358,7 +358,7 @@
   createdAt: "{{base-71d}}T10:13:00+09:00"
   updatedAt: "{{base-71d}}T10:13:00+09:00"
 
-- id: "activity-031"
+- id: "work-log-031"
   domainId: "domain-003"
   topicId: "topic-003-1"
   content: "デザインシステムのカラーパレットを定義した。ダークモード対応のセマンティックカラーを設計してTopicCardのUIに適用した。"
@@ -370,7 +370,7 @@
   createdAt: "{{base-72d}}T12:13:00+09:00"
   updatedAt: "{{base-72d}}T12:13:00+09:00"
 
-- id: "activity-032"
+- id: "work-log-032"
   domainId: "domain-003"
   topicId: "topic-003-1"
   content: "SwiftUIのカスタムコンポーネントのデザインレビューを実施。TopicCardのレイアウト調整とフォントサイズの統一を行った。"
@@ -382,10 +382,10 @@
   createdAt: "{{base-76d}}T10:42:00+09:00"
   updatedAt: "{{base-76d}}T10:42:00+09:00"
 
-- id: "activity-033"
+- id: "work-log-033"
   domainId: "domain-001"
   topicId: "topic-001-2"
-  content: "タイムラインの日付グルーピング表示を実装した。同じ日のActivityをまとめて表示するように変更。"
+  content: "タイムラインの日付グルーピング表示を実装した。同じ日のWorkLogをまとめて表示するように変更。"
   startedAt: "{{base-83d}}T08:33:00+09:00"
   endedAt: "{{base-83d}}T10:02:00+09:00"
   userId: "demo-user-001"
@@ -394,7 +394,7 @@
   createdAt: "{{base-83d}}T10:02:00+09:00"
   updatedAt: "{{base-83d}}T10:02:00+09:00"
 
-- id: "activity-034"
+- id: "work-log-034"
   domainId: "domain-006"
   topicId: "topic-006-1"
   content: "YAMLスキーマからSwiftコードを生成するジェネレーターの設計を行った。PackageSwiftの生成は固定にしてソースファイルのみ生成する方針に決定。"
@@ -406,7 +406,7 @@
   createdAt: "{{base-84d}}T09:35:00+09:00"
   updatedAt: "{{base-84d}}T09:35:00+09:00"
 
-- id: "activity-035"
+- id: "work-log-035"
   domainId: "domain-003"
   topicId: "topic-003-1"
   content: "アクセシビリティ対応でコントラスト比を検証した。WCAG AA基準を満たすよう色を調整。"
@@ -418,7 +418,7 @@
   createdAt: "{{base-84d}}T14:26:00+09:00"
   updatedAt: "{{base-84d}}T14:26:00+09:00"
 
-- id: "activity-036"
+- id: "work-log-036"
   domainId: "domain-001"
   topicId: "topic-001-1"
   content: "Sign in with AppleのFirebase Auth連携を実装した。トークンのリフレッシュ処理も含めて動作確認した。"
@@ -430,7 +430,7 @@
   createdAt: "{{base-85d}}T11:34:00+09:00"
   updatedAt: "{{base-85d}}T11:34:00+09:00"
 
-- id: "activity-037"
+- id: "work-log-037"
   domainId: "domain-001"
   topicId: "topic-001-1"
   content: "ログイン画面のエラーハンドリングを見直した。ネットワークエラーと認証エラーを区別して表示するようにした。"
@@ -442,7 +442,7 @@
   createdAt: "{{base-85d}}T15:57:00+09:00"
   updatedAt: "{{base-85d}}T15:57:00+09:00"
 
-- id: "activity-038"
+- id: "work-log-038"
   domainId: "domain-002"
   topicId: "topic-002-1"
   content: "APIキー認証とFirebase Auth認証を両立させる仕組みを実装した。"
@@ -454,7 +454,7 @@
   createdAt: "{{base-88d}}T11:50:00+09:00"
   updatedAt: "{{base-88d}}T11:50:00+09:00"
 
-- id: "activity-039"
+- id: "work-log-039"
   domainId: "domain-006"
   topicId: "topic-006-5"
   content: "ジェネレーターのゴールデンテストを整備した。生成結果のスナップショットと比較する仕組み。"
@@ -466,7 +466,7 @@
   createdAt: "{{base-92d}}T09:54:00+09:00"
   updatedAt: "{{base-92d}}T09:54:00+09:00"
 
-- id: "activity-040"
+- id: "work-log-040"
   domainId: "domain-006"
   topicId: "topic-006-5"
   content: "ジェネレーターのゴールデンテストを整備した。生成結果のスナップショットと比較する仕組み。"
@@ -478,7 +478,7 @@
   createdAt: "{{base-98d}}T11:18:00+09:00"
   updatedAt: "{{base-98d}}T11:18:00+09:00"
 
-- id: "activity-041"
+- id: "work-log-041"
   domainId: "domain-006"
   topicId: "topic-006-4"
   content: "生成コードのフォーマットチェックをpre-commitフックに追加した。"
@@ -490,7 +490,7 @@
   createdAt: "{{base-99d}}T11:45:00+09:00"
   updatedAt: "{{base-99d}}T11:45:00+09:00"
 
-- id: "activity-042"
+- id: "work-log-042"
   domainId: "domain-006"
   topicId: "topic-006-4"
   content: "生成コードのフォーマットチェックをpre-commitフックに追加した。"
@@ -502,7 +502,7 @@
   createdAt: "{{base-107d}}T11:20:00+09:00"
   updatedAt: "{{base-107d}}T11:20:00+09:00"
 
-- id: "activity-043"
+- id: "work-log-043"
   domainId: "domain-003"
   topicId: "topic-003-1"
   content: "アクセシビリティ対応でコントラスト比を検証した。WCAG AA基準を満たすよう色を調整。"
@@ -514,7 +514,7 @@
   createdAt: "{{base-107d}}T15:12:00+09:00"
   updatedAt: "{{base-107d}}T15:12:00+09:00"
 
-- id: "activity-044"
+- id: "work-log-044"
   domainId: "domain-006"
   topicId: "topic-006-5"
   content: "ジェネレーターのゴールデンテストを整備した。生成結果のスナップショットと比較する仕組み。"
@@ -526,7 +526,7 @@
   createdAt: "{{base-110d}}T11:28:00+09:00"
   updatedAt: "{{base-110d}}T11:28:00+09:00"
 
-- id: "activity-045"
+- id: "work-log-045"
   domainId: "domain-006"
   topicId: "topic-006-4"
   content: "生成コードのフォーマットチェックをpre-commitフックに追加した。"
@@ -538,7 +538,7 @@
   createdAt: "{{base-111d}}T11:21:00+09:00"
   updatedAt: "{{base-111d}}T11:21:00+09:00"
 
-- id: "activity-046"
+- id: "work-log-046"
   domainId: "domain-001"
   topicId: "topic-001-1"
   content: "Sign in with AppleのFirebase Auth連携を実装した。トークンのリフレッシュ処理も含めて動作確認した。"
@@ -550,7 +550,7 @@
   createdAt: "{{base-112d}}T11:52:00+09:00"
   updatedAt: "{{base-112d}}T11:52:00+09:00"
 
-- id: "activity-047"
+- id: "work-log-047"
   domainId: "domain-001"
   topicId: "topic-001-1"
   content: "認証状態の永続化にKeychainを使う実装に切り替えた。UserDefaultsだとセキュリティ的に問題があったため。"
@@ -562,7 +562,7 @@
   createdAt: "{{base-113d}}T11:47:00+09:00"
   updatedAt: "{{base-113d}}T11:47:00+09:00"
 
-- id: "activity-048"
+- id: "work-log-048"
   domainId: "domain-002"
   topicId: "topic-002-1"
   content: "Firebase Admin SDKを使ったIDトークン検証ミドルウェアを実装した。"
@@ -574,7 +574,7 @@
   createdAt: "{{base-120d}}T12:33:00+09:00"
   updatedAt: "{{base-120d}}T12:33:00+09:00"
 
-- id: "activity-049"
+- id: "work-log-049"
   domainId: "domain-001"
   topicId: "topic-001-2"
   content: "タイムラインの無限スクロール実装でページネーションのバグを修正した。"
@@ -586,7 +586,7 @@
   createdAt: "{{base-124d}}T11:45:00+09:00"
   updatedAt: "{{base-124d}}T11:45:00+09:00"
 
-- id: "activity-050"
+- id: "work-log-050"
   domainId: "domain-006"
   topicId: "topic-006-2"
   content: "生成されるSwiftコードのCodable準拠を自動化した。"
@@ -598,7 +598,7 @@
   createdAt: "{{base-127d}}T09:57:00+09:00"
   updatedAt: "{{base-127d}}T09:57:00+09:00"
 
-- id: "activity-051"
+- id: "work-log-051"
   domainId: "domain-006"
   topicId: "topic-006-3"
   content: "スキーマ定義の必須フィールドチェックを強化した。"
@@ -610,7 +610,7 @@
   createdAt: "{{base-127d}}T13:55:00+09:00"
   updatedAt: "{{base-127d}}T13:55:00+09:00"
 
-- id: "activity-052"
+- id: "work-log-052"
   domainId: "domain-006"
   topicId: "topic-006-3"
   content: "スキーマ定義の必須フィールドチェックを強化した。"
@@ -622,7 +622,7 @@
   createdAt: "{{base-129d}}T11:40:00+09:00"
   updatedAt: "{{base-129d}}T11:40:00+09:00"
 
-- id: "activity-053"
+- id: "work-log-053"
   domainId: "domain-006"
   topicId: "topic-006-4"
   content: "生成コードのフォーマットチェックをpre-commitフックに追加した。"
@@ -634,7 +634,7 @@
   createdAt: "{{base-132d}}T10:04:00+09:00"
   updatedAt: "{{base-132d}}T10:04:00+09:00"
 
-- id: "activity-054"
+- id: "work-log-054"
   domainId: "domain-006"
   topicId: "topic-006-1"
   content: "YAMLスキーマからSwiftコードを生成するジェネレーターの設計を行った。PackageSwiftの生成は固定にしてソースファイルのみ生成する方針に決定。"
@@ -646,7 +646,7 @@
   createdAt: "{{base-136d}}T10:51:00+09:00"
   updatedAt: "{{base-136d}}T10:51:00+09:00"
 
-- id: "activity-055"
+- id: "work-log-055"
   domainId: "domain-001"
   topicId: "topic-001-1"
   content: "FirebaseのFirestoreとSwiftの型安全な連携を実装した。CodableプロトコルとDocumentIDを使ってモデルを定義し、Repositoryパターンで抽象化した。"
@@ -658,10 +658,10 @@
   createdAt: "{{base-139d}}T11:30:00+09:00"
   updatedAt: "{{base-139d}}T11:30:00+09:00"
 
-- id: "activity-056"
+- id: "work-log-056"
   domainId: "domain-006"
   topicId: "topic-006-1"
-  content: "Goのジェネレーターにフィールド名定数の生成機能を追加した。ThreadFieldsやDomainFieldsと同じパターンでActivityFieldsを生成できるようにした。"
+  content: "Goのジェネレーターにフィールド名定数の生成機能を追加した。ThreadFieldsやDomainFieldsと同じパターンでWorkLogFieldsを生成できるようにした。"
   startedAt: "{{base-139d}}T14:22:00+09:00"
   endedAt: "{{base-139d}}T15:18:00+09:00"
   userId: "demo-user-001"
@@ -670,7 +670,7 @@
   createdAt: "{{base-139d}}T15:18:00+09:00"
   updatedAt: "{{base-139d}}T15:18:00+09:00"
 
-- id: "activity-057"
+- id: "work-log-057"
   domainId: "domain-006"
   topicId: "topic-006-3"
   content: "生成前のYAMLバリデーションでエラーメッセージを分かりやすく改善した。"
@@ -682,7 +682,7 @@
   createdAt: "{{base-141d}}T13:17:00+09:00"
   updatedAt: "{{base-141d}}T13:17:00+09:00"
 
-- id: "activity-058"
+- id: "work-log-058"
   domainId: "domain-001"
   topicId: "topic-001-1"
   content: "認証状態の永続化にKeychainを使う実装に切り替えた。UserDefaultsだとセキュリティ的に問題があったため。"
@@ -694,7 +694,7 @@
   createdAt: "{{base-145d}}T10:59:00+09:00"
   updatedAt: "{{base-145d}}T10:59:00+09:00"
 
-- id: "activity-059"
+- id: "work-log-059"
   domainId: "domain-001"
   topicId: "topic-001-1"
   content: "ログイン画面のエラーハンドリングを見直した。ネットワークエラーと認証エラーを区別して表示するようにした。"
@@ -706,10 +706,10 @@
   createdAt: "{{base-149d}}T09:52:00+09:00"
   updatedAt: "{{base-149d}}T09:52:00+09:00"
 
-- id: "activity-060"
+- id: "work-log-060"
   domainId: "domain-006"
   topicId: "topic-006-1"
-  content: "Goのジェネレーターにフィールド名定数の生成機能を追加した。ThreadFieldsやDomainFieldsと同じパターンでActivityFieldsを生成できるようにした。"
+  content: "Goのジェネレーターにフィールド名定数の生成機能を追加した。ThreadFieldsやDomainFieldsと同じパターンでWorkLogFieldsを生成できるようにした。"
   startedAt: "{{base-151d}}T09:51:00+09:00"
   endedAt: "{{base-151d}}T12:09:00+09:00"
   userId: "demo-user-001"
@@ -718,7 +718,7 @@
   createdAt: "{{base-151d}}T12:09:00+09:00"
   updatedAt: "{{base-151d}}T12:09:00+09:00"
 
-- id: "activity-061"
+- id: "work-log-061"
   domainId: "domain-001"
   topicId: "topic-001-3"
   content: "アーカイブ機能を実装した。完了したプロジェクトを一覧から隠せるようにした。"
@@ -730,10 +730,10 @@
   createdAt: "{{base-152d}}T10:10:00+09:00"
   updatedAt: "{{base-152d}}T10:10:00+09:00"
 
-- id: "activity-062"
+- id: "work-log-062"
   domainId: "domain-002"
   topicId: "topic-002-1"
-  content: "GoのFirestore clientを使ってActivityのseedデータ投入スクリプトを作成した。idempotentな実装にするため既存データの削除処理も追加。"
+  content: "GoのFirestore clientを使ってWorkLogのseedデータ投入スクリプトを作成した。idempotentな実装にするため既存データの削除処理も追加。"
   startedAt: "{{base-152d}}T12:30:00+09:00"
   endedAt: "{{base-152d}}T15:01:00+09:00"
   userId: "demo-user-001"
@@ -742,7 +742,7 @@
   createdAt: "{{base-152d}}T15:01:00+09:00"
   updatedAt: "{{base-152d}}T15:01:00+09:00"
 
-- id: "activity-063"
+- id: "work-log-063"
   domainId: "domain-006"
   topicId: "topic-006-4"
   content: "生成コードのフォーマットチェックをpre-commitフックに追加した。"
@@ -754,10 +754,10 @@
   createdAt: "{{base-158d}}T10:00:00+09:00"
   updatedAt: "{{base-158d}}T10:00:00+09:00"
 
-- id: "activity-064"
+- id: "work-log-064"
   domainId: "domain-001"
   topicId: "topic-001-2"
-  content: "ActivityFeedのセル描画パフォーマンスを改善した。LazyVStackへの切り替えとImage読み込みの最適化を実施。"
+  content: "WorkLogFeedのセル描画パフォーマンスを改善した。LazyVStackへの切り替えとImage読み込みの最適化を実施。"
   startedAt: "{{base-158d}}T11:22:00+09:00"
   endedAt: "{{base-158d}}T13:59:00+09:00"
   userId: "demo-user-001"
@@ -766,7 +766,7 @@
   createdAt: "{{base-158d}}T13:59:00+09:00"
   updatedAt: "{{base-158d}}T13:59:00+09:00"
 
-- id: "activity-065"
+- id: "work-log-065"
   domainId: "domain-002"
   topicId: "topic-002-2"
   content: "Firestoreのバックアップ・リストア手順をドキュメント化した。"
@@ -778,7 +778,7 @@
   createdAt: "{{base-165d}}T12:10:00+09:00"
   updatedAt: "{{base-165d}}T12:10:00+09:00"
 
-- id: "activity-066"
+- id: "work-log-066"
   domainId: "domain-006"
   topicId: "topic-006-5"
   content: "エッジケース(空のスキーマ、深いネスト)のテストケースを追加した。"
@@ -790,7 +790,7 @@
   createdAt: "{{base-170d}}T11:04:00+09:00"
   updatedAt: "{{base-170d}}T11:04:00+09:00"
 
-- id: "activity-067"
+- id: "work-log-067"
   domainId: "domain-001"
   topicId: "topic-001-3"
   content: "新規ドメイン作成フローのバリデーションを追加した。"
@@ -802,7 +802,7 @@
   createdAt: "{{base-171d}}T11:14:00+09:00"
   updatedAt: "{{base-171d}}T11:14:00+09:00"
 
-- id: "activity-068"
+- id: "work-log-068"
   domainId: "domain-001"
   topicId: "topic-001-1"
   content: "トークン期限切れ時の自動再ログイン処理をデバッグした。競合状態が原因のバグを修正。"
@@ -814,7 +814,7 @@
   createdAt: "{{base-174d}}T12:56:00+09:00"
   updatedAt: "{{base-174d}}T12:56:00+09:00"
 
-- id: "activity-069"
+- id: "work-log-069"
   domainId: "domain-006"
   topicId: "topic-006-3"
   content: "スキーマ定義の必須フィールドチェックを強化した。"
@@ -826,7 +826,7 @@
   createdAt: "{{base-178d}}T09:14:00+09:00"
   updatedAt: "{{base-178d}}T09:14:00+09:00"
 
-- id: "activity-070"
+- id: "work-log-070"
   domainId: "domain-002"
   topicId: "topic-002-2"
   content: "トランザクション処理の実装でリトライロジックを追加した。"
@@ -838,7 +838,7 @@
   createdAt: "{{base-178d}}T15:18:00+09:00"
   updatedAt: "{{base-178d}}T15:18:00+09:00"
 
-- id: "activity-071"
+- id: "work-log-071"
   domainId: "domain-003"
   topicId: "topic-003-1"
   content: "デザインシステムのカラーパレットを定義した。ダークモード対応のセマンティックカラーを設計してTopicCardのUIに適用した。"
@@ -850,7 +850,7 @@
   createdAt: "{{base-182d}}T10:48:00+09:00"
   updatedAt: "{{base-182d}}T10:48:00+09:00"
 
-- id: "activity-072"
+- id: "work-log-072"
   domainId: "domain-006"
   topicId: "topic-006-5"
   content: "ジェネレーターのゴールデンテストを整備した。生成結果のスナップショットと比較する仕組み。"
@@ -862,7 +862,7 @@
   createdAt: "{{base-183d}}T12:00:00+09:00"
   updatedAt: "{{base-183d}}T12:00:00+09:00"
 
-- id: "activity-073"
+- id: "work-log-073"
   domainId: "domain-001"
   topicId: "topic-001-1"
   content: "Sign in with AppleのFirebase Auth連携を実装した。トークンのリフレッシュ処理も含めて動作確認した。"
@@ -874,10 +874,10 @@
   createdAt: "{{base-186d}}T11:26:00+09:00"
   updatedAt: "{{base-186d}}T11:26:00+09:00"
 
-- id: "activity-074"
+- id: "work-log-074"
   domainId: "domain-002"
   topicId: "topic-002-1"
-  content: "GoのFirestore clientを使ってActivityのseedデータ投入スクリプトを作成した。idempotentな実装にするため既存データの削除処理も追加。"
+  content: "GoのFirestore clientを使ってWorkLogのseedデータ投入スクリプトを作成した。idempotentな実装にするため既存データの削除処理も追加。"
   startedAt: "{{base-187d}}T08:00:00+09:00"
   endedAt: "{{base-187d}}T10:58:00+09:00"
   userId: "demo-user-001"
@@ -886,7 +886,7 @@
   createdAt: "{{base-187d}}T10:58:00+09:00"
   updatedAt: "{{base-187d}}T10:58:00+09:00"
 
-- id: "activity-075"
+- id: "work-log-075"
   domainId: "domain-003"
   topicId: "topic-003-1"
   content: "デザインシステムのカラーパレットを定義した。ダークモード対応のセマンティックカラーを設計してTopicCardのUIに適用した。"
@@ -898,7 +898,7 @@
   createdAt: "{{base-188d}}T08:50:00+09:00"
   updatedAt: "{{base-188d}}T08:50:00+09:00"
 
-- id: "activity-076"
+- id: "work-log-076"
   domainId: "domain-001"
   topicId: "topic-001-1"
   content: "生体認証(Face ID)によるアプリロック機能を追加した。LocalAuthenticationフレームワークを使用。"
@@ -910,7 +910,7 @@
   createdAt: "{{base-189d}}T11:27:00+09:00"
   updatedAt: "{{base-189d}}T11:27:00+09:00"
 
-- id: "activity-077"
+- id: "work-log-077"
   domainId: "domain-001"
   topicId: "topic-001-2"
   content: "Pull to refreshのアニメーションを調整した。SwiftUIのrefreshableモディファイアを使用。"
@@ -922,7 +922,7 @@
   createdAt: "{{base-192d}}T09:10:00+09:00"
   updatedAt: "{{base-192d}}T09:10:00+09:00"
 
-- id: "activity-078"
+- id: "work-log-078"
   domainId: "domain-002"
   topicId: "topic-002-2"
   content: "トランザクション処理の実装でリトライロジックを追加した。"
@@ -934,7 +934,7 @@
   createdAt: "{{base-192d}}T13:44:00+09:00"
   updatedAt: "{{base-192d}}T13:44:00+09:00"
 
-- id: "activity-079"
+- id: "work-log-079"
   domainId: "domain-002"
   topicId: "topic-002-1"
   content: "レート制限ミドルウェアを実装した。ユーザーごとのリクエスト数をRedisでカウント。"
@@ -946,7 +946,7 @@
   createdAt: "{{base-193d}}T10:04:00+09:00"
   updatedAt: "{{base-193d}}T10:04:00+09:00"
 
-- id: "activity-080"
+- id: "work-log-080"
   domainId: "domain-001"
   topicId: "topic-001-3"
   content: "アーカイブ機能を実装した。完了したプロジェクトを一覧から隠せるようにした。"
@@ -958,7 +958,7 @@
   createdAt: "{{base-193d}}T13:13:00+09:00"
   updatedAt: "{{base-193d}}T13:13:00+09:00"
 
-- id: "activity-081"
+- id: "work-log-081"
   domainId: "domain-003"
   topicId: "topic-003-1"
   content: "デザインシステムのカラーパレットを定義した。ダークモード対応のセマンティックカラーを設計してTopicCardのUIに適用した。"
@@ -970,7 +970,7 @@
   createdAt: "{{base-194d}}T10:37:00+09:00"
   updatedAt: "{{base-194d}}T10:37:00+09:00"
 
-- id: "activity-082"
+- id: "work-log-082"
   domainId: "domain-001"
   topicId: "topic-001-1"
   content: "認証状態の永続化にKeychainを使う実装に切り替えた。UserDefaultsだとセキュリティ的に問題があったため。"
@@ -982,7 +982,7 @@
   createdAt: "{{base-194d}}T14:03:00+09:00"
   updatedAt: "{{base-194d}}T14:03:00+09:00"
 
-- id: "activity-083"
+- id: "work-log-083"
   domainId: "domain-001"
   topicId: "topic-001-1"
   content: "FirebaseのFirestoreとSwiftの型安全な連携を実装した。CodableプロトコルとDocumentIDを使ってモデルを定義し、Repositoryパターンで抽象化した。"
@@ -994,7 +994,7 @@
   createdAt: "{{base-200d}}T09:10:00+09:00"
   updatedAt: "{{base-200d}}T09:10:00+09:00"
 
-- id: "activity-084"
+- id: "work-log-084"
   domainId: "domain-002"
   topicId: "topic-002-2"
   content: "Firestoreのサブコレクション設計を見直した。クエリパフォーマンスを考慮してデータ構造を変更。"
@@ -1006,7 +1006,7 @@
   createdAt: "{{base-200d}}T13:06:00+09:00"
   updatedAt: "{{base-200d}}T13:06:00+09:00"
 
-- id: "activity-085"
+- id: "work-log-085"
   domainId: "domain-006"
   topicId: "topic-006-4"
   content: "コードジェネレーターの実行をCIパイプラインに組み込んだ。スキーマ変更時に自動で差分検出するようにした。"
@@ -1018,10 +1018,10 @@
   createdAt: "{{base-203d}}T12:23:00+09:00"
   updatedAt: "{{base-203d}}T12:23:00+09:00"
 
-- id: "activity-086"
+- id: "work-log-086"
   domainId: "domain-001"
   topicId: "topic-001-2"
-  content: "タイムラインの日付グルーピング表示を実装した。同じ日のActivityをまとめて表示するように変更。"
+  content: "タイムラインの日付グルーピング表示を実装した。同じ日のWorkLogをまとめて表示するように変更。"
   startedAt: "{{base-223d}}T08:40:00+09:00"
   endedAt: "{{base-223d}}T10:27:00+09:00"
   userId: "demo-user-001"
@@ -1030,7 +1030,7 @@
   createdAt: "{{base-223d}}T10:27:00+09:00"
   updatedAt: "{{base-223d}}T10:27:00+09:00"
 
-- id: "activity-087"
+- id: "work-log-087"
   domainId: "domain-003"
   topicId: "topic-003-1"
   content: "アイコンセットを統一した。SF Symbolsベースのカスタムアイコンを追加。"
@@ -1042,7 +1042,7 @@
   createdAt: "{{base-226d}}T09:50:00+09:00"
   updatedAt: "{{base-226d}}T09:50:00+09:00"
 
-- id: "activity-088"
+- id: "work-log-088"
   domainId: "domain-001"
   topicId: "topic-001-1"
   content: "FirebaseのFirestoreとSwiftの型安全な連携を実装した。CodableプロトコルとDocumentIDを使ってモデルを定義し、Repositoryパターンで抽象化した。"
@@ -1054,7 +1054,7 @@
   createdAt: "{{base-226d}}T15:42:00+09:00"
   updatedAt: "{{base-226d}}T15:42:00+09:00"
 
-- id: "activity-089"
+- id: "work-log-089"
   domainId: "domain-002"
   topicId: "topic-002-1"
   content: "レート制限ミドルウェアを実装した。ユーザーごとのリクエスト数をRedisでカウント。"
@@ -1066,7 +1066,7 @@
   createdAt: "{{base-233d}}T10:50:00+09:00"
   updatedAt: "{{base-233d}}T10:50:00+09:00"
 
-- id: "activity-090"
+- id: "work-log-090"
   domainId: "domain-002"
   topicId: "topic-002-2"
   content: "複合インデックスの設定漏れでクエリが失敗する問題を修正した。"
@@ -1078,7 +1078,7 @@
   createdAt: "{{base-234d}}T10:15:00+09:00"
   updatedAt: "{{base-234d}}T10:15:00+09:00"
 
-- id: "activity-091"
+- id: "work-log-091"
   domainId: "domain-006"
   topicId: "topic-006-3"
   content: "スキーマ定義の必須フィールドチェックを強化した。"
@@ -1090,7 +1090,7 @@
   createdAt: "{{base-235d}}T11:08:00+09:00"
   updatedAt: "{{base-235d}}T11:08:00+09:00"
 
-- id: "activity-092"
+- id: "work-log-092"
   domainId: "domain-002"
   topicId: "topic-002-2"
   content: "FirestoreのセキュリティルールをCIでテストする仕組みを構築した。emulatorを使ったテストスイートを整備。"
@@ -1102,7 +1102,7 @@
   createdAt: "{{base-242d}}T09:22:00+09:00"
   updatedAt: "{{base-242d}}T09:22:00+09:00"
 
-- id: "activity-093"
+- id: "work-log-093"
   domainId: "domain-002"
   topicId: "topic-002-2"
   content: "複合インデックスの設定漏れでクエリが失敗する問題を修正した。"
@@ -1114,7 +1114,7 @@
   createdAt: "{{base-244d}}T13:03:00+09:00"
   updatedAt: "{{base-244d}}T13:03:00+09:00"
 
-- id: "activity-094"
+- id: "work-log-094"
   domainId: "domain-001"
   topicId: "topic-001-3"
   content: "プロジェクト一覧の並び替え機能を実装した。最終更新日時でソートするデフォルト挙動に変更。"
@@ -1126,7 +1126,7 @@
   createdAt: "{{base-247d}}T12:13:00+09:00"
   updatedAt: "{{base-247d}}T12:13:00+09:00"
 
-- id: "activity-095"
+- id: "work-log-095"
   domainId: "domain-006"
   topicId: "topic-006-1"
   content: "スキーマの循環参照を検出するバリデーションを実装した。"
@@ -1138,7 +1138,7 @@
   createdAt: "{{base-248d}}T09:13:00+09:00"
   updatedAt: "{{base-248d}}T09:13:00+09:00"
 
-- id: "activity-096"
+- id: "work-log-096"
   domainId: "domain-006"
   topicId: "topic-006-4"
   content: "コードジェネレーターの実行をCIパイプラインに組み込んだ。スキーマ変更時に自動で差分検出するようにした。"
@@ -1150,7 +1150,7 @@
   createdAt: "{{base-252d}}T09:45:00+09:00"
   updatedAt: "{{base-252d}}T09:45:00+09:00"
 
-- id: "activity-097"
+- id: "work-log-097"
   domainId: "domain-006"
   topicId: "topic-006-5"
   content: "ジェネレーターのゴールデンテストを整備した。生成結果のスナップショットと比較する仕組み。"
@@ -1162,7 +1162,7 @@
   createdAt: "{{base-254d}}T11:50:00+09:00"
   updatedAt: "{{base-254d}}T11:50:00+09:00"
 
-- id: "activity-098"
+- id: "work-log-098"
   domainId: "domain-006"
   topicId: "topic-006-3"
   content: "生成前のYAMLバリデーションでエラーメッセージを分かりやすく改善した。"
@@ -1174,7 +1174,7 @@
   createdAt: "{{base-254d}}T16:37:00+09:00"
   updatedAt: "{{base-254d}}T16:37:00+09:00"
 
-- id: "activity-099"
+- id: "work-log-099"
   domainId: "domain-003"
   topicId: "topic-003-1"
   content: "アイコンセットを統一した。SF Symbolsベースのカスタムアイコンを追加。"
@@ -1186,10 +1186,10 @@
   createdAt: "{{base-260d}}T13:03:00+09:00"
   updatedAt: "{{base-260d}}T13:03:00+09:00"
 
-- id: "activity-100"
+- id: "work-log-100"
   domainId: "domain-001"
   topicId: "topic-001-2"
-  content: "タイムラインの日付グルーピング表示を実装した。同じ日のActivityをまとめて表示するように変更。"
+  content: "タイムラインの日付グルーピング表示を実装した。同じ日のWorkLogをまとめて表示するように変更。"
   startedAt: "{{base-264d}}T10:05:00+09:00"
   endedAt: "{{base-264d}}T11:42:00+09:00"
   userId: "demo-user-001"
@@ -1198,7 +1198,7 @@
   createdAt: "{{base-264d}}T11:42:00+09:00"
   updatedAt: "{{base-264d}}T11:42:00+09:00"
 
-- id: "activity-101"
+- id: "work-log-101"
   domainId: "domain-001"
   topicId: "topic-001-3"
   content: "DomainViewModelをAppStateと分離する設計を検討した。グローバルな状態管理とView固有のロジックの責務を整理。"
@@ -1210,7 +1210,7 @@
   createdAt: "{{base-269d}}T11:22:00+09:00"
   updatedAt: "{{base-269d}}T11:22:00+09:00"
 
-- id: "activity-102"
+- id: "work-log-102"
   domainId: "domain-006"
   topicId: "topic-006-1"
   content: "YAMLスキーマからSwiftコードを生成するジェネレーターの設計を行った。PackageSwiftの生成は固定にしてソースファイルのみ生成する方針に決定。"
@@ -1222,7 +1222,7 @@
   createdAt: "{{base-270d}}T11:40:00+09:00"
   updatedAt: "{{base-270d}}T11:40:00+09:00"
 
-- id: "activity-103"
+- id: "work-log-103"
   domainId: "domain-001"
   topicId: "topic-001-2"
   content: "Pull to refreshのアニメーションを調整した。SwiftUIのrefreshableモディファイアを使用。"
@@ -1234,7 +1234,7 @@
   createdAt: "{{base-274d}}T11:26:00+09:00"
   updatedAt: "{{base-274d}}T11:26:00+09:00"
 
-- id: "activity-104"
+- id: "work-log-104"
   domainId: "domain-002"
   topicId: "topic-002-1"
   content: "APIキー認証とFirebase Auth認証を両立させる仕組みを実装した。"
@@ -1246,7 +1246,7 @@
   createdAt: "{{base-278d}}T11:22:00+09:00"
   updatedAt: "{{base-278d}}T11:22:00+09:00"
 
-- id: "activity-105"
+- id: "work-log-105"
   domainId: "domain-002"
   topicId: "topic-002-1"
   content: "レート制限ミドルウェアを実装した。ユーザーごとのリクエスト数をRedisでカウント。"
@@ -1258,7 +1258,7 @@
   createdAt: "{{base-278d}}T15:48:00+09:00"
   updatedAt: "{{base-278d}}T15:48:00+09:00"
 
-- id: "activity-106"
+- id: "work-log-106"
   domainId: "domain-006"
   topicId: "topic-006-5"
   content: "ジェネレーターのゴールデンテストを整備した。生成結果のスナップショットと比較する仕組み。"
@@ -1270,7 +1270,7 @@
   createdAt: "{{base-279d}}T09:55:00+09:00"
   updatedAt: "{{base-279d}}T09:55:00+09:00"
 
-- id: "activity-107"
+- id: "work-log-107"
   domainId: "domain-002"
   topicId: "topic-002-2"
   content: "FirestoreのセキュリティルールをCIでテストする仕組みを構築した。emulatorを使ったテストスイートを整備。"
@@ -1282,7 +1282,7 @@
   createdAt: "{{base-285d}}T10:40:00+09:00"
   updatedAt: "{{base-285d}}T10:40:00+09:00"
 
-- id: "activity-108"
+- id: "work-log-108"
   domainId: "domain-006"
   topicId: "topic-006-5"
   content: "エッジケース(空のスキーマ、深いネスト)のテストケースを追加した。"
@@ -1294,7 +1294,7 @@
   createdAt: "{{base-290d}}T11:14:00+09:00"
   updatedAt: "{{base-290d}}T11:14:00+09:00"
 
-- id: "activity-109"
+- id: "work-log-109"
   domainId: "domain-006"
   topicId: "topic-006-5"
   content: "エッジケース(空のスキーマ、深いネスト)のテストケースを追加した。"
@@ -1306,7 +1306,7 @@
   createdAt: "{{base-290d}}T15:29:00+09:00"
   updatedAt: "{{base-290d}}T15:29:00+09:00"
 
-- id: "activity-110"
+- id: "work-log-110"
   domainId: "domain-003"
   topicId: "topic-003-1"
   content: "アクセシビリティ対応でコントラスト比を検証した。WCAG AA基準を満たすよう色を調整。"
@@ -1318,7 +1318,7 @@
   createdAt: "{{base-297d}}T13:11:00+09:00"
   updatedAt: "{{base-297d}}T13:11:00+09:00"
 
-- id: "activity-111"
+- id: "work-log-111"
   domainId: "domain-001"
   topicId: "topic-001-1"
   content: "FirebaseのFirestoreとSwiftの型安全な連携を実装した。CodableプロトコルとDocumentIDを使ってモデルを定義し、Repositoryパターンで抽象化した。"
@@ -1330,7 +1330,7 @@
   createdAt: "{{base-302d}}T10:34:00+09:00"
   updatedAt: "{{base-302d}}T10:34:00+09:00"
 
-- id: "activity-112"
+- id: "work-log-112"
   domainId: "domain-006"
   topicId: "topic-006-3"
   content: "生成前のYAMLバリデーションでエラーメッセージを分かりやすく改善した。"
@@ -1342,7 +1342,7 @@
   createdAt: "{{base-307d}}T12:30:00+09:00"
   updatedAt: "{{base-307d}}T12:30:00+09:00"
 
-- id: "activity-113"
+- id: "work-log-113"
   domainId: "domain-003"
   topicId: "topic-003-1"
   content: "SwiftUIのカスタムコンポーネントのデザインレビューを実施。TopicCardのレイアウト調整とフォントサイズの統一を行った。"
@@ -1354,7 +1354,7 @@
   createdAt: "{{base-310d}}T11:14:00+09:00"
   updatedAt: "{{base-310d}}T11:14:00+09:00"
 
-- id: "activity-114"
+- id: "work-log-114"
   domainId: "domain-002"
   topicId: "topic-002-2"
   content: "複合インデックスの設定漏れでクエリが失敗する問題を修正した。"
@@ -1366,7 +1366,7 @@
   createdAt: "{{base-313d}}T11:58:00+09:00"
   updatedAt: "{{base-313d}}T11:58:00+09:00"
 
-- id: "activity-115"
+- id: "work-log-115"
   domainId: "domain-006"
   topicId: "topic-006-3"
   content: "スキーマ定義の必須フィールドチェックを強化した。"
@@ -1378,7 +1378,7 @@
   createdAt: "{{base-314d}}T11:05:00+09:00"
   updatedAt: "{{base-314d}}T11:05:00+09:00"
 
-- id: "activity-116"
+- id: "work-log-116"
   domainId: "domain-002"
   topicId: "topic-002-2"
   content: "トランザクション処理の実装でリトライロジックを追加した。"
@@ -1390,10 +1390,10 @@
   createdAt: "{{base-315d}}T12:17:00+09:00"
   updatedAt: "{{base-315d}}T12:17:00+09:00"
 
-- id: "activity-117"
+- id: "work-log-117"
   domainId: "domain-001"
   topicId: "topic-001-2"
-  content: "ActivityDetailViewの遷移アニメーションを実装した。"
+  content: "WorkLogDetailViewの遷移アニメーションを実装した。"
   startedAt: "{{base-320d}}T08:10:00+09:00"
   endedAt: "{{base-320d}}T09:50:00+09:00"
   userId: "demo-user-001"
@@ -1402,7 +1402,7 @@
   createdAt: "{{base-320d}}T09:50:00+09:00"
   updatedAt: "{{base-320d}}T09:50:00+09:00"
 
-- id: "activity-118"
+- id: "work-log-118"
   domainId: "domain-006"
   topicId: "topic-006-3"
   content: "スキーマ定義の必須フィールドチェックを強化した。"
@@ -1414,7 +1414,7 @@
   createdAt: "{{base-320d}}T12:34:00+09:00"
   updatedAt: "{{base-320d}}T12:34:00+09:00"
 
-- id: "activity-119"
+- id: "work-log-119"
   domainId: "domain-003"
   topicId: "topic-003-1"
   content: "SwiftUIのカスタムコンポーネントのデザインレビューを実施。TopicCardのレイアウト調整とフォントサイズの統一を行った。"
@@ -1426,7 +1426,7 @@
   createdAt: "{{base-323d}}T09:44:00+09:00"
   updatedAt: "{{base-323d}}T09:44:00+09:00"
 
-- id: "activity-120"
+- id: "work-log-120"
   domainId: "domain-001"
   topicId: "topic-001-1"
   content: "FirebaseのFirestoreとSwiftの型安全な連携を実装した。CodableプロトコルとDocumentIDを使ってモデルを定義し、Repositoryパターンで抽象化した。"
@@ -1438,7 +1438,7 @@
   createdAt: "{{base-331d}}T11:01:00+09:00"
   updatedAt: "{{base-331d}}T11:01:00+09:00"
 
-- id: "activity-121"
+- id: "work-log-121"
   domainId: "domain-006"
   topicId: "topic-006-1"
   content: "YAMLスキーマからSwiftコードを生成するジェネレーターの設計を行った。PackageSwiftの生成は固定にしてソースファイルのみ生成する方針に決定。"
@@ -1450,10 +1450,10 @@
   createdAt: "{{base-333d}}T10:33:00+09:00"
   updatedAt: "{{base-333d}}T10:33:00+09:00"
 
-- id: "activity-122"
+- id: "work-log-122"
   domainId: "domain-001"
   topicId: "topic-001-2"
-  content: "タイムラインの日付グルーピング表示を実装した。同じ日のActivityをまとめて表示するように変更。"
+  content: "タイムラインの日付グルーピング表示を実装した。同じ日のWorkLogをまとめて表示するように変更。"
   startedAt: "{{base-334d}}T09:21:00+09:00"
   endedAt: "{{base-334d}}T11:17:00+09:00"
   userId: "demo-user-001"
@@ -1462,7 +1462,7 @@
   createdAt: "{{base-334d}}T11:17:00+09:00"
   updatedAt: "{{base-334d}}T11:17:00+09:00"
 
-- id: "activity-123"
+- id: "work-log-123"
   domainId: "domain-001"
   topicId: "topic-001-3"
   content: "アーカイブ機能を実装した。完了したプロジェクトを一覧から隠せるようにした。"
@@ -1474,7 +1474,7 @@
   createdAt: "{{base-334d}}T15:56:00+09:00"
   updatedAt: "{{base-334d}}T15:56:00+09:00"
 
-- id: "activity-124"
+- id: "work-log-124"
   domainId: "domain-002"
   topicId: "topic-002-2"
   content: "FirestoreのセキュリティルールをCIでテストする仕組みを構築した。emulatorを使ったテストスイートを整備。"
@@ -1486,7 +1486,7 @@
   createdAt: "{{base-336d}}T10:52:00+09:00"
   updatedAt: "{{base-336d}}T10:52:00+09:00"
 
-- id: "activity-125"
+- id: "work-log-125"
   domainId: "domain-002"
   topicId: "topic-002-1"
   content: "レート制限ミドルウェアを実装した。ユーザーごとのリクエスト数をRedisでカウント。"
@@ -1498,7 +1498,7 @@
   createdAt: "{{base-338d}}T11:25:00+09:00"
   updatedAt: "{{base-338d}}T11:25:00+09:00"
 
-- id: "activity-126"
+- id: "work-log-126"
   domainId: "domain-001"
   topicId: "topic-001-3"
   content: "DomainViewModelをAppStateと分離する設計を検討した。グローバルな状態管理とView固有のロジックの責務を整理。"
@@ -1510,7 +1510,7 @@
   createdAt: "{{base-340d}}T12:55:00+09:00"
   updatedAt: "{{base-340d}}T12:55:00+09:00"
 
-- id: "activity-127"
+- id: "work-log-127"
   domainId: "domain-003"
   topicId: "topic-003-1"
   content: "タイポグラフィのスケールを見直した。見出し・本文・キャプションのサイズ比率を再設計。"
@@ -1522,7 +1522,7 @@
   createdAt: "{{base-343d}}T12:55:00+09:00"
   updatedAt: "{{base-343d}}T12:55:00+09:00"
 
-- id: "activity-128"
+- id: "work-log-128"
   domainId: "domain-001"
   topicId: "topic-001-3"
   content: "TopicCardの編集・削除UIを実装した。スワイプアクションで操作できるようにした。"
@@ -1534,7 +1534,7 @@
   createdAt: "{{base-343d}}T16:10:00+09:00"
   updatedAt: "{{base-343d}}T16:10:00+09:00"
 
-- id: "activity-129"
+- id: "work-log-129"
   domainId: "domain-001"
   topicId: "topic-001-1"
   content: "FirebaseのFirestoreとSwiftの型安全な連携を実装した。CodableプロトコルとDocumentIDを使ってモデルを定義し、Repositoryパターンで抽象化した。"
@@ -1546,7 +1546,7 @@
   createdAt: "{{base-345d}}T09:33:00+09:00"
   updatedAt: "{{base-345d}}T09:33:00+09:00"
 
-- id: "activity-130"
+- id: "work-log-130"
   domainId: "domain-001"
   topicId: "topic-001-3"
   content: "DomainViewModelをAppStateと分離する設計を検討した。グローバルな状態管理とView固有のロジックの責務を整理。"
@@ -1558,7 +1558,7 @@
   createdAt: "{{base-346d}}T13:13:00+09:00"
   updatedAt: "{{base-346d}}T13:13:00+09:00"
 
-- id: "activity-131"
+- id: "work-log-131"
   domainId: "domain-002"
   topicId: "topic-002-1"
   content: "Firebase Admin SDKを使ったIDトークン検証ミドルウェアを実装した。"
@@ -1570,7 +1570,7 @@
   createdAt: "{{base-347d}}T09:19:00+09:00"
   updatedAt: "{{base-347d}}T09:19:00+09:00"
 
-- id: "activity-132"
+- id: "work-log-132"
   domainId: "domain-006"
   topicId: "topic-006-2"
   content: "生成されるSwiftコードのCodable準拠を自動化した。"
@@ -1582,7 +1582,7 @@
   createdAt: "{{base-348d}}T12:32:00+09:00"
   updatedAt: "{{base-348d}}T12:32:00+09:00"
 
-- id: "activity-133"
+- id: "work-log-133"
   domainId: "domain-001"
   topicId: "topic-001-3"
   content: "新規ドメイン作成フローのバリデーションを追加した。"
@@ -1594,7 +1594,7 @@
   createdAt: "{{base-350d}}T10:38:00+09:00"
   updatedAt: "{{base-350d}}T10:38:00+09:00"
 
-- id: "activity-134"
+- id: "work-log-134"
   domainId: "domain-001"
   topicId: "topic-001-3"
   content: "プロジェクト一覧の並び替え機能を実装した。最終更新日時でソートするデフォルト挙動に変更。"
@@ -1606,7 +1606,7 @@
   createdAt: "{{base-351d}}T12:58:00+09:00"
   updatedAt: "{{base-351d}}T12:58:00+09:00"
 
-- id: "activity-135"
+- id: "work-log-135"
   domainId: "domain-001"
   topicId: "topic-001-3"
   content: "新規ドメイン作成フローのバリデーションを追加した。"
@@ -1618,7 +1618,7 @@
   createdAt: "{{base-353d}}T09:42:00+09:00"
   updatedAt: "{{base-353d}}T09:42:00+09:00"
 
-- id: "activity-136"
+- id: "work-log-136"
   domainId: "domain-006"
   topicId: "topic-006-5"
   content: "ジェネレーターのゴールデンテストを整備した。生成結果のスナップショットと比較する仕組み。"
@@ -1630,7 +1630,7 @@
   createdAt: "{{base-353d}}T11:38:00+09:00"
   updatedAt: "{{base-353d}}T11:38:00+09:00"
 
-- id: "activity-137"
+- id: "work-log-137"
   domainId: "domain-006"
   topicId: "topic-006-3"
   content: "スキーマ定義の必須フィールドチェックを強化した。"
@@ -1642,7 +1642,7 @@
   createdAt: "{{base-356d}}T11:34:00+09:00"
   updatedAt: "{{base-356d}}T11:34:00+09:00"
 
-- id: "activity-138"
+- id: "work-log-138"
   domainId: "domain-001"
   topicId: "topic-001-3"
   content: "TopicCardの編集・削除UIを実装した。スワイプアクションで操作できるようにした。"
@@ -1654,7 +1654,7 @@
   createdAt: "{{base-357d}}T12:56:00+09:00"
   updatedAt: "{{base-357d}}T12:56:00+09:00"
 
-- id: "activity-139"
+- id: "work-log-139"
   domainId: "domain-001"
   topicId: "topic-001-1"
   content: "ログイン画面のエラーハンドリングを見直した。ネットワークエラーと認証エラーを区別して表示するようにした。"
@@ -1666,7 +1666,7 @@
   createdAt: "{{base-360d}}T12:12:00+09:00"
   updatedAt: "{{base-360d}}T12:12:00+09:00"
 
-- id: "activity-140"
+- id: "work-log-140"
   domainId: "domain-006"
   topicId: "topic-006-4"
   content: "コードジェネレーターの実行をCIパイプラインに組み込んだ。スキーマ変更時に自動で差分検出するようにした。"
@@ -1678,7 +1678,7 @@
   createdAt: "{{base-366d}}T11:29:00+09:00"
   updatedAt: "{{base-366d}}T11:29:00+09:00"
 
-- id: "activity-141"
+- id: "work-log-141"
   domainId: "domain-001"
   topicId: "topic-001-1"
   content: "トークン期限切れ時の自動再ログイン処理をデバッグした。競合状態が原因のバグを修正。"
@@ -1690,7 +1690,7 @@
   createdAt: "{{base-367d}}T10:46:00+09:00"
   updatedAt: "{{base-367d}}T10:46:00+09:00"
 
-- id: "activity-142"
+- id: "work-log-142"
   domainId: "domain-006"
   topicId: "topic-006-3"
   content: "生成前のYAMLバリデーションでエラーメッセージを分かりやすく改善した。"
@@ -1702,7 +1702,7 @@
   createdAt: "{{base-367d}}T14:09:00+09:00"
   updatedAt: "{{base-367d}}T14:09:00+09:00"
 
-- id: "activity-143"
+- id: "work-log-143"
   domainId: "domain-001"
   topicId: "topic-001-2"
   content: "DomainsViewとDomainItemのデザインを実装した。横スクロールのTopicカード一覧とナビゲーション導線を追加。"
@@ -1714,7 +1714,7 @@
   createdAt: "{{base-373d}}T12:35:00+09:00"
   updatedAt: "{{base-373d}}T12:35:00+09:00"
 
-- id: "activity-144"
+- id: "work-log-144"
   domainId: "domain-006"
   topicId: "topic-006-3"
   content: "生成前のYAMLバリデーションでエラーメッセージを分かりやすく改善した。"
@@ -1726,10 +1726,10 @@
   createdAt: "{{base-378d}}T10:23:00+09:00"
   updatedAt: "{{base-378d}}T10:23:00+09:00"
 
-- id: "activity-145"
+- id: "work-log-145"
   domainId: "domain-002"
   topicId: "topic-002-1"
-  content: "GoのFirestore clientを使ってActivityのseedデータ投入スクリプトを作成した。idempotentな実装にするため既存データの削除処理も追加。"
+  content: "GoのFirestore clientを使ってWorkLogのseedデータ投入スクリプトを作成した。idempotentな実装にするため既存データの削除処理も追加。"
   startedAt: "{{base-382d}}T08:44:00+09:00"
   endedAt: "{{base-382d}}T11:01:00+09:00"
   userId: "demo-user-001"
@@ -1738,7 +1738,7 @@
   createdAt: "{{base-382d}}T11:01:00+09:00"
   updatedAt: "{{base-382d}}T11:01:00+09:00"
 
-- id: "activity-146"
+- id: "work-log-146"
   domainId: "domain-003"
   topicId: "topic-003-1"
   content: "タイポグラフィのスケールを見直した。見出し・本文・キャプションのサイズ比率を再設計。"
@@ -1750,7 +1750,7 @@
   createdAt: "{{base-385d}}T12:29:00+09:00"
   updatedAt: "{{base-385d}}T12:29:00+09:00"
 
-- id: "activity-147"
+- id: "work-log-147"
   domainId: "domain-001"
   topicId: "topic-001-3"
   content: "TopicCardの編集・削除UIを実装した。スワイプアクションで操作できるようにした。"
@@ -1762,7 +1762,7 @@
   createdAt: "{{base-387d}}T12:07:00+09:00"
   updatedAt: "{{base-387d}}T12:07:00+09:00"
 
-- id: "activity-148"
+- id: "work-log-148"
   domainId: "domain-001"
   topicId: "topic-001-3"
   content: "TopicCardの編集・削除UIを実装した。スワイプアクションで操作できるようにした。"
@@ -1774,7 +1774,7 @@
   createdAt: "{{base-389d}}T11:15:00+09:00"
   updatedAt: "{{base-389d}}T11:15:00+09:00"
 
-- id: "activity-149"
+- id: "work-log-149"
   domainId: "domain-001"
   topicId: "topic-001-3"
   content: "DomainViewModelをAppStateと分離する設計を検討した。グローバルな状態管理とView固有のロジックの責務を整理。"
@@ -1786,7 +1786,7 @@
   createdAt: "{{base-392d}}T10:42:00+09:00"
   updatedAt: "{{base-392d}}T10:42:00+09:00"
 
-- id: "activity-150"
+- id: "work-log-150"
   domainId: "domain-002"
   topicId: "topic-002-1"
   content: "APIキー認証とFirebase Auth認証を両立させる仕組みを実装した。"
@@ -1798,7 +1798,7 @@
   createdAt: "{{base-395d}}T11:00:00+09:00"
   updatedAt: "{{base-395d}}T11:00:00+09:00"
 
-- id: "activity-151"
+- id: "work-log-151"
   domainId: "domain-006"
   topicId: "topic-006-2"
   content: "Swift生成コードにDocumentIDプロパティラッパーの自動付与を実装した。"
@@ -1810,7 +1810,7 @@
   createdAt: "{{base-397d}}T12:00:00+09:00"
   updatedAt: "{{base-397d}}T12:00:00+09:00"
 
-- id: "activity-152"
+- id: "work-log-152"
   domainId: "domain-001"
   topicId: "topic-001-1"
   content: "トークン期限切れ時の自動再ログイン処理をデバッグした。競合状態が原因のバグを修正。"
@@ -1822,7 +1822,7 @@
   createdAt: "{{base-398d}}T11:28:00+09:00"
   updatedAt: "{{base-398d}}T11:28:00+09:00"
 
-- id: "activity-153"
+- id: "work-log-153"
   domainId: "domain-006"
   topicId: "topic-006-2"
   content: "SwiftのSPMローカルパッケージの設定でハマった。ディレクトリ名とパッケージ名の不一致問題を解決してyoudoyou-firestore-gen-swiftに統一した。"
@@ -1834,7 +1834,7 @@
   createdAt: "{{base-399d}}T12:32:00+09:00"
   updatedAt: "{{base-399d}}T12:32:00+09:00"
 
-- id: "activity-154"
+- id: "work-log-154"
   domainId: "domain-006"
   topicId: "topic-006-3"
   content: "スキーマ定義の必須フィールドチェックを強化した。"
@@ -1846,7 +1846,7 @@
   createdAt: "{{base-402d}}T11:29:00+09:00"
   updatedAt: "{{base-402d}}T11:29:00+09:00"
 
-- id: "activity-155"
+- id: "work-log-155"
   domainId: "domain-002"
   topicId: "topic-002-1"
   content: "Firebase Admin SDKを使ったIDトークン検証ミドルウェアを実装した。"
@@ -1858,7 +1858,7 @@
   createdAt: "{{base-405d}}T09:39:00+09:00"
   updatedAt: "{{base-405d}}T09:39:00+09:00"
 
-- id: "activity-156"
+- id: "work-log-156"
   domainId: "domain-006"
   topicId: "topic-006-3"
   content: "スキーマ定義の必須フィールドチェックを強化した。"
@@ -1870,7 +1870,7 @@
   createdAt: "{{base-406d}}T09:27:00+09:00"
   updatedAt: "{{base-406d}}T09:27:00+09:00"
 
-- id: "activity-157"
+- id: "work-log-157"
   domainId: "domain-006"
   topicId: "topic-006-1"
   content: "ジェネレーターの出力にコメント自動生成機能を追加した。"
@@ -1882,7 +1882,7 @@
   createdAt: "{{base-407d}}T10:08:00+09:00"
   updatedAt: "{{base-407d}}T10:08:00+09:00"
 
-- id: "activity-158"
+- id: "work-log-158"
   domainId: "domain-001"
   topicId: "topic-001-3"
   content: "TopicCardの編集・削除UIを実装した。スワイプアクションで操作できるようにした。"
@@ -1894,7 +1894,7 @@
   createdAt: "{{base-408d}}T09:55:00+09:00"
   updatedAt: "{{base-408d}}T09:55:00+09:00"
 
-- id: "activity-159"
+- id: "work-log-159"
   domainId: "domain-006"
   topicId: "topic-006-1"
   content: "YAMLスキーマからSwiftコードを生成するジェネレーターの設計を行った。PackageSwiftの生成は固定にしてソースファイルのみ生成する方針に決定。"
@@ -1906,7 +1906,7 @@
   createdAt: "{{base-409d}}T12:08:00+09:00"
   updatedAt: "{{base-409d}}T12:08:00+09:00"
 
-- id: "activity-160"
+- id: "work-log-160"
   domainId: "domain-006"
   topicId: "topic-006-2"
   content: "生成されるSwiftコードのCodable準拠を自動化した。"
@@ -1918,7 +1918,7 @@
   createdAt: "{{base-409d}}T13:43:00+09:00"
   updatedAt: "{{base-409d}}T13:43:00+09:00"
 
-- id: "activity-161"
+- id: "work-log-161"
   domainId: "domain-006"
   topicId: "topic-006-5"
   content: "エッジケース(空のスキーマ、深いネスト)のテストケースを追加した。"
@@ -1930,7 +1930,7 @@
   createdAt: "{{base-411d}}T11:53:00+09:00"
   updatedAt: "{{base-411d}}T11:53:00+09:00"
 
-- id: "activity-162"
+- id: "work-log-162"
   domainId: "domain-002"
   topicId: "topic-002-2"
   content: "Firestoreのバックアップ・リストア手順をドキュメント化した。"
@@ -1942,7 +1942,7 @@
   createdAt: "{{base-417d}}T11:11:00+09:00"
   updatedAt: "{{base-417d}}T11:11:00+09:00"
 
-- id: "activity-163"
+- id: "work-log-163"
   domainId: "domain-006"
   topicId: "topic-006-4"
   content: "コードジェネレーターの実行をCIパイプラインに組み込んだ。スキーマ変更時に自動で差分検出するようにした。"
@@ -1954,7 +1954,7 @@
   createdAt: "{{base-421d}}T09:56:00+09:00"
   updatedAt: "{{base-421d}}T09:56:00+09:00"
 
-- id: "activity-164"
+- id: "work-log-164"
   domainId: "domain-006"
   topicId: "topic-006-2"
   content: "Swift生成コードにDocumentIDプロパティラッパーの自動付与を実装した。"
@@ -1966,7 +1966,7 @@
   createdAt: "{{base-426d}}T12:40:00+09:00"
   updatedAt: "{{base-426d}}T12:40:00+09:00"
 
-- id: "activity-165"
+- id: "work-log-165"
   domainId: "domain-001"
   topicId: "topic-001-1"
   content: "Sign in with AppleのFirebase Auth連携を実装した。トークンのリフレッシュ処理も含めて動作確認した。"
@@ -1978,7 +1978,7 @@
   createdAt: "{{base-435d}}T12:34:00+09:00"
   updatedAt: "{{base-435d}}T12:34:00+09:00"
 
-- id: "activity-166"
+- id: "work-log-166"
   domainId: "domain-001"
   topicId: "topic-001-1"
   content: "FirebaseのFirestoreとSwiftの型安全な連携を実装した。CodableプロトコルとDocumentIDを使ってモデルを定義し、Repositoryパターンで抽象化した。"
@@ -1990,7 +1990,7 @@
   createdAt: "{{base-439d}}T10:25:00+09:00"
   updatedAt: "{{base-439d}}T10:25:00+09:00"
 
-- id: "activity-167"
+- id: "work-log-167"
   domainId: "domain-002"
   topicId: "topic-002-2"
   content: "複合インデックスの設定漏れでクエリが失敗する問題を修正した。"
@@ -2002,7 +2002,7 @@
   createdAt: "{{base-441d}}T13:07:00+09:00"
   updatedAt: "{{base-441d}}T13:07:00+09:00"
 
-- id: "activity-168"
+- id: "work-log-168"
   domainId: "domain-006"
   topicId: "topic-006-3"
   content: "スキーマ定義の必須フィールドチェックを強化した。"
@@ -2014,7 +2014,7 @@
   createdAt: "{{base-441d}}T17:56:00+09:00"
   updatedAt: "{{base-441d}}T17:56:00+09:00"
 
-- id: "activity-169"
+- id: "work-log-169"
   domainId: "domain-006"
   topicId: "topic-006-2"
   content: "Swift生成コードにDocumentIDプロパティラッパーの自動付与を実装した。"
@@ -2026,7 +2026,7 @@
   createdAt: "{{base-442d}}T09:35:00+09:00"
   updatedAt: "{{base-442d}}T09:35:00+09:00"
 
-- id: "activity-170"
+- id: "work-log-170"
   domainId: "domain-003"
   topicId: "topic-003-1"
   content: "アイコンセットを統一した。SF Symbolsベースのカスタムアイコンを追加。"
@@ -2038,10 +2038,10 @@
   createdAt: "{{base-443d}}T13:06:00+09:00"
   updatedAt: "{{base-443d}}T13:06:00+09:00"
 
-- id: "activity-171"
+- id: "work-log-171"
   domainId: "domain-001"
   topicId: "topic-001-2"
-  content: "ActivityFeedのセル描画パフォーマンスを改善した。LazyVStackへの切り替えとImage読み込みの最適化を実施。"
+  content: "WorkLogFeedのセル描画パフォーマンスを改善した。LazyVStackへの切り替えとImage読み込みの最適化を実施。"
   startedAt: "{{base-451d}}T10:50:00+09:00"
   endedAt: "{{base-451d}}T12:26:00+09:00"
   userId: "demo-user-001"
@@ -2050,7 +2050,7 @@
   createdAt: "{{base-451d}}T12:26:00+09:00"
   updatedAt: "{{base-451d}}T12:26:00+09:00"
 
-- id: "activity-172"
+- id: "work-log-172"
   domainId: "domain-002"
   topicId: "topic-002-2"
   content: "複合インデックスの設定漏れでクエリが失敗する問題を修正した。"
@@ -2062,7 +2062,7 @@
   createdAt: "{{base-454d}}T13:33:00+09:00"
   updatedAt: "{{base-454d}}T13:33:00+09:00"
 
-- id: "activity-173"
+- id: "work-log-173"
   domainId: "domain-006"
   topicId: "topic-006-4"
   content: "生成コードのフォーマットチェックをpre-commitフックに追加した。"
@@ -2074,7 +2074,7 @@
   createdAt: "{{base-455d}}T12:08:00+09:00"
   updatedAt: "{{base-455d}}T12:08:00+09:00"
 
-- id: "activity-174"
+- id: "work-log-174"
   domainId: "domain-006"
   topicId: "topic-006-3"
   content: "スキーマ定義の必須フィールドチェックを強化した。"
@@ -2086,7 +2086,7 @@
   createdAt: "{{base-456d}}T09:45:00+09:00"
   updatedAt: "{{base-456d}}T09:45:00+09:00"
 
-- id: "activity-175"
+- id: "work-log-175"
   domainId: "domain-003"
   topicId: "topic-003-1"
   content: "アクセシビリティ対応でコントラスト比を検証した。WCAG AA基準を満たすよう色を調整。"
@@ -2098,7 +2098,7 @@
   createdAt: "{{base-461d}}T10:57:00+09:00"
   updatedAt: "{{base-461d}}T10:57:00+09:00"
 
-- id: "activity-176"
+- id: "work-log-176"
   domainId: "domain-003"
   topicId: "topic-003-1"
   content: "タイポグラフィのスケールを見直した。見出し・本文・キャプションのサイズ比率を再設計。"
@@ -2110,7 +2110,7 @@
   createdAt: "{{base-471d}}T09:15:00+09:00"
   updatedAt: "{{base-471d}}T09:15:00+09:00"
 
-- id: "activity-177"
+- id: "work-log-177"
   domainId: "domain-006"
   topicId: "topic-006-1"
   content: "スキーマの循環参照を検出するバリデーションを実装した。"
@@ -2122,7 +2122,7 @@
   createdAt: "{{base-474d}}T10:03:00+09:00"
   updatedAt: "{{base-474d}}T10:03:00+09:00"
 
-- id: "activity-178"
+- id: "work-log-178"
   domainId: "domain-006"
   topicId: "topic-006-3"
   content: "生成前のYAMLバリデーションでエラーメッセージを分かりやすく改善した。"
@@ -2134,7 +2134,7 @@
   createdAt: "{{base-475d}}T12:41:00+09:00"
   updatedAt: "{{base-475d}}T12:41:00+09:00"
 
-- id: "activity-179"
+- id: "work-log-179"
   domainId: "domain-001"
   topicId: "topic-001-2"
   content: "Pull to refreshのアニメーションを調整した。SwiftUIのrefreshableモディファイアを使用。"
@@ -2146,7 +2146,7 @@
   createdAt: "{{base-475d}}T17:20:00+09:00"
   updatedAt: "{{base-475d}}T17:20:00+09:00"
 
-- id: "activity-180"
+- id: "work-log-180"
   domainId: "domain-002"
   topicId: "topic-002-2"
   content: "Firestoreのバックアップ・リストア手順をドキュメント化した。"
@@ -2158,10 +2158,10 @@
   createdAt: "{{base-476d}}T10:23:00+09:00"
   updatedAt: "{{base-476d}}T10:23:00+09:00"
 
-- id: "activity-181"
+- id: "work-log-181"
   domainId: "domain-001"
   topicId: "topic-001-2"
-  content: "タイムラインの日付グルーピング表示を実装した。同じ日のActivityをまとめて表示するように変更。"
+  content: "タイムラインの日付グルーピング表示を実装した。同じ日のWorkLogをまとめて表示するように変更。"
   startedAt: "{{base-476d}}T11:10:00+09:00"
   endedAt: "{{base-476d}}T11:33:00+09:00"
   userId: "demo-user-001"
@@ -2170,7 +2170,7 @@
   createdAt: "{{base-476d}}T11:33:00+09:00"
   updatedAt: "{{base-476d}}T11:33:00+09:00"
 
-- id: "activity-182"
+- id: "work-log-182"
   domainId: "domain-006"
   topicId: "topic-006-4"
   content: "生成コードのフォーマットチェックをpre-commitフックに追加した。"
@@ -2182,7 +2182,7 @@
   createdAt: "{{base-478d}}T12:57:00+09:00"
   updatedAt: "{{base-478d}}T12:57:00+09:00"
 
-- id: "activity-183"
+- id: "work-log-183"
   domainId: "domain-006"
   topicId: "topic-006-4"
   content: "生成コードのフォーマットチェックをpre-commitフックに追加した。"
@@ -2194,7 +2194,7 @@
   createdAt: "{{base-483d}}T11:27:00+09:00"
   updatedAt: "{{base-483d}}T11:27:00+09:00"
 
-- id: "activity-184"
+- id: "work-log-184"
   domainId: "domain-006"
   topicId: "topic-006-2"
   content: "生成されるSwiftコードのCodable準拠を自動化した。"
@@ -2206,7 +2206,7 @@
   createdAt: "{{base-484d}}T12:33:00+09:00"
   updatedAt: "{{base-484d}}T12:33:00+09:00"
 
-- id: "activity-185"
+- id: "work-log-185"
   domainId: "domain-006"
   topicId: "topic-006-1"
   content: "YAMLスキーマからSwiftコードを生成するジェネレーターの設計を行った。PackageSwiftの生成は固定にしてソースファイルのみ生成する方針に決定。"
@@ -2218,7 +2218,7 @@
   createdAt: "{{base-484d}}T17:19:00+09:00"
   updatedAt: "{{base-484d}}T17:19:00+09:00"
 
-- id: "activity-186"
+- id: "work-log-186"
   domainId: "domain-006"
   topicId: "topic-006-5"
   content: "エッジケース(空のスキーマ、深いネスト)のテストケースを追加した。"
@@ -2230,7 +2230,7 @@
   createdAt: "{{base-486d}}T10:52:00+09:00"
   updatedAt: "{{base-486d}}T10:52:00+09:00"
 
-- id: "activity-187"
+- id: "work-log-187"
   domainId: "domain-006"
   topicId: "topic-006-5"
   content: "エッジケース(空のスキーマ、深いネスト)のテストケースを追加した。"
@@ -2242,7 +2242,7 @@
   createdAt: "{{base-488d}}T10:50:00+09:00"
   updatedAt: "{{base-488d}}T10:50:00+09:00"
 
-- id: "activity-188"
+- id: "work-log-188"
   domainId: "domain-006"
   topicId: "topic-006-2"
   content: "生成されるSwiftコードのCodable準拠を自動化した。"
@@ -2254,7 +2254,7 @@
   createdAt: "{{base-490d}}T12:27:00+09:00"
   updatedAt: "{{base-490d}}T12:27:00+09:00"
 
-- id: "activity-189"
+- id: "work-log-189"
   domainId: "domain-006"
   topicId: "topic-006-3"
   content: "スキーマ定義の必須フィールドチェックを強化した。"
@@ -2266,7 +2266,7 @@
   createdAt: "{{base-490d}}T17:38:00+09:00"
   updatedAt: "{{base-490d}}T17:38:00+09:00"
 
-- id: "activity-190"
+- id: "work-log-190"
   domainId: "domain-006"
   topicId: "topic-006-5"
   content: "エッジケース(空のスキーマ、深いネスト)のテストケースを追加した。"
@@ -2278,7 +2278,7 @@
   createdAt: "{{base-494d}}T10:37:00+09:00"
   updatedAt: "{{base-494d}}T10:37:00+09:00"
 
-- id: "activity-191"
+- id: "work-log-191"
   domainId: "domain-002"
   topicId: "topic-002-1"
   content: "Firebase Admin SDKを使ったIDトークン検証ミドルウェアを実装した。"
@@ -2290,7 +2290,7 @@
   createdAt: "{{base-495d}}T12:41:00+09:00"
   updatedAt: "{{base-495d}}T12:41:00+09:00"
 
-- id: "activity-192"
+- id: "work-log-192"
   domainId: "domain-002"
   topicId: "topic-002-2"
   content: "FirestoreのセキュリティルールをCIでテストする仕組みを構築した。emulatorを使ったテストスイートを整備。"
@@ -2302,7 +2302,7 @@
   createdAt: "{{base-496d}}T10:41:00+09:00"
   updatedAt: "{{base-496d}}T10:41:00+09:00"
 
-- id: "activity-193"
+- id: "work-log-193"
   domainId: "domain-001"
   topicId: "topic-001-3"
   content: "アーカイブ機能を実装した。完了したプロジェクトを一覧から隠せるようにした。"
@@ -2314,7 +2314,7 @@
   createdAt: "{{base-497d}}T12:24:00+09:00"
   updatedAt: "{{base-497d}}T12:24:00+09:00"
 
-- id: "activity-194"
+- id: "work-log-194"
   domainId: "domain-006"
   topicId: "topic-006-5"
   content: "エッジケース(空のスキーマ、深いネスト)のテストケースを追加した。"

@@ -8,15 +8,15 @@ import (
 
 // Collection names
 const (
-	CollectionActivities = "activities"
+	CollectionWork_logs = "work_logs"
 )
 
-// ActivityPath returns the document path for a activity.
-func ActivityPath(activityID string) string {
-	return "activities/" + activityID
+// Work_logPath returns the document path for a work_log.
+func Work_logPath(workLogID string) string {
+	return "work_logs/" + workLogID
 }
 
-type Activity struct {
+type WorkLog struct {
 	ID        string    `firestore:"-" json:"id" yaml:"id"`
 	DomainId  string    `firestore:"domainId" json:"domainId" yaml:"domainId"`
 	TopicId   string    `firestore:"topicId" json:"topicId" yaml:"topicId"`
@@ -30,85 +30,85 @@ type Activity struct {
 	UpdatedAt time.Time `firestore:"updatedAt,serverTimestamp" json:"updatedAt" yaml:"updatedAt"`
 }
 
-func (a *Activity) GetDomainId() string {
-	if a == nil {
+func (w *WorkLog) GetDomainId() string {
+	if w == nil {
 		return ""
 	}
-	return a.DomainId
+	return w.DomainId
 }
 
-func (a *Activity) GetTopicId() string {
-	if a == nil {
+func (w *WorkLog) GetTopicId() string {
+	if w == nil {
 		return ""
 	}
-	return a.TopicId
+	return w.TopicId
 }
 
-func (a *Activity) GetContent() string {
-	if a == nil {
+func (w *WorkLog) GetContent() string {
+	if w == nil {
 		return ""
 	}
-	return a.Content
+	return w.Content
 }
 
-func (a *Activity) GetStartedAt() time.Time {
-	if a == nil {
+func (w *WorkLog) GetStartedAt() time.Time {
+	if w == nil {
 		return time.Time{}
 	}
-	return a.StartedAt
+	return w.StartedAt
 }
 
-func (a *Activity) GetEndedAt() time.Time {
-	if a == nil {
+func (w *WorkLog) GetEndedAt() time.Time {
+	if w == nil {
 		return time.Time{}
 	}
-	return a.EndedAt
+	return w.EndedAt
 }
 
-func (a *Activity) GetUserId() string {
-	if a == nil {
+func (w *WorkLog) GetUserId() string {
+	if w == nil {
 		return ""
 	}
-	return a.UserId
+	return w.UserId
 }
 
-func (a *Activity) GetUserName() string {
-	if a == nil {
+func (w *WorkLog) GetUserName() string {
+	if w == nil {
 		return ""
 	}
-	return a.UserName
+	return w.UserName
 }
 
-func (a *Activity) GetUserIcon() string {
-	if a == nil {
+func (w *WorkLog) GetUserIcon() string {
+	if w == nil {
 		return ""
 	}
-	return a.UserIcon
+	return w.UserIcon
 }
 
-func (a *Activity) GetCreatedAt() time.Time {
-	if a == nil {
+func (w *WorkLog) GetCreatedAt() time.Time {
+	if w == nil {
 		return time.Time{}
 	}
-	return a.CreatedAt
+	return w.CreatedAt
 }
 
-func (a *Activity) GetUpdatedAt() time.Time {
-	if a == nil {
+func (w *WorkLog) GetUpdatedAt() time.Time {
+	if w == nil {
 		return time.Time{}
 	}
-	return a.UpdatedAt
+	return w.UpdatedAt
 }
 
-func (a *Activity) GetID() string {
-	if a == nil {
+func (w *WorkLog) GetID() string {
+	if w == nil {
 		return ""
 	}
-	return a.ID
+	return w.ID
 }
 
-// ActivityFields contains field names for Activity.
-var ActivityFields = struct {
+// WorkLogFields contains field names for WorkLog.
+var WorkLogFields = struct {
 	Id        string
 	DomainId  string
 	TopicId   string

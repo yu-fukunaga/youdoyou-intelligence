@@ -1,16 +1,16 @@
 import SwiftUI
 
 struct TimerBanner: View {
-  @EnvironmentObject var activityState: ActivityState
+  @EnvironmentObject var workLogState: WorkLogState
   @EnvironmentObject var appState: AppState
   var onTap: () -> Void
 
   private var domain: Domain? {
-    appState.domains.first { $0.id == activityState.activeDomainId }
+    appState.domains.first { $0.id == workLogState.activeDomainId }
   }
 
   private var topic: Topic? {
-    domain?.topics.first { $0.id == activityState.activeTopicId }
+    domain?.topics.first { $0.id == workLogState.activeTopicId }
   }
 
   var body: some View {
@@ -30,7 +30,7 @@ struct TimerBanner: View {
 
       Spacer()
 
-      Text(activityState.displayTime)
+      Text(workLogState.displayTime)
         .font(.system(.body, design: .monospaced))
         .fontWeight(.bold)
         .foregroundColor(.red)

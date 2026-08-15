@@ -1,8 +1,8 @@
 import SwiftUI
 
-struct ActivityQuickStartContent: View {
+struct WorkLogQuickStartContent: View {
   @EnvironmentObject private var appState: AppState
-  @StateObject private var viewModel = ActivityQuickStartViewModel()
+  @StateObject private var viewModel = WorkLogQuickStartViewModel()
 
   var body: some View {
     HStack(spacing: 12) {

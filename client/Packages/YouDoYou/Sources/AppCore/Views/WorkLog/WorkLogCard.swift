@@ -1,11 +1,11 @@
 import SwiftUI
 
-struct ActivityCard: View {
+struct WorkLogCard: View {
   @EnvironmentObject var appState: AppState
-  let activity: Activity
+  let workLog: WorkLog
 
   private var durationText: String {
-    let seconds = activity.endedAt.timeIntervalSince(activity.startedAt)
+    let seconds = workLog.endedAt.timeIntervalSince(workLog.startedAt)
     let hours = Int(seconds) / 3600
     let minutes = Int(seconds) % 3600 / 60
     return "\(hours)h \(minutes)m"
@@ -15,20 +15,20 @@ struct ActivityCard: View {
     let formatter = DateFormatter()
     formatter.dateFormat = "yyyy/MM/dd (EEE) HH:mm"
     formatter.locale = Locale(identifier: "ja_JP")
-    return formatter.string(from: activity.startedAt)
+    return formatter.string(from: workLog.startedAt)
   }
 
   var body: some View {
 
     NavigationLink(
-      destination: ActivityDetailView(
-        viewModel: ActivityDetailViewModel(activity: activity, appState: appState)
+      destination: WorkLogDetailView(
+        viewModel: WorkLogDetailViewModel(workLog: workLog, appState: appState)
       )
     ) {
       VStack(alignment: .leading, spacing: 12) {
         // User
         HStack {
-          if let url = URL(string: activity.userIcon), !activity.userIcon.isEmpty {
+          if let url = URL(string: workLog.userIcon), !workLog.userIcon.isEmpty {
             AsyncImage(url: url) { image in
               image
                 .resizable()
@@ -46,7 +46,7 @@ struct ActivityCard: View {
               .frame(width: 32, height: 32)
           }
           VStack(alignment: .leading, spacing: 2) {
-            Text(activity.userName)
+            Text(workLog.userName)
               .font(.subheadline)
               .fontWeight(.medium)
             Text(formattedDate)
@@ -94,7 +94,7 @@ struct ActivityCard: View {
                 .foregroundColor(.secondary)
               }
 
-              Text(activity.content)
+              Text(workLog.content)
                 .font(.body)
                 .foregroundColor(.primary)
             }

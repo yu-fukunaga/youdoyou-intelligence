@@ -3,20 +3,20 @@ import FirebaseFirestore
 import Foundation
 
 @MainActor
-class ActivityQuickStartViewModel: ObservableObject {
-  @Published var activities: [Activity] = []
+class WorkLogQuickStartViewModel: ObservableObject {
+  @Published var workLogs: [WorkLog] = []
 
-  private let repository: any ActivityRepositoryProtocol
+  private let repository: any WorkLogRepositoryProtocol
   private var listener: ListenerRegistration?
 
-  init(repository: any ActivityRepositoryProtocol = ActivityRepository()) {
+  init(repository: any WorkLogRepositoryProtocol = WorkLogRepository()) {
     self.repository = repository
   }
 
   func startObserving() {
     guard listener == nil else { return }
-    listener = repository.observe { [weak self] activities in
-      self?.activities = activities
+    listener = repository.observe { [weak self] workLogs in
+      self?.workLogs = workLogs
     }
   }
 
@@ -25,15 +25,15 @@ class ActivityQuickStartViewModel: ObservableObject {
     listener = nil
   }
 
-  // `activities` is already ordered most-recent-first by the repository.
+  // `workLogs` is already ordered most-recent-first by the repository.
   func recentTopics(in domains: [Domain], limit: Int = 6) -> [Topic] {
     let allTopics = domains.flatMap { $0.topics }
     var seenTopicIds = Set<String>()
     var result: [Topic] = []
 
-    for activity in activities {
-      guard seenTopicIds.insert(activity.topicId).inserted else { continue }
-      if let topic = allTopics.first(where: { $0.id == activity.topicId }) {
+    for workLog in workLogs {
+      guard seenTopicIds.insert(workLog.topicId).inserted else { continue }
+      if let topic = allTopics.first(where: { $0.id == workLog.topicId }) {
         result.append(topic)
       }
       if result.count >= limit { break }

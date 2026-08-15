@@ -8,11 +8,11 @@ struct HomeView: View {
           title: "アクティビティ",
           systemImage: "flame.fill",
           titleColor: Color(red: 0.85, green: 0.25, blue: 0.05),
-          linkTitle: "Activities",
-          destination: ActivitiesView()
+          linkTitle: "WorkLogs",
+          destination: WorkLogsView()
         )
       } content: {
-        ActivityStatsContent()
+        WorkLogStatsContent()
       }
 
       HomeCard(verticalPadding: 12) {
@@ -24,7 +24,7 @@ struct HomeView: View {
         .fontWeight(.semibold)
         .foregroundColor(.indigo)
       } content: {
-        ActivityQuickStartContent()
+        WorkLogQuickStartContent()
       }
 
       Spacer()

@@ -42,11 +42,11 @@ struct DomainItem: View {
 struct TopicCard: View {
   let topic: Topic
   let domain: Domain
-  @EnvironmentObject var activityState: ActivityState
+  @EnvironmentObject var workLogState: WorkLogState
   @EnvironmentObject var appState: AppState
 
   private var isDisabled: Bool {
-    activityState.startDate != nil && activityState.activeTopicId != topic.id
+    workLogState.startDate != nil && workLogState.activeTopicId != topic.id
   }
   @State private var isShowingCreateView = false
 
@@ -82,15 +82,15 @@ struct TopicCard: View {
     .disabled(isDisabled)
     .buttonStyle(.plain)
     .sheet(isPresented: $isShowingCreateView) {
-      ActivityCreateView(
-        viewModel: ActivityCreateViewModel(
+      WorkLogCreateView(
+        viewModel: WorkLogCreateViewModel(
           domainId: domain.id ?? "",
           topicId: topic.id,
-          activityState: activityState,
+          workLogState: workLogState,
           appState: appState
         )
       )
-      .environmentObject(activityState)
+      .environmentObject(workLogState)
       .environmentObject(appState)
       .presentationCornerRadius(16)
     }

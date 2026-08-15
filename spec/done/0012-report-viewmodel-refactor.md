@@ -19,7 +19,7 @@ order: ""
 
 ## Details
 
-集計ロジックを`ActivityReport`という別型に切り出すことを検討したが、`ReportView`に閉じたコンポーネントである限りロジックが`ReportViewModel`にあること自体は問題ではない(MVVMとしてもRich Domain Modelとしても妥当)と判断し、切り出しは行わないことにした。実際の問題は命名だった。
+集計ロジックを`WorkLogReport`(旧`ActivityReport`)という別型に切り出すことを検討したが、`ReportView`に閉じたコンポーネントである限りロジックが`ReportViewModel`にあること自体は問題ではない(MVVMとしてもRich Domain Modelとしても妥当)と判断し、切り出しは行わないことにした。実際の問題は命名だった。
 
 - `ReportView`には「棒グラフ(週/四半期/年表示)」「タイムライン(日表示)」「サマリーリスト」という3つの視覚的コンポーネントがあり、各プロパティ・メソッドがそのどれのためのものか名前から分からないことが読みにくさの原因な気がした。
 - `chart`/`bar`/`row`のような、データの意味ではなく見た目の形を表す言葉が使われていた
@@ -38,9 +38,9 @@ order: ""
 | `chartBars(domains:)` | `barChartColumns(domains:)` |
 | `ChartBar` | `BarChartColumn` |
 | `ChartSegment` | `BarChartSegment` |
-| `dayActivities` | `timelineActivities` |
+| `dayWorkLogs` | `timelineWorkLogs` |
 | `dayScrollStart` | `timelineScrollStart` |
-| `colorForActivity(_:domains:)` | `timelineColor(for:domains:)` |
+| `colorForWorkLog(_:domains:)` | `timelineColor(for:domains:)` |
 | `resolveTitle(id:domains:)` | `timelineTitle(for:domains:)` |
 | `summaryRows(domains:)` | `listRows(domains:)` |
 | `SummaryRow` | `ListRow` |

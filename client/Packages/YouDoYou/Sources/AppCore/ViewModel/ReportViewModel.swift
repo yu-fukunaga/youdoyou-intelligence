@@ -70,8 +70,8 @@ class ReportViewModel: ObservableObject {
   @Published var selectedBarIndex: Int?
   @Published private(set) var isLoading = false
 
-  private var cache: [String: [Activity]] = [:]
-  private var repository: any ActivityRepositoryProtocol
+  private var cache: [String: [WorkLog]] = [:]
+  private var repository: any WorkLogRepositoryProtocol
   private var calendar: Calendar
 
   private static let palette: [Color] = [
@@ -80,7 +80,7 @@ class ReportViewModel: ObservableObject {
   ]
 
   init(
-    repository: any ActivityRepositoryProtocol = ActivityRepository(),
+    repository: any WorkLogRepositoryProtocol = WorkLogRepository(),
     calendar: Calendar = {
       var cal = Calendar.current
       cal.firstWeekday = 2
@@ -201,7 +201,7 @@ class ReportViewModel: ObservableObject {
     "\(periodType.rawValue)-\(dateInterval.start.timeIntervalSince1970)"
   }
 
-  private var currentActivities: [Activity] {
+  private var currentWorkLogs: [WorkLog] {
     cache[cacheKey] ?? []
   }
 
@@ -283,15 +283,15 @@ class ReportViewModel: ObservableObject {
     selectedItemId = selectedItemId == id ? nil : id
   }
 
-  private var filteredActivities: [Activity] {
-    guard let selectedItemId else { return currentActivities }
-    return currentActivities.filter { $0[keyPath: groupingKey] == selectedItemId }
+  private var filteredWorkLogs: [WorkLog] {
+    guard let selectedItemId else { return currentWorkLogs }
+    return currentWorkLogs.filter { $0[keyPath: groupingKey] == selectedItemId }
   }
 
   // MARK: - Overall
 
   var headerTotalDuration: TimeInterval {
-    filteredActivities.reduce(0) {
+    filteredWorkLogs.reduce(0) {
       $0 + $1.endedAt.timeIntervalSince($1.startedAt)
     }
   }
@@ -321,10 +321,10 @@ class ReportViewModel: ObservableObject {
 
   // Always includes every known group (domain or topic) per bucket, with 0 duration when
   // absent, so a segment's identity is stable across period navigation (a group that had
-  // no activity before still "exists" at height 0, letting it grow from the bottom
+  // no workLog before still "exists" at height 0, letting it grow from the bottom
   // instead of being freshly inserted and fading in).
   func barChartColumns(domains: [Domain]) -> [BarChartColumn] {
-    let activities = filteredActivities
+    let workLogs = filteredWorkLogs
     let colorMap = colorMap(domains: domains)
     let allGroups = allGroupIds(domains: domains)
     let realBuckets = buckets
@@ -340,7 +340,7 @@ class ReportViewModel: ObservableObject {
       }
 
       let bucket = realBuckets[index]
-      let inBucket = activities.filter {
+      let inBucket = workLogs.filter {
         $0.startedAt < bucket.end && bucket.start < $0.endedAt
       }
 
@@ -373,17 +373,17 @@ class ReportViewModel: ObservableObject {
 
   // MARK: - List
 
-  // Uses currentActivities (not filteredActivities) so every row stays visible
+  // Uses currentWorkLogs (not filteredWorkLogs) so every row stays visible
   // for tapping even while another item is selected.
   func listRows(domains: [Domain]) -> [ListRow] {
-    let activities = currentActivities
+    let workLogs = currentWorkLogs
     let colorMap = colorMap(domains: domains)
     let allBuckets = buckets
-    let groups = listGroups(in: activities, domains: domains)
+    let groups = listGroups(in: workLogs, domains: domains)
 
     return groups.map { group in
       let durations = allBuckets.map { bucket in
-        listBucketDuration(groupId: group.id, activities: activities, in: bucket)
+        listBucketDuration(groupId: group.id, workLogs: workLogs, in: bucket)
       }
       return ListRow(
         id: group.id, title: group.title,
@@ -408,22 +408,22 @@ class ReportViewModel: ObservableObject {
 
   // MARK: - Helpers
 
-  private var groupingKey: KeyPath<Activity, String> {
+  private var groupingKey: KeyPath<WorkLog, String> {
     groupingUnit == .domain ? \.domainId : \.topicId
   }
 
-  // One BarChartColumn's segments: groups only include activity within this bucket,
+  // One BarChartColumn's segments: groups only include workLog within this bucket,
   // and groups with zero duration in this bucket are omitted.
   private func barChartSegments(
-    _ activities: [Activity],
+    _ workLogs: [WorkLog],
     in bucket: DateInterval,
     domains: [Domain]
   ) -> [(id: String, title: String, duration: TimeInterval)] {
     var groups: [String: (title: String, duration: TimeInterval)] = [:]
 
-    for activity in activities {
-      let id = activity[keyPath: groupingKey]
-      let clamped = clampedDuration(activity: activity, in: bucket)
+    for workLog in workLogs {
+      let id = workLog[keyPath: groupingKey]
+      let clamped = clampedDuration(workLog: workLog, in: bucket)
       guard clamped > 0 else { continue }
 
       if groups[id] == nil {
@@ -438,32 +438,32 @@ class ReportViewModel: ObservableObject {
   }
 
   // One ListRow.bucketDurations entry: unlike barChartSegments, always returns
-  // a value (0 if the group had no activity in this bucket).
+  // a value (0 if the group had no workLog in this bucket).
   private func listBucketDuration(
     groupId: String,
-    activities: [Activity],
+    workLogs: [WorkLog],
     in bucket: DateInterval
   ) -> TimeInterval {
-    activities
+    workLogs
       .filter { $0[keyPath: groupingKey] == groupId }
-      .reduce(0) { $0 + clampedDuration(activity: $1, in: bucket) }
+      .reduce(0) { $0 + clampedDuration(workLog: $1, in: bucket) }
   }
 
-  // Clips the activity's duration to the bucket's boundaries; 0 if there's no overlap.
+  // Clips the workLog's duration to the bucket's boundaries; 0 if there's no overlap.
   private func clampedDuration(
-    activity: Activity,
+    workLog: WorkLog,
     in bucket: DateInterval
   ) -> TimeInterval {
-    let start = max(activity.startedAt, bucket.start)
-    let end = min(activity.endedAt, bucket.end)
+    let start = max(workLog.startedAt, bucket.start)
+    let end = min(workLog.endedAt, bucket.end)
     return max(0, end.timeIntervalSince(start))
   }
 
   private func listGroups(
-    in activities: [Activity],
+    in workLogs: [WorkLog],
     domains: [Domain]
   ) -> [(id: String, title: String)] {
-    let ids = Set(activities.map { $0[keyPath: groupingKey] })
+    let ids = Set(workLogs.map { $0[keyPath: groupingKey] })
     return ids.map { id in
       (id: id, title: timelineTitle(for: id, domains: domains))
     }

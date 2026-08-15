@@ -1,10 +1,10 @@
-// ActivityEditView.swift
+// WorkLogEditView.swift
 import SwiftUI
 
-struct ActivityEditView: View {
+struct WorkLogEditView: View {
   @Environment(\.dismiss) var dismiss
   @EnvironmentObject var appState: AppState
-  @ObservedObject var viewModel: ActivityDetailViewModel
+  @ObservedObject var viewModel: WorkLogDetailViewModel
   @State private var showDiscardConfirmation = false
 
   var body: some View {
