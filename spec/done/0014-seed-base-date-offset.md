@@ -17,7 +17,7 @@ order: "Zz"
 
 現状、seedデータ内の日時はYAMLに記述したRFC3339文字列がそのまま使われるため、実行日から離れるほどデータの日付が古くなり、相対日付を前提とした画面確認がしづらい。seed投入の基準日をデフォルトで実行日(今日)とし、必要に応じて±日数で基準日をずらせるようにしたい。
 
-あわせて、seedデータの内容自体も実態に合わせて整理・拡充する（Domainの数を絞り、Activityの件数と日時のバラつきを増やす）。
+あわせて、seedデータの内容自体も実態に合わせて整理・拡充する（Domainの数を絞り、WorkLog(旧Activity)の件数と日時のバラつきを増やす）。
 
 ---
 
@@ -35,9 +35,9 @@ order: "Zz"
 - `server/Makefile` の `seed` ターゲットは変更しない（`make seed` は従来通り引数なしで今日基準）。offsetを使いたい場合は `go run ./cmd/seed -dir=... -offset-days=N` を直接叩く
 - 動作確認: Firestoreエミュレーターに対して `-offset-days=0` と `-offset-days=-5` で実際にseedし、Firestore REST APIで格納されたタイムスタンプがそれぞれ期待通りシフトしていることを確認済み（例: `activity-001.startedAt` が offset 0 で当日9:00 JST、offset -5 でその5日前になる）
 
-### Task 2: seedデータ（Domain / Activity）の整理・拡充
+### Task 2: seedデータ（Domain / WorkLog）の整理・拡充
 
 - `domains.yaml` のDomainを7件から4件に削減（iOSアプリ／バックエンドAPI／デザインシステム／コードジェネレーターを残し、マーケティングサイト／データ基盤／クライアント案件Aとそれぞれのtopicsを削除）
-- `activities.yaml` のActivityを15件から194件に大幅増加。`{{base}}`（今日）から`{{base-500d}}`（約1年5ヶ月前）まで遡る期間に分散させ、直近2日は必ず活動が存在するよう保証しつつ、それ以前は確率的に0〜2件/日を生成
-- Activityの開始・終了時刻の分を毎回ランダム化（従来は`:00`/`:30`など綺麗な値に偏っていた）
-- 動作確認: エミュレーターに再seedし、Domain 4件・Activity 194件が投入されること、削除したDomain/topic IDへの参照が残っていないことを確認済み
+- `activities.yaml` のWorkLogを15件から194件に大幅増加。`{{base}}`（今日）から`{{base-500d}}`（約1年5ヶ月前）まで遡る期間に分散させ、直近2日は必ず活動が存在するよう保証しつつ、それ以前は確率的に0〜2件/日を生成
+- WorkLogの開始・終了時刻の分を毎回ランダム化（従来は`:00`/`:30`など綺麗な値に偏っていた）
+- 動作確認: エミュレーターに再seedし、Domain 4件・WorkLog 194件が投入されること、削除したDomain/topic IDへの参照が残っていないことを確認済み

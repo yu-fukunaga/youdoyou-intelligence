@@ -1,10 +1,10 @@
 import SwiftUI
 
-struct ActivityCreateView: View {
+struct WorkLogCreateView: View {
   @Environment(\.dismiss) var dismiss
-  @EnvironmentObject var activityState: ActivityState
+  @EnvironmentObject var workLogState: WorkLogState
   @EnvironmentObject var appState: AppState
-  @StateObject var viewModel: ActivityCreateViewModel
+  @StateObject var viewModel: WorkLogCreateViewModel
   @State private var showDeleteConfirmation = false
 
   var body: some View {
@@ -12,7 +12,7 @@ struct ActivityCreateView: View {
       // ヘッダー
       HStack {
         Button {
-          if activityState.isReadyToPost {
+          if workLogState.isReadyToPost {
             showDeleteConfirmation = true
           }
           else {
@@ -79,23 +79,23 @@ struct ActivityCreateView: View {
                 Button(action: { viewModel.startTimer() }) {
                   HStack(spacing: 8) {
                     Image(systemName: "play.circle.fill")
-                      .foregroundColor(activityState.isRunning || activityState.isReadyToPost ? .gray : .blue)
+                      .foregroundColor(workLogState.isRunning || workLogState.isReadyToPost ? .gray : .blue)
                     Text("開始")
-                      .foregroundColor(activityState.isRunning || activityState.isReadyToPost ? .secondary : .blue)
+                      .foregroundColor(workLogState.isRunning || workLogState.isReadyToPost ? .secondary : .blue)
                   }
                 }
-                .disabled(activityState.isRunning || activityState.isReadyToPost)
+                .disabled(workLogState.isRunning || workLogState.isReadyToPost)
                 Spacer()
                 DatePicker(
                   "",
                   selection: Binding(
-                    get: { activityState.startDate ?? Date() },
+                    get: { workLogState.startDate ?? Date() },
                     set: { newValue in
-                      let second = Calendar.current.component(.second, from: activityState.startDate ?? Date())
+                      let second = Calendar.current.component(.second, from: workLogState.startDate ?? Date())
                       var components = Calendar.current.dateComponents(
                         [.year, .month, .day, .hour, .minute], from: newValue)
                       components.second = second
-                      activityState.startDate = Calendar.current.date(from: components)
+                      workLogState.startDate = Calendar.current.date(from: components)
                     }
                   ),
                   in: ...Date(),
@@ -103,7 +103,7 @@ struct ActivityCreateView: View {
                 )
                 .labelsHidden()
                 .fixedSize()
-                .disabled(activityState.isRunning)
+                .disabled(workLogState.isRunning)
                 .environment(\.locale, Locale(identifier: "ja_JP"))
               }
               .padding(16)
@@ -122,16 +122,16 @@ struct ActivityCreateView: View {
                 DatePicker(
                   "",
                   selection: Binding(
-                    get: { activityState.endDate ?? Date() },
+                    get: { workLogState.endDate ?? Date() },
                     set: { newValue in
-                      let second = Calendar.current.component(.second, from: activityState.endDate ?? Date())
+                      let second = Calendar.current.component(.second, from: workLogState.endDate ?? Date())
                       var components = Calendar.current.dateComponents(
                         [.year, .month, .day, .hour, .minute], from: newValue)
                       components.second = second
-                      activityState.endDate = Calendar.current.date(from: components)
+                      workLogState.endDate = Calendar.current.date(from: components)
                     }
                   ),
-                  in: (activityState.startDate ?? .distantPast)...Date(),
+                  in: (workLogState.startDate ?? .distantPast)...Date(),
                   displayedComponents: [.date, .hourAndMinute]
                 )
                 .labelsHidden()
@@ -139,13 +139,13 @@ struct ActivityCreateView: View {
                 .environment(\.locale, Locale(identifier: "ja_JP"))
               }
               .padding(16)
-              .opacity(activityState.isRunning ? 0 : 1)
-              .frame(height: activityState.isRunning ? 0 : nil)
+              .opacity(workLogState.isRunning ? 0 : 1)
+              .frame(height: workLogState.isRunning ? 0 : nil)
               .clipped()
 
               Divider().padding(.horizontal, 16)
-                .opacity(activityState.isRunning ? 0 : 1)
-                .frame(height: activityState.isRunning ? 0 : nil)
+                .opacity(workLogState.isRunning ? 0 : 1)
+                .frame(height: workLogState.isRunning ? 0 : nil)
                 .clipped()
 
               // 経過時間
@@ -157,14 +157,14 @@ struct ActivityCreateView: View {
                     .foregroundColor(.secondary)
                 }
                 Spacer()
-                if activityState.isRunning {
-                  Text(activityState.displayTime)
+                if workLogState.isRunning {
+                  Text(workLogState.displayTime)
                     .font(.system(.body, design: .monospaced))
                     .fontWeight(.bold)
                     .foregroundColor(.blue)
                 }
-                else if let start = activityState.startDate,
-                  let end = activityState.endDate,
+                else if let start = workLogState.startDate,
+                  let end = workLogState.endDate,
                   start < end
                 {
                   Text(calculateDuration(from: start, to: end))
@@ -182,7 +182,7 @@ struct ActivityCreateView: View {
             .cornerRadius(12)
 
             // タイマー停止ボタン
-            if activityState.isRunning {
+            if workLogState.isRunning {
               Button(action: { viewModel.stopTimer() }) {
                 HStack {
                   Image(systemName: "stop.circle.fill")
@@ -205,7 +205,7 @@ struct ActivityCreateView: View {
               .fontWeight(.semibold)
               .foregroundColor(.secondary)
 
-            TextField("何をしましたか？", text: $activityState.content, axis: .vertical)
+            TextField("何をしましたか？", text: $workLogState.content, axis: .vertical)
               .lineLimit(5...10)
               .padding(16)
               .background(Color(.systemBackground))
@@ -229,7 +229,7 @@ struct ActivityCreateView: View {
               await viewModel.post()
               if viewModel.error == nil {
                 dismiss()
-                NotificationCenter.default.post(name: NSNotification.Name("navigateToActivities"), object: nil)
+                NotificationCenter.default.post(name: NSNotification.Name("navigateToWorkLogs"), object: nil)
               }
             }
           } label: {
@@ -237,14 +237,14 @@ struct ActivityCreateView: View {
               .fontWeight(.semibold)
               .frame(maxWidth: .infinity)
               .padding(14)
-              .background(activityState.isReadyToPost ? Color.blue : Color.gray)
+              .background(workLogState.isReadyToPost ? Color.blue : Color.gray)
               .foregroundColor(.white)
               .cornerRadius(12)
           }
-          .disabled(!activityState.isReadyToPost || viewModel.isLoading)
+          .disabled(!workLogState.isReadyToPost || viewModel.isLoading)
 
           Button {
-            if activityState.isReadyToPost || activityState.isRunning {
+            if workLogState.isReadyToPost || workLogState.isRunning {
               showDeleteConfirmation = true
             }
             else {
@@ -265,23 +265,23 @@ struct ActivityCreateView: View {
       }
     }
     .background(Color(.systemGroupedBackground))
-    .interactiveDismissDisabled(activityState.isReadyToPost)
+    .interactiveDismissDisabled(workLogState.isReadyToPost)
     .onAppear {
-      if !activityState.isRunning && !activityState.isReadyToPost {
+      if !workLogState.isRunning && !workLogState.isReadyToPost {
         let now = Date(timeIntervalSince1970: floor(Date().timeIntervalSince1970))
-        activityState.startDate = now
-        activityState.endDate = now
+        workLogState.startDate = now
+        workLogState.endDate = now
       }
     }
     .onDisappear {
-      if !activityState.isReadyToPost && !activityState.isRunning {
-        activityState.reset()
+      if !workLogState.isReadyToPost && !workLogState.isRunning {
+        workLogState.reset()
       }
     }
     .alert("入力を破棄しますか？", isPresented: $showDeleteConfirmation) {
       Button("キャンセル", role: .cancel) {}
       Button("破棄して閉じる", role: .destructive) {
-        activityState.reset()
+        workLogState.reset()
         dismiss()
       }
     } message: {

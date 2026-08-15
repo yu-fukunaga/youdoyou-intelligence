@@ -1,7 +1,7 @@
 import SwiftUI
 
-struct ActivitiesView: View {
-  @StateObject private var viewModel = ActivityViewModel()
+struct WorkLogsView: View {
+  @StateObject private var viewModel = WorkLogViewModel()
 
   var body: some View {
     ScrollView {
@@ -11,17 +11,17 @@ struct ActivitiesView: View {
           .fontWeight(.bold)
           .padding(.horizontal)
 
-        ForEach(viewModel.todayActivities) { activity in
-          ActivityCard(activity: activity)
+        ForEach(viewModel.todayWorkLogs) { workLog in
+          WorkLogCard(workLog: workLog)
         }
 
-        Text("Recent Activity")
+        Text("Recent WorkLog")
           .font(.title2)
           .fontWeight(.bold)
           .padding(.horizontal)
 
-        ForEach(viewModel.pastActivities) { activity in
-          ActivityCard(activity: activity)
+        ForEach(viewModel.pastWorkLogs) { workLog in
+          WorkLogCard(workLog: workLog)
         }
       }
       .padding(16)

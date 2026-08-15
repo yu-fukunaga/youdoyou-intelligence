@@ -3,15 +3,15 @@
 @preconcurrency import FirebaseFirestore
 import Foundation
 
-public enum ActivityCollection {
-  public static let name = "activities"
+public enum WorkLogCollection {
+  public static let name = "work_logs"
 
   public static func documentPath(_ id: String) -> String {
-    "activities/\(id)"
+    "work_logs/\(id)"
   }
 }
 
-public enum ActivityFields {
+public enum WorkLogFields {
   public static let id = "id"
   public static let domainId = "domainId"
   public static let topicId = "topicId"
@@ -25,7 +25,7 @@ public enum ActivityFields {
   public static let updatedAt = "updatedAt"
 }
 
-public struct Activity: Codable, Identifiable, Sendable {
+public struct WorkLog: Codable, Identifiable, Sendable {
   @DocumentID public var id: String?
   public var domainId: String
   public var topicId: String

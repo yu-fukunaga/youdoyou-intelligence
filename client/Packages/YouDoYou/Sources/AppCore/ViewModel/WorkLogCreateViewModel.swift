@@ -5,7 +5,7 @@ import Foundation
 import TimerLiveActivityAttributes
 
 @MainActor
-class ActivityCreateViewModel: ObservableObject {
+class WorkLogCreateViewModel: ObservableObject {
   @Published var isLoading = false
   @Published var error: String?
   @Published var domain: Domain?
@@ -13,26 +13,26 @@ class ActivityCreateViewModel: ObservableObject {
 
   private let domainId: String
   private let topicId: String
-  private let activityState: ActivityState
-  private let repository: any ActivityRepositoryProtocol
+  private let workLogState: WorkLogState
+  private let repository: any WorkLogRepositoryProtocol
 
   init(
     domainId: String,
     topicId: String,
-    activityState: ActivityState,
+    workLogState: WorkLogState,
     appState: AppState,
-    repository: any ActivityRepositoryProtocol = ActivityRepository()
+    repository: any WorkLogRepositoryProtocol = WorkLogRepository()
   ) {
     self.domainId = domainId
     self.topicId = topicId
-    self.activityState = activityState
+    self.workLogState = workLogState
     self.repository = repository
     self.domain = appState.domains.first { $0.id == domainId }
     self.topic = domain?.topics.first { $0.id == topicId }
   }
 
   func startTimer() {
-    activityState.start(domainId: domainId, topicId: topicId)
+    workLogState.start(domainId: domainId, topicId: topicId)
     error = nil
     do {
       try ActivityKit.Activity<TimerLiveActivityAttributes>.request(
@@ -47,9 +47,9 @@ class ActivityCreateViewModel: ObservableObject {
   }
 
   func stopTimer() {
-    let elapsed = activityState.stop()
-    if let start = activityState.startDate {
-      activityState.endDate = start.addingTimeInterval(elapsed)
+    let elapsed = workLogState.stop()
+    if let start = workLogState.startDate {
+      workLogState.endDate = start.addingTimeInterval(elapsed)
     }
   }
 
@@ -59,7 +59,7 @@ class ActivityCreateViewModel: ObservableObject {
       return
     }
 
-    guard let start = activityState.startDate, let end = activityState.endDate, start < end else {
+    guard let start = workLogState.startDate, let end = workLogState.endDate, start < end else {
       error = "終了時間は開始時間より後に設定してください"
       return
     }
@@ -67,10 +67,10 @@ class ActivityCreateViewModel: ObservableObject {
     isLoading = true
     defer { isLoading = false }
 
-    let activity = Activity(
+    let workLog = WorkLog(
       domainId: domainId,
       topicId: topicId,
-      content: activityState.content,
+      content: workLogState.content,
       startedAt: start,
       endedAt: end,
       userId: user.uid,
@@ -79,8 +79,8 @@ class ActivityCreateViewModel: ObservableObject {
     )
 
     do {
-      try await repository.create(activity)
-      activityState.reset()
+      try await repository.create(workLog)
+      workLogState.reset()
     }
     catch {
       self.error = error.localizedDescription
@@ -89,6 +89,6 @@ class ActivityCreateViewModel: ObservableObject {
 
   func cancel() {
     error = nil
-    activityState.reset()
+    workLogState.reset()
   }
 }

@@ -2,7 +2,7 @@ import SwiftUI
 
 public struct RootView: View {
   @StateObject private var authState = AuthState()
-  @StateObject private var activityState = ActivityState()
+  @StateObject private var workLogState = WorkLogState()
   @StateObject private var appState = AppState()
   @StateObject private var navigationState = NavigationState()
   @State private var selectedTab = 0
@@ -45,10 +45,10 @@ public struct RootView: View {
         }
         .tag(1)
       }
-      .environmentObject(activityState)
+      .environmentObject(workLogState)
       .environmentObject(appState)
       .environmentObject(navigationState)
-      .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("navigateToActivities"))) { _ in
+      .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("navigateToWorkLogs"))) { _ in
         selectedTab = 0
       }
       .onAppear {
@@ -59,29 +59,29 @@ public struct RootView: View {
       }
       .background(Color(.systemGroupedBackground))
 
-      if activityState.isRunning {
+      if workLogState.isRunning {
         TimerBanner {
-          navigationState.isShowingActivityCreate = true
+          navigationState.isShowingWorkLogCreate = true
         }
-        .environmentObject(activityState)
+        .environmentObject(workLogState)
         .environmentObject(appState)
         .padding(.horizontal, 16)
         .padding(.bottom, 80)
       }
     }
-    .sheet(isPresented: $navigationState.isShowingActivityCreate) {
-      if let domainId = activityState.activeDomainId,
-        let topicId = activityState.activeTopicId
+    .sheet(isPresented: $navigationState.isShowingWorkLogCreate) {
+      if let domainId = workLogState.activeDomainId,
+        let topicId = workLogState.activeTopicId
       {
-        ActivityCreateView(
-          viewModel: ActivityCreateViewModel(
+        WorkLogCreateView(
+          viewModel: WorkLogCreateViewModel(
             domainId: domainId,
             topicId: topicId,
-            activityState: activityState,
+            workLogState: workLogState,
             appState: appState
           )
         )
-        .environmentObject(activityState)
+        .environmentObject(workLogState)
         .environmentObject(appState)
       }
     }

@@ -2,7 +2,7 @@ import Combine
 import Foundation
 
 @MainActor
-class ActivityState: ObservableObject {
+class WorkLogState: ObservableObject {
   @Published var startDate: Date?
   @Published var endDate: Date?
   @Published var displayTime = "0:00:00"

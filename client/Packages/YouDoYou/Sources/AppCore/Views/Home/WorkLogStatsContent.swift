@@ -1,8 +1,8 @@
 import Charts
 import SwiftUI
 
-struct ActivityStatsContent: View {
-  @StateObject private var viewModel = ActivityStatsViewModel()
+struct WorkLogStatsContent: View {
+  @StateObject private var viewModel = WorkLogStatsViewModel()
 
   var body: some View {
     VStack(alignment: .leading, spacing: 24) {

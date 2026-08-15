@@ -64,8 +64,8 @@ models:
         type: string
         optional: true
 
-  # アクティビティ（タイムラインに流れる実体）
-  Activity:
+  # ワークログ（タイムラインに流れる実体）
+  WorkLog:
     fields:
       id:
         type: id
@@ -214,9 +214,9 @@ collections:
     path: "domains/{domainID}"
     model: Domain
 
-  activities:
-    path: "activities/{activityID}"
-    model: Activity
+  work_logs:
+    path: "work_logs/{workLogID}"
+    model: WorkLog
 
   threads:
     path: "threads/{threadID}"
