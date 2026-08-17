@@ -76,12 +76,6 @@ public struct RootView: View {
         let topicId = workLogState.activeTopicId
       {
         WorkLogCreateView(
-          viewModel: WorkLogCreateViewModel(
-            domainId: domainId,
-            topicId: topicId,
-            workLogState: workLogState,
-            appState: appState
-          ),
           domainId: domainId,
           topicId: topicId
         )

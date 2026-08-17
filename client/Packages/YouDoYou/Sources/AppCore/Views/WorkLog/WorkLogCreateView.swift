@@ -5,8 +5,9 @@ struct WorkLogCreateView: View {
   @EnvironmentObject var workLogState: WorkLogState
   @Environment(WorkLogStore.self) var workLogStore: WorkLogStore
   @EnvironmentObject var appState: AppState
-  @StateObject var viewModel: WorkLogCreateViewModel
   @State private var showCancelConfirmation = false
+  @State private var isLoading = false
+  @State private var error: String?
 
   let domainId: String
   let topicId: String
@@ -53,7 +54,7 @@ struct WorkLogCreateView: View {
           WorkLogContentSectionView(content: $workLogState.content)
 
           // エラー
-          if let error = viewModel.error {
+          if let error = error {
             HStack(spacing: 8) {
               Image(systemName: "exclamationmark.circle.fill")
                 .foregroundColor(.red)
@@ -66,10 +67,15 @@ struct WorkLogCreateView: View {
           // Postボタン
           Button {
             Task {
-              await viewModel.post()
-              if viewModel.error == nil {
+              isLoading = true
+              defer { isLoading = false }
+              do {
+                try await workLogStore.post()
                 dismiss()
                 NotificationCenter.default.post(name: NSNotification.Name("navigateToWorkLogs"), object: nil)
+              }
+              catch {
+                self.error = error.localizedDescription
               }
             }
           } label: {
@@ -81,7 +87,7 @@ struct WorkLogCreateView: View {
               .foregroundColor(.white)
               .cornerRadius(12)
           }
-          .disabled(!workLogState.isReadyToPost || viewModel.isLoading)
+          .disabled(!workLogState.isReadyToPost || isLoading)
 
           Button {
             if workLogState.isReadyToPost || workLogState.isRunning {

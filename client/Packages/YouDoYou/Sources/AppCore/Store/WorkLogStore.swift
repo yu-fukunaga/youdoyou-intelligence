@@ -1,8 +1,23 @@
 import ActivityKit
 import Combine
+import FirebaseAuth
 import Foundation
 import Observation
 import TimerLiveActivityAttributes
+
+enum WorkLogStoreError: LocalizedError {
+  case notLoggedIn
+  case invalidTimeRange
+
+  var errorDescription: String? {
+    switch self {
+    case .notLoggedIn:
+      return "ログインしてください"
+    case .invalidTimeRange:
+      return "終了時間は開始時間より後に設定してください"
+    }
+  }
+}
 
 @Observable
 @MainActor
@@ -79,6 +94,29 @@ final class WorkLogStore {
     timerPublisher = nil
     clearPersisted()
     endDate = Date()
+  }
+
+  func post() async throws {
+    guard let user = Auth.auth().currentUser else {
+      throw WorkLogStoreError.notLoggedIn
+    }
+    guard let start = startDate, let end = endDate, start < end else {
+      throw WorkLogStoreError.invalidTimeRange
+    }
+
+    let workLog = WorkLog(
+      domainId: activeDomainId ?? "",
+      topicId: activeTopicId ?? "",
+      content: content,
+      startedAt: start,
+      endedAt: end,
+      userId: user.uid,
+      userName: user.displayName ?? "ユーザー",
+      userIcon: user.photoURL?.absoluteString ?? ""
+    )
+
+    try await repository.create(workLog)
+    reset()
   }
 
   func reset() {

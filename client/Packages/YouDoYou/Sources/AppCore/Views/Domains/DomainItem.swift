@@ -83,12 +83,6 @@ struct TopicCard: View {
     .buttonStyle(.plain)
     .sheet(isPresented: $isShowingCreateView) {
       WorkLogCreateView(
-        viewModel: WorkLogCreateViewModel(
-          domainId: domain.id ?? "",
-          topicId: topic.id,
-          workLogState: workLogState,
-          appState: appState
-        ),
         domainId: domain.id ?? "",
         topicId: topic.id
       )
