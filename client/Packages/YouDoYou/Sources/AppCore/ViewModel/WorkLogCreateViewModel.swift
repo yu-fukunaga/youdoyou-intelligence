@@ -1,8 +1,6 @@
-import ActivityKit
 import FirebaseAuth
 import FirebaseFirestore
 import Foundation
-import TimerLiveActivityAttributes
 
 @MainActor
 class WorkLogCreateViewModel: ObservableObject {
@@ -29,28 +27,6 @@ class WorkLogCreateViewModel: ObservableObject {
     self.repository = repository
     self.domain = appState.domains.first { $0.id == domainId }
     self.topic = domain?.topics.first { $0.id == topicId }
-  }
-
-  func startTimer() {
-    workLogState.start(domainId: domainId, topicId: topicId)
-    error = nil
-    do {
-      try ActivityKit.Activity<TimerLiveActivityAttributes>.request(
-        attributes: TimerLiveActivityAttributes(name: domain?.title ?? ""),
-        contentState: TimerLiveActivityAttributes.ContentState(emoji: topic?.title ?? ""),
-        pushType: nil
-      )
-    }
-    catch {
-      self.error = error.localizedDescription
-    }
-  }
-
-  func stopTimer() {
-    let elapsed = workLogState.stop()
-    if let start = workLogState.startDate {
-      workLogState.endDate = start.addingTimeInterval(elapsed)
-    }
   }
 
   func post() async {

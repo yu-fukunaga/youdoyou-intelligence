@@ -3,9 +3,21 @@ import SwiftUI
 struct WorkLogCreateView: View {
   @Environment(\.dismiss) var dismiss
   @EnvironmentObject var workLogState: WorkLogState
+  @Environment(WorkLogStore.self) var workLogStore: WorkLogStore
   @EnvironmentObject var appState: AppState
   @StateObject var viewModel: WorkLogCreateViewModel
   @State private var showCancelConfirmation = false
+
+  let domainId: String
+  let topicId: String
+
+  private var domain: Domain? {
+    appState.domains.first { $0.id == domainId }
+  }
+
+  private var topic: Topic? {
+    domain?.topics.first { $0.id == topicId }
+  }
 
   var body: some View {
     VStack(spacing: 0) {
@@ -20,14 +32,21 @@ struct WorkLogCreateView: View {
         VStack(alignment: .leading, spacing: 24) {
 
           WorkLogDomainTopicView(
-            domainTitle: viewModel.domain?.title ?? "",
-            topicTitle: viewModel.topic?.title ?? ""
+            domainTitle: domain?.title ?? "",
+            topicTitle: topic?.title ?? ""
           )
 
           WorkLogTimeSectionView(
             workLogState: workLogState,
-            onStartTimer: { viewModel.startTimer() },
-            onStopTimer: { viewModel.stopTimer() }
+            onStartTimer: {
+              workLogStore.startTimer(
+                domainId: domainId,
+                topicId: topicId,
+                domainTitle: domain?.title ?? "",
+                topicTitle: topic?.title ?? ""
+              )
+            },
+            onStopTimer: { workLogStore.stopTimer() }
           )
 
           // 内容

@@ -88,7 +88,9 @@ struct TopicCard: View {
           topicId: topic.id,
           workLogState: workLogState,
           appState: appState
-        )
+        ),
+        domainId: domain.id ?? "",
+        topicId: topic.id
       )
       .environmentObject(workLogState)
       .environmentObject(appState)
