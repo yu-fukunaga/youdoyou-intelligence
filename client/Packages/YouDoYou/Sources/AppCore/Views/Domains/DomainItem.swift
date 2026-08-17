@@ -42,11 +42,11 @@ struct DomainItem: View {
 struct TopicCard: View {
   let topic: Topic
   let domain: Domain
-  @EnvironmentObject var workLogState: WorkLogState
+  @Environment(WorkLogDraftStore.self) var workLogDraftStore: WorkLogDraftStore
   @EnvironmentObject var appState: AppState
 
   private var isDisabled: Bool {
-    workLogState.startDate != nil && workLogState.activeTopicId != topic.id
+    workLogDraftStore.startDate != nil && workLogDraftStore.activeTopicId != topic.id
   }
   @State private var isShowingCreateView = false
 
@@ -86,7 +86,7 @@ struct TopicCard: View {
         domainId: domain.id ?? "",
         topicId: topic.id
       )
-      .environmentObject(workLogState)
+      .environment(workLogDraftStore)
       .environmentObject(appState)
       .presentationCornerRadius(16)
     }
