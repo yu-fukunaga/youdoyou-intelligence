@@ -2,7 +2,6 @@ import SwiftUI
 
 struct WorkLogCreateView: View {
   @Environment(\.dismiss) var dismiss
-  @EnvironmentObject var workLogState: WorkLogState
   @Environment(WorkLogStore.self) var workLogStore: WorkLogStore
   @EnvironmentObject var appState: AppState
   @State private var showCancelConfirmation = false
@@ -24,7 +23,7 @@ struct WorkLogCreateView: View {
     VStack(spacing: 0) {
 
       WorkLogHeaderView(
-        isReadyToPost: workLogState.isReadyToPost,
+        isReadyToPost: workLogStore.isReadyToPost,
         onShowCancelConfirmation: { showCancelConfirmation = true },
         onClose: { dismiss() }
       )
@@ -38,7 +37,7 @@ struct WorkLogCreateView: View {
           )
 
           WorkLogTimeSectionView(
-            workLogState: workLogState,
+            workLogStore: workLogStore,
             onStartTimer: {
               workLogStore.startTimer(
                 domainId: domainId,
@@ -51,7 +50,12 @@ struct WorkLogCreateView: View {
           )
 
           // 内容
-          WorkLogContentSectionView(content: $workLogState.content)
+          WorkLogContentSectionView(
+            content: Binding(
+              get: { workLogStore.content },
+              set: { workLogStore.content = $0 }
+            )
+          )
 
           // エラー
           if let error = error {
@@ -83,14 +87,14 @@ struct WorkLogCreateView: View {
               .fontWeight(.semibold)
               .frame(maxWidth: .infinity)
               .padding(14)
-              .background(workLogState.isReadyToPost ? Color.blue : Color.gray)
+              .background(workLogStore.isReadyToPost ? Color.blue : Color.gray)
               .foregroundColor(.white)
               .cornerRadius(12)
           }
-          .disabled(!workLogState.isReadyToPost || isLoading)
+          .disabled(!workLogStore.isReadyToPost || isLoading)
 
           Button {
-            if workLogState.isReadyToPost || workLogState.isRunning {
+            if workLogStore.isReadyToPost || workLogStore.isRunning {
               showCancelConfirmation = true
             }
             else {
@@ -111,23 +115,23 @@ struct WorkLogCreateView: View {
       }
     }
     .background(Color(.systemGroupedBackground))
-    .interactiveDismissDisabled(workLogState.isReadyToPost)
+    .interactiveDismissDisabled(workLogStore.isReadyToPost)
     .onAppear {
-      if !workLogState.isRunning && !workLogState.isReadyToPost {
+      if !workLogStore.isRunning && !workLogStore.isReadyToPost {
         let now = Date(timeIntervalSince1970: floor(Date().timeIntervalSince1970))
-        workLogState.startDate = now
-        workLogState.endDate = now
+        workLogStore.startDate = now
+        workLogStore.endDate = now
       }
     }
     .onDisappear {
-      if !workLogState.isReadyToPost && !workLogState.isRunning {
-        workLogState.reset()
+      if !workLogStore.isReadyToPost && !workLogStore.isRunning {
+        workLogStore.reset()
       }
     }
     .alert("入力を破棄しますか？", isPresented: $showCancelConfirmation) {
       Button("キャンセル", role: .cancel) {}
       Button("破棄して閉じる", role: .destructive) {
-        workLogState.reset()
+        workLogStore.reset()
         dismiss()
       }
     } message: {
@@ -210,7 +214,7 @@ private struct WorkLogDomainTopicView: View {
 }
 
 private struct WorkLogTimeSectionView: View {
-  @ObservedObject var workLogState: WorkLogState
+  let workLogStore: WorkLogStore
   let onStartTimer: () -> Void
   let onStopTimer: () -> Void
   var body: some View {
@@ -226,23 +230,23 @@ private struct WorkLogTimeSectionView: View {
           Button(action: { onStartTimer() }) {
             HStack(spacing: 8) {
               Image(systemName: "play.circle.fill")
-                .foregroundColor(workLogState.isRunning || workLogState.isReadyToPost ? .gray : .blue)
+                .foregroundColor(workLogStore.isRunning || workLogStore.isReadyToPost ? .gray : .blue)
               Text("開始")
-                .foregroundColor(workLogState.isRunning || workLogState.isReadyToPost ? .secondary : .blue)
+                .foregroundColor(workLogStore.isRunning || workLogStore.isReadyToPost ? .secondary : .blue)
             }
           }
-          .disabled(workLogState.isRunning || workLogState.isReadyToPost)
+          .disabled(workLogStore.isRunning || workLogStore.isReadyToPost)
           Spacer()
           DatePicker(
             "",
             selection: Binding(
-              get: { workLogState.startDate ?? Date() },
+              get: { workLogStore.startDate ?? Date() },
               set: { newValue in
-                let second = Calendar.current.component(.second, from: workLogState.startDate ?? Date())
+                let second = Calendar.current.component(.second, from: workLogStore.startDate ?? Date())
                 var components = Calendar.current.dateComponents(
                   [.year, .month, .day, .hour, .minute], from: newValue)
                 components.second = second
-                workLogState.startDate = Calendar.current.date(from: components)
+                workLogStore.startDate = Calendar.current.date(from: components)
               }
             ),
             in: ...Date(),
@@ -250,7 +254,7 @@ private struct WorkLogTimeSectionView: View {
           )
           .labelsHidden()
           .fixedSize()
-          .disabled(workLogState.isRunning)
+          .disabled(workLogStore.isRunning)
           .environment(\.locale, Locale(identifier: "ja_JP"))
         }
         .padding(16)
@@ -269,16 +273,16 @@ private struct WorkLogTimeSectionView: View {
           DatePicker(
             "",
             selection: Binding(
-              get: { workLogState.endDate ?? Date() },
+              get: { workLogStore.endDate ?? Date() },
               set: { newValue in
-                let second = Calendar.current.component(.second, from: workLogState.endDate ?? Date())
+                let second = Calendar.current.component(.second, from: workLogStore.endDate ?? Date())
                 var components = Calendar.current.dateComponents(
                   [.year, .month, .day, .hour, .minute], from: newValue)
                 components.second = second
-                workLogState.endDate = Calendar.current.date(from: components)
+                workLogStore.endDate = Calendar.current.date(from: components)
               }
             ),
-            in: (workLogState.startDate ?? .distantPast)...Date(),
+            in: (workLogStore.startDate ?? .distantPast)...Date(),
             displayedComponents: [.date, .hourAndMinute]
           )
           .labelsHidden()
@@ -286,13 +290,13 @@ private struct WorkLogTimeSectionView: View {
           .environment(\.locale, Locale(identifier: "ja_JP"))
         }
         .padding(16)
-        .opacity(workLogState.isRunning ? 0 : 1)
-        .frame(height: workLogState.isRunning ? 0 : nil)
+        .opacity(workLogStore.isRunning ? 0 : 1)
+        .frame(height: workLogStore.isRunning ? 0 : nil)
         .clipped()
 
         Divider().padding(.horizontal, 16)
-          .opacity(workLogState.isRunning ? 0 : 1)
-          .frame(height: workLogState.isRunning ? 0 : nil)
+          .opacity(workLogStore.isRunning ? 0 : 1)
+          .frame(height: workLogStore.isRunning ? 0 : nil)
           .clipped()
 
         // 経過時間
@@ -304,14 +308,14 @@ private struct WorkLogTimeSectionView: View {
               .foregroundColor(.secondary)
           }
           Spacer()
-          if workLogState.isRunning {
-            Text(workLogState.displayTime)
+          if workLogStore.isRunning {
+            Text(workLogStore.displayTime)
               .font(.system(.body, design: .monospaced))
               .fontWeight(.bold)
               .foregroundColor(.blue)
           }
-          else if let start = workLogState.startDate,
-            let end = workLogState.endDate,
+          else if let start = workLogStore.startDate,
+            let end = workLogStore.endDate,
             start < end
           {
             Text(calculateDuration(from: start, to: end))
@@ -329,7 +333,7 @@ private struct WorkLogTimeSectionView: View {
       .cornerRadius(12)
 
       // タイマー停止ボタン
-      if workLogState.isRunning {
+      if workLogStore.isRunning {
         Button(action: { onStopTimer() }) {
           HStack {
             Image(systemName: "stop.circle.fill")
