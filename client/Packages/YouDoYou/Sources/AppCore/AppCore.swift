@@ -2,7 +2,7 @@ import SwiftUI
 
 public struct RootView: View {
   @StateObject private var authState = AuthState()
-  @StateObject private var workLogState = WorkLogState()
+  @State private var workLogDraftStore = WorkLogDraftStore(repository: WorkLogRepository())
   @StateObject private var appState = AppState()
   @StateObject private var navigationState = NavigationState()
   @State private var selectedTab = 0
@@ -45,7 +45,7 @@ public struct RootView: View {
         }
         .tag(1)
       }
-      .environmentObject(workLogState)
+      .environment(workLogDraftStore)
       .environmentObject(appState)
       .environmentObject(navigationState)
       .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("navigateToWorkLogs"))) { _ in
@@ -59,29 +59,25 @@ public struct RootView: View {
       }
       .background(Color(.systemGroupedBackground))
 
-      if workLogState.isRunning {
+      if workLogDraftStore.isRunning {
         TimerBanner {
           navigationState.isShowingWorkLogCreate = true
         }
-        .environmentObject(workLogState)
+        .environment(workLogDraftStore)
         .environmentObject(appState)
         .padding(.horizontal, 16)
         .padding(.bottom, 80)
       }
     }
     .sheet(isPresented: $navigationState.isShowingWorkLogCreate) {
-      if let domainId = workLogState.activeDomainId,
-        let topicId = workLogState.activeTopicId
+      if let domainId = workLogDraftStore.activeDomainId,
+        let topicId = workLogDraftStore.activeTopicId
       {
         WorkLogCreateView(
-          viewModel: WorkLogCreateViewModel(
-            domainId: domainId,
-            topicId: topicId,
-            workLogState: workLogState,
-            appState: appState
-          )
+          domainId: domainId,
+          topicId: topicId
         )
-        .environmentObject(workLogState)
+        .environment(workLogDraftStore)
         .environmentObject(appState)
       }
     }

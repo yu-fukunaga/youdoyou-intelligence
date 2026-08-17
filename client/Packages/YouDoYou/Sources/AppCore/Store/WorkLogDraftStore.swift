@@ -1,20 +1,41 @@
+import ActivityKit
 import Combine
+import FirebaseAuth
 import Foundation
+import Observation
+import TimerLiveActivityAttributes
 
+enum WorkLogDraftStoreError: LocalizedError {
+  case notLoggedIn
+  case invalidTimeRange
+
+  var errorDescription: String? {
+    switch self {
+    case .notLoggedIn:
+      return "ログインしてください"
+    case .invalidTimeRange:
+      return "終了時間は開始時間より後に設定してください"
+    }
+  }
+}
+
+@Observable
 @MainActor
-class WorkLogState: ObservableObject {
-  @Published var startDate: Date?
-  @Published var endDate: Date?
-  @Published var displayTime = "0:00:00"
-  @Published var activeDomainId: String?
-  @Published var activeTopicId: String?
-  @Published var content: String = "" {
+final class WorkLogDraftStore {
+  var startDate: Date?
+  var endDate: Date?
+  var displayTime = "0:00:00"
+  var activeDomainId: String?
+  var activeTopicId: String?
+  var content: String = "" {
     didSet {
       if isRunning {
         UserDefaults.standard.set(content, forKey: Keys.content)
       }
     }
   }
+
+  private let repository: any WorkLogRepositoryProtocol
 
   private var timerPublisher: AnyCancellable?
 
@@ -34,7 +55,8 @@ class WorkLogState: ObservableObject {
     static let content = "timerContent"
   }
 
-  init() {
+  init(repository: WorkLogRepositoryProtocol) {
+    self.repository = repository
     restore()
   }
 
@@ -52,13 +74,49 @@ class WorkLogState: ObservableObject {
     startTicking()
   }
 
-  func stop() -> TimeInterval {
+  func startTimer(domainId: String, topicId: String, domainTitle: String, topicTitle: String) {
+    start(domainId: domainId, topicId: topicId)
+    do {
+      try ActivityKit.Activity<TimerLiveActivityAttributes>.request(
+        attributes: TimerLiveActivityAttributes(name: domainTitle),
+        contentState: TimerLiveActivityAttributes.ContentState(emoji: topicTitle),
+        pushType: nil
+      )
+    }
+    catch {
+      print("Failed to start Live Activity: \(error.localizedDescription)")
+    }
+  }
+
+  func stopTimer() {
+    guard startDate != nil else { return }
     timerPublisher?.cancel()
     timerPublisher = nil
     clearPersisted()
+    endDate = Date()
+  }
 
-    guard let start = startDate else { return 0 }
-    return Date().timeIntervalSince(start)
+  func post() async throws {
+    guard let user = Auth.auth().currentUser else {
+      throw WorkLogDraftStoreError.notLoggedIn
+    }
+    guard let start = startDate, let end = endDate, start < end else {
+      throw WorkLogDraftStoreError.invalidTimeRange
+    }
+
+    let workLog = WorkLog(
+      domainId: activeDomainId ?? "",
+      topicId: activeTopicId ?? "",
+      content: content,
+      startedAt: start,
+      endedAt: end,
+      userId: user.uid,
+      userName: user.displayName ?? "ユーザー",
+      userIcon: user.photoURL?.absoluteString ?? ""
+    )
+
+    try await repository.create(workLog)
+    reset()
   }
 
   func reset() {
