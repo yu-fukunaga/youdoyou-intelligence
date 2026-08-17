@@ -3,7 +3,7 @@ import SwiftUI
 public struct RootView: View {
   @StateObject private var authState = AuthState()
   @StateObject private var workLogState = WorkLogState()
-  @State private var workLogStore = WorkLogStore(repository: WorkLogRepository())
+  @State private var workLogDraftStore = WorkLogDraftStore(repository: WorkLogRepository())
   @StateObject private var appState = AppState()
   @StateObject private var navigationState = NavigationState()
   @State private var selectedTab = 0
@@ -47,7 +47,7 @@ public struct RootView: View {
         .tag(1)
       }
       .environmentObject(workLogState)
-      .environment(workLogStore)
+      .environment(workLogDraftStore)
       .environmentObject(appState)
       .environmentObject(navigationState)
       .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("navigateToWorkLogs"))) { _ in

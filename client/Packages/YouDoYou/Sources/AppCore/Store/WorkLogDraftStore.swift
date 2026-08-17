@@ -5,7 +5,7 @@ import Foundation
 import Observation
 import TimerLiveActivityAttributes
 
-enum WorkLogStoreError: LocalizedError {
+enum WorkLogDraftStoreError: LocalizedError {
   case notLoggedIn
   case invalidTimeRange
 
@@ -21,7 +21,7 @@ enum WorkLogStoreError: LocalizedError {
 
 @Observable
 @MainActor
-final class WorkLogStore {
+final class WorkLogDraftStore {
   var startDate: Date?
   var endDate: Date?
   var displayTime = "0:00:00"
@@ -98,10 +98,10 @@ final class WorkLogStore {
 
   func post() async throws {
     guard let user = Auth.auth().currentUser else {
-      throw WorkLogStoreError.notLoggedIn
+      throw WorkLogDraftStoreError.notLoggedIn
     }
     guard let start = startDate, let end = endDate, start < end else {
-      throw WorkLogStoreError.invalidTimeRange
+      throw WorkLogDraftStoreError.invalidTimeRange
     }
 
     let workLog = WorkLog(
