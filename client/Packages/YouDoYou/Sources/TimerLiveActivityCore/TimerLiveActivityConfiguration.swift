@@ -37,21 +37,47 @@ public struct TimerLiveActivityConfiguration: Widget {
         // Expanded UI goes here.  Compose the expanded UI through
         // various regions, like leading/trailing/center/bottom
         DynamicIslandExpandedRegion(.leading) {
-          Text("Leading")
+          Image("YouDoYouClientAppIcon")
+            .resizable()
+            .frame(width: 32, height: 32)
+            .clipShape(RoundedRectangle(cornerRadius: 6))
+            .padding(.leading)
         }
         DynamicIslandExpandedRegion(.trailing) {
-          Text("Trailing")
+          Text(timerInterval: context.attributes.startDate...Date.distantFuture, countsDown: false)
+            .font(.system(.title3, design: .monospaced))
+            .fontWeight(.bold)
+            .foregroundStyle(.red)
         }
         DynamicIslandExpandedRegion(.bottom) {
-          Text("Bottom \(context.state.emoji)")
-          // more content
+          VStack(alignment: .leading, spacing: 2) {
+            Text(context.attributes.domainTitle)
+              .font(.caption)
+              .foregroundStyle(.secondary)
+            Text(context.attributes.topicTitle)
+              .font(.headline)
+              .fontWeight(.semibold)
+          }
+          .frame(maxWidth: .infinity, alignment: .leading)
+          .padding(.horizontal)
+          .padding(.top, 4)
         }
       } compactLeading: {
-        Text("L")
+        Image("YouDoYouClientAppIcon")
+          .resizable()
+          .frame(width: 20, height: 20)
+          .clipShape(RoundedRectangle(cornerRadius: 4))
       } compactTrailing: {
-        Text("T \(context.state.emoji)")
+        Text(timerInterval: context.attributes.startDate...Date.distantFuture, countsDown: false)
+          .font(.system(.caption, design: .monospaced))
+          .fontWeight(.semibold)
+          .foregroundStyle(.red)
+          .frame(width: 44)
       } minimal: {
-        Text(context.state.emoji)
+        Image("YouDoYouClientAppIcon")
+          .resizable()
+          .frame(width: 20, height: 20)
+          .clipShape(RoundedRectangle(cornerRadius: 4))
       }
       .widgetURL(URL(string: "http://www.apple.com"))
       .keylineTint(Color.red)
@@ -59,27 +85,4 @@ public struct TimerLiveActivityConfiguration: Widget {
   }
 
   public init() {}
-}
-
-extension TimerLiveActivityAttributes {
-  fileprivate static var preview: TimerLiveActivityAttributes {
-    TimerLiveActivityAttributes(domainTitle: "Work", topicTitle: "World", startDate: Date())
-  }
-}
-
-extension TimerLiveActivityAttributes.ContentState {
-  fileprivate static var smiley: TimerLiveActivityAttributes.ContentState {
-    TimerLiveActivityAttributes.ContentState(emoji: "😀")
-  }
-
-  fileprivate static var starEyes: TimerLiveActivityAttributes.ContentState {
-    TimerLiveActivityAttributes.ContentState(emoji: "🤩")
-  }
-}
-
-#Preview("Notification", as: .content, using: TimerLiveActivityAttributes.preview) {
-  TimerLiveActivityConfiguration()
-} contentStates: {
-  TimerLiveActivityAttributes.ContentState.smiley
-  TimerLiveActivityAttributes.ContentState.starEyes
 }

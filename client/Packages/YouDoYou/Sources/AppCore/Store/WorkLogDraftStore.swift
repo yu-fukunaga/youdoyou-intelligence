@@ -98,6 +98,7 @@ final class WorkLogDraftStore {
     timerPublisher = nil
     clearPersisted()
     endDate = Date()
+    endLiveActivity()
   }
 
   func post() async throws {
@@ -132,6 +133,15 @@ final class WorkLogDraftStore {
     activeDomainId = nil
     activeTopicId = nil
     clearPersisted()
+    endLiveActivity()
+  }
+
+  private func endLiveActivity() {
+    Task {
+      for activity in ActivityKit.Activity<TimerLiveActivityAttributes>.activities {
+        await activity.end(dismissalPolicy: .immediate)
+      }
+    }
   }
 
   // アプリ起動時に復元
