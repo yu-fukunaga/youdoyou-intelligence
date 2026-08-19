@@ -13,9 +13,13 @@ public struct TimerLiveActivityAttributes: ActivityAttributes {
   }
 
   // Fixed non-changing properties about your activity go here!
-  public var name: String
+  public var domainTitle: String
+  public var topicTitle: String
+  public var startDate: Date
 
-  public init(name: String) {
-    self.name = name
+  public init(domainTitle: String, topicTitle: String, startDate: Date) {
+    self.domainTitle = domainTitle
+    self.topicTitle = topicTitle
+    self.startDate = startDate
   }
 }

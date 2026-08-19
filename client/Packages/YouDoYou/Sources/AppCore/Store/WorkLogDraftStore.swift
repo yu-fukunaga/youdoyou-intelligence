@@ -52,6 +52,8 @@ final class WorkLogDraftStore {
     static let startDate = "timerStartedAt"
     static let domainId = "timerDomainId"
     static let topicId = "timerTopicId"
+    static let domainTitle = "timerDomainTitle"
+    static let topicTitle = "timerTopicTitle"
     static let content = "timerContent"
   }
 
@@ -76,9 +78,19 @@ final class WorkLogDraftStore {
 
   func startTimer(domainId: String, topicId: String, domainTitle: String, topicTitle: String) {
     start(domainId: domainId, topicId: topicId)
+    UserDefaults.standard.set(domainTitle, forKey: Keys.domainTitle)
+    UserDefaults.standard.set(topicTitle, forKey: Keys.topicTitle)
+    requestLiveActivity(domainTitle: domainTitle, topicTitle: topicTitle)
+  }
+
+  private func requestLiveActivity(domainTitle: String, topicTitle: String) {
     do {
       try ActivityKit.Activity<TimerLiveActivityAttributes>.request(
-        attributes: TimerLiveActivityAttributes(name: domainTitle),
+        attributes: TimerLiveActivityAttributes(
+          domainTitle: domainTitle,
+          topicTitle: topicTitle,
+          startDate: startDate ?? Date()
+        ),
         contentState: TimerLiveActivityAttributes.ContentState(emoji: topicTitle),
         pushType: nil
       )
@@ -94,6 +106,7 @@ final class WorkLogDraftStore {
     timerPublisher = nil
     clearPersisted()
     endDate = Date()
+    endLiveActivity()
   }
 
   func post() async throws {
@@ -128,6 +141,15 @@ final class WorkLogDraftStore {
     activeDomainId = nil
     activeTopicId = nil
     clearPersisted()
+    endLiveActivity()
+  }
+
+  private func endLiveActivity() {
+    Task {
+      for activity in ActivityKit.Activity<TimerLiveActivityAttributes>.activities {
+        await activity.end(dismissalPolicy: .immediate)
+      }
+    }
   }
 
   // アプリ起動時に復元
@@ -143,6 +165,12 @@ final class WorkLogDraftStore {
     self.activeTopicId = topicId
     self.content = UserDefaults.standard.string(forKey: Keys.content) ?? ""
     startTicking()
+
+    if ActivityKit.Activity<TimerLiveActivityAttributes>.activities.isEmpty {
+      let domainTitle = UserDefaults.standard.string(forKey: Keys.domainTitle) ?? ""
+      let topicTitle = UserDefaults.standard.string(forKey: Keys.topicTitle) ?? ""
+      requestLiveActivity(domainTitle: domainTitle, topicTitle: topicTitle)
+    }
   }
 
   private func startTicking() {
@@ -157,6 +185,8 @@ final class WorkLogDraftStore {
     UserDefaults.standard.removeObject(forKey: Keys.startDate)
     UserDefaults.standard.removeObject(forKey: Keys.domainId)
     UserDefaults.standard.removeObject(forKey: Keys.topicId)
+    UserDefaults.standard.removeObject(forKey: Keys.domainTitle)
+    UserDefaults.standard.removeObject(forKey: Keys.topicTitle)
     UserDefaults.standard.removeObject(forKey: Keys.content)
   }
 
