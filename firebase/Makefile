@@ -24,7 +24,7 @@ upgrade-tools:
 
 .PHONY: gen
 gen:
-	@$(MAKE) --no-print-directory gen/go
+	@$(MAKE) --no-print-directory gen/go gen/swift
 	@echo "Done."
 
 .PHONY: gen/go
