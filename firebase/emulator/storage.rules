@@ -1,0 +1,10 @@
+rules_version = '2';
+
+// Local emulator only: no production Storage bucket is deployed yet, so allow all access.
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /{allPaths=**} {
+      allow read, write: if true;
+    }
+  }
+}

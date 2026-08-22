@@ -18,7 +18,6 @@ func DomainPath(domainID string) string {
 
 type Topic struct {
 	Id       string `firestore:"id" json:"id" yaml:"id"`
-	Code     string `firestore:"code" json:"code" yaml:"code"`
 	Title    string `firestore:"title" json:"title" yaml:"title"`
 	ImageUrl string `firestore:"imageUrl" json:"imageUrl" yaml:"imageUrl"`
 }
@@ -28,13 +27,6 @@ func (t *Topic) GetId() string {
 		return ""
 	}
 	return t.Id
-}
-
-func (t *Topic) GetCode() string {
-	if t == nil {
-		return ""
-	}
-	return t.Code
 }
 
 func (t *Topic) GetTitle() string {
@@ -56,7 +48,7 @@ type Domain struct {
 	Title       string    `firestore:"title" json:"title" yaml:"title"`
 	Description string    `firestore:"description" json:"description" yaml:"description"`
 	Topics      []*Topic  `firestore:"topics" json:"topics" yaml:"topics"`
-	IconUrl     string    `firestore:"iconUrl" json:"iconUrl" yaml:"iconUrl"`
+	Color       string    `firestore:"color" json:"color" yaml:"color"`
 	CreatedAt   time.Time `firestore:"createdAt,serverTimestamp" json:"createdAt" yaml:"createdAt"`
 	UpdatedAt   time.Time `firestore:"updatedAt,serverTimestamp" json:"updatedAt" yaml:"updatedAt"`
 }
@@ -82,11 +74,11 @@ func (d *Domain) GetTopics() []*Topic {
 	return d.Topics
 }
 
-func (d *Domain) GetIconUrl() string {
+func (d *Domain) GetColor() string {
 	if d == nil {
 		return ""
 	}
-	return d.IconUrl
+	return d.Color
 }
 
 func (d *Domain) GetCreatedAt() time.Time {
@@ -113,12 +105,10 @@ func (d *Domain) GetID() string {
 // TopicFields contains field names for Topic.
 var TopicFields = struct {
 	Id       string
-	Code     string
 	Title    string
 	ImageUrl string
 }{
 	Id:       "id",
-	Code:     "code",
 	Title:    "title",
 	ImageUrl: "imageUrl",
 }
@@ -129,7 +119,7 @@ var DomainFields = struct {
 	Title       string
 	Description string
 	Topics      string
-	IconUrl     string
+	Color       string
 	CreatedAt   string
 	UpdatedAt   string
 }{
@@ -137,7 +127,7 @@ var DomainFields = struct {
 	Title:       "title",
 	Description: "description",
 	Topics:      "topics",
-	IconUrl:     "iconUrl",
+	Color:       "color",
 	CreatedAt:   "createdAt",
 	UpdatedAt:   "updatedAt",
 }

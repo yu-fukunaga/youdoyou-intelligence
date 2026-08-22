@@ -41,8 +41,9 @@ models:
       topics:
         type: array
         item_model: Topic
-      iconUrl:
+      color:
         type: string
+        description: "HEXカラーコード (例: #4285F4)"
         optional: true
       createdAt:
         type: server_timestamp
@@ -54,10 +55,6 @@ models:
       id:
         type: string
         description: "development: issue番号 / learning: uuid"
-      code:
-        type: string
-        description: "短縮識別コード (例: YDY-1)"
-        optional: true
       title:
         type: string
       imageUrl:
