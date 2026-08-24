@@ -10,9 +10,9 @@ struct DomainItem: View {
       // ------------------------------
       NavigationLink(destination: DomainDetailView(domain: domain)) {
         HStack {
-          RoundedRectangle(cornerRadius: 8)
-            .fill(Color(.systemGray5))
-            .frame(width: 32, height: 32)
+          Circle()
+            .fill(domain.color.flatMap(Color.init(hex:)) ?? Color(.systemGray5))
+            .frame(width: 12, height: 12)
           Text(domain.title)
           Spacer()
           Image(systemName: "chevron.right")
@@ -55,9 +55,22 @@ struct TopicCard: View {
       isShowingCreateView = true
     } label: {
       VStack(alignment: .leading, spacing: 6) {
-        RoundedRectangle(cornerRadius: 8)
-          .fill(Color(.systemGray5))
-          .frame(width: 32, height: 32)
+        Group {
+          if let urlString = topic.imageUrl, let url = URL(string: urlString), !urlString.isEmpty {
+            AsyncImage(url: url) { image in
+              image
+                .resizable()
+                .scaledToFill()
+            } placeholder: {
+              Color(.systemGray5)
+            }
+          }
+          else {
+            Color(.systemGray5)
+          }
+        }
+        .frame(width: 32, height: 32)
+        .clipShape(RoundedRectangle(cornerRadius: 8))
         Text(topic.title)
           .font(.subheadline)
           .fontWeight(.medium)

@@ -44,6 +44,14 @@ public struct RootView: View {
           Label("Reports", systemImage: "chart.bar.xaxis")
         }
         .tag(1)
+
+        NavigationStack {
+          DomainsView()
+        }
+        .tabItem {
+          Label("Domains", systemImage: "square.grid.2x2")
+        }
+        .tag(2)
       }
       .environment(workLogDraftStore)
       .environmentObject(appState)

@@ -16,7 +16,7 @@ public enum DomainFields {
   public static let title = "title"
   public static let description = "description"
   public static let topics = "topics"
-  public static let iconUrl = "iconUrl"
+  public static let color = "color"
   public static let createdAt = "createdAt"
   public static let updatedAt = "updatedAt"
 }
@@ -26,7 +26,7 @@ public struct Domain: Codable, Identifiable, Sendable {
   public var title: String
   public var description: String
   public var topics: [Topic]
-  public var iconUrl: String?
+  public var color: String?
   @ServerTimestamp public var createdAt: Date?
   @ServerTimestamp public var updatedAt: Date?
 
@@ -34,36 +34,32 @@ public struct Domain: Codable, Identifiable, Sendable {
     title: String,
     description: String,
     topics: [Topic] = [],
-    iconUrl: String? = nil
+    color: String? = nil
   ) {
     self.title = title
     self.description = description
     self.topics = topics
-    self.iconUrl = iconUrl
+    self.color = color
   }
 }
 
 public enum TopicFields {
   public static let id = "id"
-  public static let code = "code"
   public static let title = "title"
   public static let imageUrl = "imageUrl"
 }
 
 public struct Topic: Codable, Identifiable, Sendable {
   public var id: String
-  public var code: String?
   public var title: String
   public var imageUrl: String?
 
   public init(
     id: String,
-    code: String? = nil,
     title: String,
     imageUrl: String? = nil
   ) {
     self.id = id
-    self.code = code
     self.title = title
     self.imageUrl = imageUrl
   }

@@ -1,22 +1,26 @@
 import FirebaseFirestore
+import FirebaseStorage
 import Foundation
 
 protocol DomainRepositoryProtocol: Sendable {
   func observe(onChange: @escaping ([Domain]) -> Void) -> ListenerRegistration
-  func create(title: String, description: String, topics: [Topic]) async throws
+  func create(title: String, description: String, topics: [Topic], color: String?) async throws
   func update(_ domain: Domain) async throws
   func delete(id: String) async throws
+  func uploadTopicImage(topicId: String, data: Data) async throws -> String
 }
 
 struct DomainRepository: DomainRepositoryProtocol, @unchecked Sendable {
   private let db: Firestore
+  private let storage: Storage
 
   private var collection: CollectionReference {
     db.collection(DomainCollection.name)
   }
 
-  init(db: Firestore = Firestore.firestore()) {
+  init(db: Firestore = Firestore.firestore(), storage: Storage = Storage.storage()) {
     self.db = db
+    self.storage = storage
   }
 
   func observe(onChange: @escaping ([Domain]) -> Void) -> ListenerRegistration {
@@ -37,11 +41,12 @@ struct DomainRepository: DomainRepositoryProtocol, @unchecked Sendable {
       }
   }
 
-  func create(title: String, description: String, topics: [Topic]) async throws {
+  func create(title: String, description: String, topics: [Topic], color: String?) async throws {
     let newDomain = Domain(
       title: title,
       description: description,
-      topics: topics
+      topics: topics,
+      color: color
     )
     try collection.addDocument(from: newDomain)
   }
@@ -53,5 +58,12 @@ struct DomainRepository: DomainRepositoryProtocol, @unchecked Sendable {
 
   func delete(id: String) async throws {
     try await collection.document(id).delete()
+  }
+
+  func uploadTopicImage(topicId: String, data: Data) async throws -> String {
+    let ref = storage.reference().child("topics/\(topicId)/icon")
+    _ = try await ref.putDataAsync(data)
+    let url = try await ref.downloadURL()
+    return url.absoluteString
   }
 }
