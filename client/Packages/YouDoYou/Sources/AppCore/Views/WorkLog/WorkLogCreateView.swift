@@ -105,7 +105,7 @@ struct WorkLogCreateView: View {
               .fontWeight(.semibold)
               .frame(maxWidth: .infinity)
               .padding(14)
-              .background(Color(.systemGray5))
+              .background(Color.systemGray5)
               .foregroundColor(.primary)
               .cornerRadius(12)
           }
@@ -114,7 +114,7 @@ struct WorkLogCreateView: View {
         .padding(20)
       }
     }
-    .background(Color(.systemGroupedBackground))
+    .background(Color.systemGroupedBackground)
     .interactiveDismissDisabled(workLogDraftStore.isReadyToPost)
     .onAppear {
       if !workLogDraftStore.isRunning && !workLogDraftStore.isReadyToPost {
@@ -193,7 +193,7 @@ private struct WorkLogDomainTopicView: View {
 
       HStack(spacing: 12) {
         RoundedRectangle(cornerRadius: 8)
-          .fill(Color(.systemGray5))
+          .fill(Color.systemGray5)
           .frame(width: 44, height: 44)
 
         VStack(alignment: .leading, spacing: 4) {
@@ -207,7 +207,7 @@ private struct WorkLogDomainTopicView: View {
         Spacer()
       }
       .padding(16)
-      .background(Color(.systemBackground))
+      .background(Color.systemBackground)
       .cornerRadius(12)
     }
   }
@@ -329,7 +329,7 @@ private struct WorkLogTimeSectionView: View {
         }
         .padding(16)
       }
-      .background(Color(.systemBackground))
+      .background(Color.systemBackground)
       .cornerRadius(12)
 
       // タイマー停止ボタン
@@ -364,7 +364,7 @@ private struct WorkLogContentSectionView: View {
       TextField("何をしましたか？", text: $content, axis: .vertical)
         .lineLimit(5...10)
         .padding(16)
-        .background(Color(.systemBackground))
+        .background(Color.systemBackground)
         .cornerRadius(12)
     }
   }

@@ -13,11 +13,13 @@ struct TopicSelectionView: View {
       }
     }
     .navigationTitle("Topics")
-    .navigationBarTitleDisplayMode(.large)
-    .toolbarBackground(.hidden, for: .navigationBar)
-    .background(Color(.systemGroupedBackground))
+    .toolbarTitleDisplayMode(.automatic)
+    #if os(iOS)
+      .toolbarBackground(.hidden, for: .navigationBar)
+    #endif
+    .background(Color.systemGroupedBackground)
     .toolbar {
-      ToolbarItem(placement: .navigationBarTrailing) {
+      ToolbarItem(placement: .primaryAction) {
         UserIconButton()
       }
     }

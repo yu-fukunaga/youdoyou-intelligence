@@ -15,14 +15,14 @@ struct UserIconButton: View {
             .scaledToFill()
         } placeholder: {
           Circle()
-            .fill(Color(.systemGray5))
+            .fill(Color.systemGray5)
         }
         .frame(width: 32, height: 32)
         .clipShape(Circle())
       }
       else {
         Circle()
-          .fill(Color(.systemGray5))
+          .fill(Color.systemGray5)
           .frame(width: 32, height: 32)
       }
     }

@@ -27,7 +27,7 @@ struct WorkLogsView: View {
       .padding(16)
     }
     .toolbar {
-      ToolbarItem(placement: .navigationBarTrailing) {
+      ToolbarItem(placement: .primaryAction) {
         UserIconButton()
       }
     }
@@ -37,6 +37,6 @@ struct WorkLogsView: View {
     .onDisappear {
       viewModel.stopObserving()
     }
-    .background(Color(.systemGroupedBackground))
+    .background(Color.systemGroupedBackground)
   }
 }

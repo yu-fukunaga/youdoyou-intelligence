@@ -35,14 +35,14 @@ struct WorkLogCard: View {
                 .scaledToFill()
             } placeholder: {
               Circle()
-                .fill(Color(.systemGray5))
+                .fill(Color.systemGray5)
             }
             .frame(width: 32, height: 32)
             .clipShape(Circle())
           }
           else {
             Circle()
-              .fill(Color(.systemGray5))
+              .fill(Color.systemGray5)
               .frame(width: 32, height: 32)
           }
           VStack(alignment: .leading, spacing: 2) {
@@ -71,7 +71,7 @@ struct WorkLogCard: View {
               // Topic + Domain情報
               HStack(spacing: 8) {
                 RoundedRectangle(cornerRadius: 6)
-                  .fill(Color(.systemGray5))
+                  .fill(Color.systemGray5)
                   .frame(width: 56, height: 56)
                 VStack(alignment: .leading, spacing: 2) {
                   Text("Domain Title Domain Title Domain Title")  // 後でappStateから
@@ -100,13 +100,13 @@ struct WorkLogCard: View {
             }
           }
           .padding(16)
-          .background(Color(.systemGroupedBackground))
+          .background(Color.systemGroupedBackground)
           .cornerRadius(8)
         }
 
       }
       .padding()
-      .background(Color(.systemBackground))
+      .background(Color.systemBackground)
       .cornerRadius(12)
       .shadow(radius: 1)
     }

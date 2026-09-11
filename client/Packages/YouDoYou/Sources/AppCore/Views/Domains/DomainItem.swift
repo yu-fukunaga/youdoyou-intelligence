@@ -11,7 +11,7 @@ struct DomainItem: View {
       NavigationLink(destination: DomainDetailView(domain: domain)) {
         HStack {
           Circle()
-            .fill(domain.color.flatMap(Color.init(hex:)) ?? Color(.systemGray5))
+            .fill(domain.color.flatMap(Color.init(hex:)) ?? Color.systemGray5)
             .frame(width: 12, height: 12)
           Text(domain.title)
           Spacer()
@@ -62,11 +62,11 @@ struct TopicCard: View {
                 .resizable()
                 .scaledToFill()
             } placeholder: {
-              Color(.systemGray5)
+              Color.systemGray5
             }
           }
           else {
-            Color(.systemGray5)
+            Color.systemGray5
           }
         }
         .frame(width: 32, height: 32)

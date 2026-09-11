@@ -3,7 +3,10 @@ import Combine
 import FirebaseAuth
 import Foundation
 import Observation
-import TimerLiveActivityAttributes
+
+#if os(iOS)
+  import TimerLiveActivityAttributes
+#endif
 
 enum WorkLogDraftStoreError: LocalizedError {
   case notLoggedIn
@@ -84,20 +87,22 @@ final class WorkLogDraftStore {
   }
 
   private func requestLiveActivity(domainTitle: String, topicTitle: String) {
-    do {
-      try ActivityKit.Activity<TimerLiveActivityAttributes>.request(
-        attributes: TimerLiveActivityAttributes(
-          domainTitle: domainTitle,
-          topicTitle: topicTitle,
-          startDate: startDate ?? Date()
-        ),
-        contentState: TimerLiveActivityAttributes.ContentState(emoji: topicTitle),
-        pushType: nil
-      )
-    }
-    catch {
-      print("Failed to start Live Activity: \(error.localizedDescription)")
-    }
+    #if os(iOS)
+      do {
+        try ActivityKit.Activity<TimerLiveActivityAttributes>.request(
+          attributes: TimerLiveActivityAttributes(
+            domainTitle: domainTitle,
+            topicTitle: topicTitle,
+            startDate: startDate ?? Date()
+          ),
+          contentState: TimerLiveActivityAttributes.ContentState(emoji: topicTitle),
+          pushType: nil
+        )
+      }
+      catch {
+        print("Failed to start Live Activity: \(error.localizedDescription)")
+      }
+    #endif
   }
 
   func stopTimer() {
@@ -145,11 +150,13 @@ final class WorkLogDraftStore {
   }
 
   private func endLiveActivity() {
-    Task {
-      for activity in ActivityKit.Activity<TimerLiveActivityAttributes>.activities {
-        await activity.end(dismissalPolicy: .immediate)
+    #if os(iOS)
+      Task {
+        for activity in ActivityKit.Activity<TimerLiveActivityAttributes>.activities {
+          await activity.end(dismissalPolicy: .immediate)
+        }
       }
-    }
+    #endif
   }
 
   // アプリ起動時に復元
@@ -166,7 +173,11 @@ final class WorkLogDraftStore {
     self.content = UserDefaults.standard.string(forKey: Keys.content) ?? ""
     startTicking()
 
-    if ActivityKit.Activity<TimerLiveActivityAttributes>.activities.isEmpty {
+    var hasNoActiveLiveActivity = false
+    #if os(iOS)
+      hasNoActiveLiveActivity = ActivityKit.Activity<TimerLiveActivityAttributes>.activities.isEmpty
+    #endif
+    if hasNoActiveLiveActivity {
       let domainTitle = UserDefaults.standard.string(forKey: Keys.domainTitle) ?? ""
       let topicTitle = UserDefaults.standard.string(forKey: Keys.topicTitle) ?? ""
       requestLiveActivity(domainTitle: domainTitle, topicTitle: topicTitle)

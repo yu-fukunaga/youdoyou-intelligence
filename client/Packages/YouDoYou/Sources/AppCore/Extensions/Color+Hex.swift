@@ -1,5 +1,12 @@
 import SwiftUI
-import UIKit
+
+#if canImport(UIKit)
+  import UIKit
+#endif
+
+#if canImport(AppKit)
+  import AppKit
+#endif
 
 extension Color {
   init?(hex: String) {
@@ -19,8 +26,14 @@ extension Color {
   var hexString: String {
     // getRed(_:green:blue:alpha:) fails for colors backed by a non-RGB color space
     // (e.g. white/black/gray), so convert through deviceRGB first to guarantee components.
+    #if canImport(UIKit)
+      let platformColor = UIColor(self)
+    #else
+      let platformColor = NSColor(self)
+    #endif
+
     guard
-      let rgbColor = UIColor(self).cgColor.converted(
+      let rgbColor = platformColor.cgColor.converted(
         to: CGColorSpaceCreateDeviceRGB(), intent: .defaultIntent, options: nil),
       let components = rgbColor.components, components.count >= 3
     else {

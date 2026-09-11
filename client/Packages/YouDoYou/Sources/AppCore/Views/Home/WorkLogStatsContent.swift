@@ -65,11 +65,11 @@ struct HourlyDotsRow: View {
     .chartXAxis {
       AxisMarks(values: minorGridValues) { _ in
         AxisGridLine(stroke: StrokeStyle(lineWidth: 0.3))
-          .foregroundStyle(Color(uiColor: .systemGray4))
+          .foregroundStyle(Color.systemGray4)
       }
       AxisMarks(values: majorGridValues) { _ in
         AxisGridLine(stroke: StrokeStyle(lineWidth: 0.3))
-          .foregroundStyle(Color(uiColor: .systemGray))
+          .foregroundStyle(Color.systemGray)
       }
       AxisMarks(values: [0, 6, 12, 18]) { value in
         AxisValueLabel {

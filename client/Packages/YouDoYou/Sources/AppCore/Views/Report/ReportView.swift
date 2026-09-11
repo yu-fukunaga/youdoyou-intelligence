@@ -22,11 +22,13 @@ struct ReportView: View {
       }
     }
     .navigationTitle("Report")
-    .navigationBarTitleDisplayMode(.large)
-    .toolbarBackground(.hidden, for: .navigationBar)
-    .background(Color(.systemGroupedBackground))
+    .toolbarTitleDisplayMode(.automatic)
+    #if os(iOS)
+      .toolbarBackground(.hidden, for: .navigationBar)
+    #endif
+    .background(Color.systemGroupedBackground)
     .toolbar {
-      ToolbarItem(placement: .navigationBarTrailing) {
+      ToolbarItem(placement: .primaryAction) {
         UserIconButton()
       }
     }
@@ -93,7 +95,7 @@ struct ReportView: View {
         .foregroundStyle(.secondary)
         .padding(.horizontal, 10)
         .padding(.vertical, 4)
-        .background(Color(.systemFill))
+        .background(Color.systemFill)
         .clipShape(Capsule())
     }
   }
@@ -134,9 +136,9 @@ struct ReportView: View {
     } label: {
       Image(systemName: "list.bullet.indent")
         .font(.system(size: 14, weight: .semibold))
-        .foregroundStyle(isTopic ? Color(.systemBackground) : .secondary)
+        .foregroundStyle(isTopic ? Color.systemBackground : .secondary)
         .frame(width: 24, height: 24)
-        .background(isTopic ? Color.primary : Color(.systemFill))
+        .background(isTopic ? Color.primary : Color.systemFill)
         .clipShape(Circle())
     }
   }
@@ -242,7 +244,7 @@ struct ReportView: View {
   // sense of motion when it moves from one bar to another.
   private func selectionHighlight(columnWidth: CGFloat, height: CGFloat) -> some View {
     Rectangle()
-      .fill(Color(.systemFill))
+      .fill(Color.systemFill)
       .frame(width: columnWidth, height: height)
       .offset(x: CGFloat(highlightedBarIndex) * (columnWidth + Self.barSpacing))
       .opacity(highlightOpacity)
@@ -264,7 +266,7 @@ struct ReportView: View {
             path.move(to: CGPoint(x: 0, y: y))
             path.addLine(to: CGPoint(x: geometry.size.width - Self.axisGutterWidth, y: y))
           }
-          .stroke(Color(.separator), lineWidth: 0.5)
+          .stroke(Color.separator, lineWidth: 0.5)
 
           Text("\(Int(tickValue))h")
             .font(.caption2)
@@ -283,7 +285,7 @@ struct ReportView: View {
             path.move(to: CGPoint(x: x, y: 0))
             path.addLine(to: CGPoint(x: x, y: geometry.size.height))
           }
-          .stroke(Color(.separator), style: StrokeStyle(lineWidth: 0.5, dash: [3, 3]))
+          .stroke(Color.separator, style: StrokeStyle(lineWidth: 0.5, dash: [3, 3]))
           .animation(
             .easeInOut(duration: Self.dataAnimationDuration).delay(Self.dataAnimationDelay), value: columnWidth)
         }
@@ -370,7 +372,7 @@ struct ReportView: View {
     .frame(maxWidth: .infinity, alignment: .leading)
     .padding(.horizontal)
     .padding(.vertical, 12)
-    .background(Color(.secondarySystemGroupedBackground))
+    .background(Color.secondarySystemGroupedBackground)
     .clipShape(RoundedRectangle(cornerRadius: Self.cardCornerRadius))
   }
 
@@ -401,7 +403,7 @@ struct ReportView: View {
         }
       }
     }
-    .background(Color(.secondarySystemGroupedBackground))
+    .background(Color.secondarySystemGroupedBackground)
     .clipShape(RoundedRectangle(cornerRadius: Self.cardCornerRadius))
     .padding(.horizontal)
     .padding(.top, 16)
@@ -448,7 +450,7 @@ struct ReportView: View {
       }
       .padding(.horizontal)
       .padding(.vertical, 12)
-      .background(isSelected ? Color(.systemFill) : .clear)
+      .background(isSelected ? Color.systemFill : .clear)
     }
     .buttonStyle(.plain)
   }

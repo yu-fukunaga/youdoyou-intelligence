@@ -65,7 +65,7 @@ public struct RootView: View {
       .onDisappear {
         appState.stop()
       }
-      .background(Color(.systemGroupedBackground))
+      .background(Color.systemGroupedBackground)
 
       if workLogDraftStore.isRunning {
         TimerBanner {

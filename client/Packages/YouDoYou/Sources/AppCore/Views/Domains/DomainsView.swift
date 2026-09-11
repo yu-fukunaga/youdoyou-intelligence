@@ -14,11 +14,13 @@ struct DomainsView: View {
         }
       }
       .navigationTitle("Domains")
-      .navigationBarTitleDisplayMode(.large)
-      .toolbarBackground(.hidden, for: .navigationBar)
-      .background(Color(.systemGroupedBackground))
+      .toolbarTitleDisplayMode(.automatic)
+      #if os(iOS)
+        .toolbarBackground(.hidden, for: .navigationBar)
+      #endif
+      .background(Color.systemGroupedBackground)
       .toolbar {
-        ToolbarItem(placement: .navigationBarTrailing) {
+        ToolbarItem(placement: .primaryAction) {
           UserIconButton()
         }
       }
@@ -37,7 +39,9 @@ struct DomainsView: View {
       .padding(24)
     }
     .sheet(isPresented: $isShowingCreate) {
-      DomainFormView(mode: .create)
+      #if os(iOS)
+        DomainFormView(mode: .create)
+      #endif
     }
   }
 }
@@ -49,7 +53,7 @@ private struct DomainCard: View {
     NavigationLink(destination: DomainDetailView(domain: domain)) {
       HStack(alignment: .top, spacing: 12) {
         RoundedRectangle(cornerRadius: 8)
-          .fill(domain.color.flatMap(Color.init(hex:)) ?? Color(.systemGray5))
+          .fill(domain.color.flatMap(Color.init(hex:)) ?? Color.systemGray5)
           .frame(width: 80, height: 80)
         VStack {
           Text(domain.title)
@@ -57,7 +61,7 @@ private struct DomainCard: View {
         Spacer()
       }
       .padding()
-      .background(Color(.systemBackground))
+      .background(Color.systemBackground)
       .cornerRadius(12)
       .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 2)
     }

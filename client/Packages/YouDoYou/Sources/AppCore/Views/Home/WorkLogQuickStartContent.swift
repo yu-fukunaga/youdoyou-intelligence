@@ -15,7 +15,7 @@ struct WorkLogQuickStartContent: View {
               .foregroundColor(.primary)
               .padding(.vertical, 8)
               .padding(.horizontal, 12)
-              .background(Color(uiColor: .systemGray6))
+              .background(Color.systemGray6)
               .cornerRadius(16)
           }
         }

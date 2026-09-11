@@ -1,7 +1,10 @@
 import FirebaseAuth
 import Foundation
 import GoogleSignIn
-import UIKit
+
+#if canImport(UIKit)
+  import UIKit
+#endif
 
 @MainActor
 class AuthState: ObservableObject {
@@ -41,14 +44,24 @@ class AuthState: ObservableObject {
   }
 
   func signInWithGoogle() async throws {
-    guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-      let rootViewController = windowScene.keyWindow?.rootViewController
-    else {
-      throw NSError(
-        domain: "AuthState", code: -1, userInfo: [NSLocalizedDescriptionKey: "Root view controller not found"])
-    }
+    #if os(iOS)
+      guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+        let rootViewController = windowScene.keyWindow?.rootViewController
+      else {
+        throw NSError(
+          domain: "AuthState", code: -1, userInfo: [NSLocalizedDescriptionKey: "Root view controller not found"])
+      }
+      let result = try await GIDSignIn.sharedInstance.signIn(withPresenting: rootViewController)
+    #endif
 
-    let result = try await GIDSignIn.sharedInstance.signIn(withPresenting: rootViewController)
+    #if os(macOS)
+      guard let window = NSApplication.shared.windows.first else {
+        throw NSError(
+          domain: "AuthState", code: -1, userInfo: [NSLocalizedDescriptionKey: "Main window not found"])
+      }
+      let result = try await GIDSignIn.sharedInstance.signIn(withPresenting: window)
+    #endif
+
     guard let idToken = result.user.idToken?.tokenString else {
       throw NSError(domain: "AuthState", code: -1, userInfo: [NSLocalizedDescriptionKey: "ID token not found"])
     }
