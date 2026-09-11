@@ -26,6 +26,26 @@ lint:
 ci-lint:
 	$(SWIFT_FORMAT) lint --recursive --strict .
 
+# Build commands
+.PHONY: build-package
+build-package: build-package-ios build-package-macos
+	@echo "✅ All package-builds completed!"
+
+.PHONY: build-package-ios
+build-package-ios:
+	@echo "== build: iOS =="
+	@cd Packages/YouDoYou && swift build --triple arm64-apple-ios26.0-simulator --sdk $$(xcrun --sdk iphonesimulator --show-sdk-path)
+
+.PHONY: build-package-macos
+build-package-macos:
+	@echo "== build: macOS =="
+	@cd Packages/YouDoYou && swift build --triple arm64-apple-macosx26.0 --sdk $$(xcrun --sdk macosx --show-sdk-path)
+
+.PHONY: clean-package
+clean-package:
+	@echo "== package clean =="
+	@cd Packages/YouDoYou && swift package clean
+
 .PHONY: secure
 secure: gitleaks semgrep
 	@echo "Security checks completed!"
