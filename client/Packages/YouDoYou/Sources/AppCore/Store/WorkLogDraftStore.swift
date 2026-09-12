@@ -89,13 +89,16 @@ final class WorkLogDraftStore {
   private func requestLiveActivity(domainTitle: String, topicTitle: String) {
     #if os(iOS)
       do {
-        try ActivityKit.Activity<TimerLiveActivityAttributes>.request(
+        _ = try ActivityKit.Activity<TimerLiveActivityAttributes>.request(
           attributes: TimerLiveActivityAttributes(
             domainTitle: domainTitle,
             topicTitle: topicTitle,
             startDate: startDate ?? Date()
           ),
-          contentState: TimerLiveActivityAttributes.ContentState(emoji: topicTitle),
+          content: ActivityContent(
+            state: TimerLiveActivityAttributes.ContentState(emoji: topicTitle),
+            staleDate: nil
+          ),
           pushType: nil
         )
       }
@@ -153,7 +156,10 @@ final class WorkLogDraftStore {
     #if os(iOS)
       Task {
         for activity in ActivityKit.Activity<TimerLiveActivityAttributes>.activities {
-          await activity.end(dismissalPolicy: .immediate)
+          // TODO: Pass the final ContentState instead of nil. Apple recommends this since
+          // the activity can remain visible after ending:
+          // https://developer.apple.com/documentation/activitykit/displaying-live-data-with-live-activities
+          await activity.end(nil, dismissalPolicy: .immediate)
         }
       }
     #endif
