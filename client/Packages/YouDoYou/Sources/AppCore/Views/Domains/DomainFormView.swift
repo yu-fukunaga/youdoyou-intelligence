@@ -263,15 +263,18 @@
     @State private var pickerItem: PhotosPickerItem?
 
     var body: some View {
+      let imageData = field.imageData
+      let existingImageUrl = field.existingImageUrl
+
       HStack(spacing: 12) {
         PhotosPicker(selection: $pickerItem, matching: .images) {
           Group {
-            if let imageData = field.imageData, let uiImage = UIImage(data: imageData) {
+            if let imageData = imageData, let uiImage = UIImage(data: imageData) {
               Image(uiImage: uiImage)
                 .resizable()
                 .scaledToFill()
             }
-            else if let urlString = field.existingImageUrl, let url = URL(string: urlString), !urlString.isEmpty {
+            else if let urlString = existingImageUrl, let url = URL(string: urlString), !urlString.isEmpty {
               AsyncImage(url: url) { image in
                 image
                   .resizable()
