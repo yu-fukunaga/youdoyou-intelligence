@@ -111,7 +111,7 @@ struct ReportView: View {
     }
   }
 
-  private func styledDuration(_ duration: TimeInterval) -> Text {
+  private func styledDuration(_ duration: TimeInterval) -> some View {
     let totalMinutes = Int(duration) / 60
     let hours = totalMinutes / 60
     let minutes = totalMinutes % 60
@@ -123,9 +123,22 @@ struct ReportView: View {
       Text(label).font(.callout).foregroundStyle(.secondary)
     }
 
-    if hours == 0 { return number(minutes) + unit("分") }
-    if minutes == 0 { return number(hours) + unit("時間") }
-    return number(hours) + unit("時間") + Text(" ") + number(minutes) + unit("分")
+    return HStack(alignment: .lastTextBaseline, spacing: 2) {
+      if hours == 0 {
+        number(minutes)
+        unit("分")
+      }
+      else if minutes == 0 {
+        number(hours)
+        unit("時間")
+      }
+      else {
+        number(hours)
+        unit("時間")
+        number(minutes)
+        unit("分")
+      }
+    }
   }
 
   private var groupingUnitButton: some View {
