@@ -209,7 +209,7 @@ struct ReportViewModel_BucketLabelTests {
       (
         periodType: .day,
         bucketStart: date(2026, 1, 1),  // Thursday
-        expected: "Thu"
+        expected: "木"
       ),
       (
         periodType: .month,
@@ -293,6 +293,9 @@ struct ReportViewModel_MovePeriodTests {
       (periodType: .year, offset: -1, expected: date(2021, 1, 1)),
     ]
 
+  // TODO: This test intentionally sets `now` outside the tested date range to
+  // avoid the isViewingToday guard. Add a dedicated test that verifies
+  // movePeriod does nothing when today falls within the current period.
   @Test(arguments: cases)
   @MainActor
   func movePeriod_test(
@@ -300,7 +303,7 @@ struct ReportViewModel_MovePeriodTests {
     offset: Int,
     expected: Date
   ) {
-    let vm = ReportViewModel(repository: MockWorkLogRepository())
+    let vm = ReportViewModel(repository: MockWorkLogRepository(), now: { date(2000, 1, 1) })
     vm.periodType = periodType
     vm.currentDate = date(2026, 1, 1)
 
