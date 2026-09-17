@@ -4,7 +4,7 @@
 # re-run `make aggregate` and commit the diff.
 
 # --- client ---
-.PHONY: client/build-package client/build-package-ios client/build-package-macos client/ci-lint client/clean-package client/format client/gitleaks client/lint client/precommit-format client/secure client/semgrep client/swift-format
+.PHONY: client/build-package client/build-package-ios client/build-package-macos client/ci-lint client/clean-package client/coverage client/format client/gitleaks client/lint client/precommit-format client/secure client/semgrep client/swift-format client/test client/test-ios client/test-macos
 
 client/build-package:
 	direnv exec client $(MAKE) -C client build-package
@@ -20,6 +20,9 @@ client/ci-lint:
 
 client/clean-package:
 	direnv exec client $(MAKE) -C client clean-package
+
+client/coverage:
+	direnv exec client $(MAKE) -C client coverage
 
 client/format:
 	direnv exec client $(MAKE) -C client format
@@ -41,6 +44,15 @@ client/semgrep:
 
 client/swift-format:
 	direnv exec client $(MAKE) -C client swift-format
+
+client/test:
+	direnv exec client $(MAKE) -C client test
+
+client/test-ios:
+	direnv exec client $(MAKE) -C client test-ios
+
+client/test-macos:
+	direnv exec client $(MAKE) -C client test-macos
 
 # --- firebase ---
 .PHONY: firebase/check-golangci-lint-go-version firebase/emulators firebase/format firebase/gen firebase/gen/go firebase/gen/swift firebase/gitleaks firebase/install-tools firebase/lint firebase/lint/schema firebase/secure firebase/setup firebase/test firebase/upgrade-tools firebase/vulncheck

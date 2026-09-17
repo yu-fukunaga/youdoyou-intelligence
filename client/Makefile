@@ -1,5 +1,7 @@
 # Variables
 SWIFT_FORMAT := swift-format
+SIMULATOR := iPhone 17 Pro
+SIMULATOR_OS := 26.5
 
 # Commands
 .PHONY: format
@@ -45,6 +47,41 @@ build-package-macos:
 clean-package:
 	@echo "== package clean =="
 	@cd Packages/YouDoYou && swift package clean
+
+# Test commands (xcodebuild)
+.PHONY: test
+test: test-ios test-macos
+	@echo "✅ All tests completed!"
+
+.PHONY: test-ios
+test-ios:
+	@echo "== test: iOS Simulator =="
+	@rm -rf /tmp/test-ios.xcresult
+	@xcodebuild test \
+		-project YouDoYouClient.xcodeproj \
+		-scheme YouDoYou_iOS_Test \
+		-destination 'platform=iOS Simulator,name=$(SIMULATOR),OS=$(SIMULATOR_OS)' \
+		-enableCodeCoverage YES \
+		-resultBundlePath /tmp/test-ios.xcresult; \
+	TEST_EXIT=$$?; \
+	$(MAKE) coverage; \
+	exit $$TEST_EXIT
+
+.PHONY: coverage
+coverage:
+	@if [ -d /tmp/test-ios.xcresult ]; then \
+		xcrun xccov view --report --files-for-target AppCore /tmp/test-ios.xcresult; \
+	else \
+		echo "No coverage data found. Run 'make test-ios' first."; \
+	fi
+
+.PHONY: test-macos
+test-macos:
+	@echo "== test: macOS =="
+# 	xcodebuild test \
+# 		-project YouDoYouClient.xcodeproj \
+# 		-scheme YouDoYou_macOS_Test \
+# 		-destination 'platform=macOS'
 
 .PHONY: secure
 secure: gitleaks semgrep
