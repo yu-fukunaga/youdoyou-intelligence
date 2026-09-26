@@ -5,11 +5,11 @@ go 1.26.6
 replace github.com/yu-fukunaga/youdoyou-intelligence/gen-go => ../gen-go
 
 require (
-	cloud.google.com/go/compute/metadata v0.9.0
+	cloud.google.com/go/compute/metadata v0.9.1
 	cloud.google.com/go/firestore v1.25.0
 	firebase.google.com/go/v4 v4.21.0
 	github.com/bradleyfalzon/ghinstallation/v2 v2.19.0
-	github.com/firebase/genkit/go v1.12.0
+	github.com/firebase/genkit/go v1.13.1
 	github.com/go-chi/chi/v5 v5.3.2
 	github.com/google/go-github/v72 v72.0.0
 	github.com/joho/godotenv v1.5.1
