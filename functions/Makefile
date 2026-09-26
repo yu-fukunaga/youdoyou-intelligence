@@ -4,6 +4,7 @@ GCP_PROJECT_ID := $(GOOGLE_CLOUD_PROJECT)
 .PHONY: setup
 setup:
 	@echo "Setting up..."
+	direnv allow .
 	$(MAKE) install-tools
 	go mod tidy
 
@@ -17,10 +18,13 @@ install-tools:
 	fi
 
 # Lint
-.PHONY: lint
-lint:
+.PHONY: lint check-golangci-lint-go-version
+lint: check-golangci-lint-go-version
 	@echo "Running linter..."
 	$(PWD)/bin/golangci-lint run
+
+check-golangci-lint-go-version:
+	@../scripts/check_golangci_lint_go_version.sh $(PWD)/bin/golangci-lint
 
 .PHONY: format
 format:
@@ -39,7 +43,7 @@ vulncheck:
 	@go tool govulncheck ./... || (echo ""; echo "❌ govulncheck failed!"; echo ""; exit 1)
 
 .PHONY: gosec
-gosec:
+gosec: check-golangci-lint-go-version
 	@echo $(DIVIDER)
 	@echo "[2/3] gosec"
 	@echo $(DIVIDER)
