@@ -60,7 +60,7 @@ class ReportViewModel: ObservableObject {
   @Published var periodType: PeriodType = .day {
     didSet { selectedBarIndex = nil }
   }
-  @Published var currentDate: Date = .now
+  @Published var currentDate: Date
   @Published var groupingUnit: GroupingUnit = .domain {
     didSet { selectedItemId = nil }
   }
@@ -73,6 +73,7 @@ class ReportViewModel: ObservableObject {
   private var cache: [String: [WorkLog]] = [:]
   private var repository: any WorkLogRepositoryProtocol
   private var calendar: Calendar
+  private var now: () -> Date
 
   private static let palette: [Color] = [
     .red, .orange, .yellow, .green, .teal,
@@ -85,10 +86,13 @@ class ReportViewModel: ObservableObject {
       var cal = Calendar.current
       cal.firstWeekday = 2
       return cal
-    }()
+    }(),
+    now: @escaping () -> Date = { .now }
   ) {
     self.repository = repository
     self.calendar = calendar
+    self.now = now
+    self.currentDate = now()
   }
 
   // MARK: - Date Interval
@@ -260,7 +264,7 @@ class ReportViewModel: ObservableObject {
   }
 
   var isViewingToday: Bool {
-    dateInterval.contains(.now)
+    dateInterval.contains(now())
   }
 
   var isAtEarliestDate: Bool {
@@ -268,7 +272,7 @@ class ReportViewModel: ObservableObject {
   }
 
   func jumpToToday() {
-    currentDate = .now
+    currentDate = now()
     selectedBarIndex = nil
     Task { await loadIfNeeded() }
   }

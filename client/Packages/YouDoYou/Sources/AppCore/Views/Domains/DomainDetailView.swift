@@ -16,7 +16,7 @@ struct DomainDetailView: View {
       VStack(alignment: .leading, spacing: 24) {
         HStack(spacing: 16) {
           RoundedRectangle(cornerRadius: 12)
-            .fill(domain.color.flatMap(Color.init(hex:)) ?? Color(.systemGray5))
+            .fill(domain.color.flatMap(Color.init(hex:)) ?? Color.systemGray5)
             .frame(width: 64, height: 64)
 
           if !domain.description.isEmpty {
@@ -51,10 +51,10 @@ struct DomainDetailView: View {
       }
       .padding(20)
     }
-    .background(Color(.systemGroupedBackground))
+    .background(Color.systemGroupedBackground)
     .navigationTitle(domain.title)
     .toolbar {
-      ToolbarItem(placement: .navigationBarTrailing) {
+      ToolbarItem(placement: .primaryAction) {
         Menu {
           Button {
             isShowingEdit = true
@@ -72,7 +72,9 @@ struct DomainDetailView: View {
       }
     }
     .sheet(isPresented: $isShowingEdit) {
-      DomainFormView(mode: .edit(domain))
+      #if os(iOS)
+        DomainFormView(mode: .edit(domain))
+      #endif
     }
     .alert("Domainを削除しますか？", isPresented: $isShowingDeleteConfirmation) {
       Button("キャンセル", role: .cancel) {}
@@ -116,11 +118,11 @@ private struct DomainDetailTopicRow: View {
                 .resizable()
                 .scaledToFill()
             } placeholder: {
-              Color(.systemGray5)
+              Color.systemGray5
             }
           }
           else {
-            Color(.systemGray5)
+            Color.systemGray5
           }
         }
         .frame(width: 40, height: 40)
@@ -140,7 +142,7 @@ private struct DomainDetailTopicRow: View {
       }
       .opacity(isDisabled ? 0.4 : 1.0)
       .padding(12)
-      .background(Color(.systemBackground))
+      .background(Color.systemBackground)
       .cornerRadius(12)
     }
     .disabled(isDisabled)

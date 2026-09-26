@@ -47,7 +47,7 @@ struct WorkLogEditView: View {
 
             HStack(spacing: 12) {
               RoundedRectangle(cornerRadius: 8)
-                .fill(Color(.systemGray5))
+                .fill(Color.systemGray5)
                 .frame(width: 44, height: 44)
               VStack(alignment: .leading, spacing: 4) {
                 Text(viewModel.domain?.title ?? "")
@@ -60,7 +60,7 @@ struct WorkLogEditView: View {
               Spacer()
             }
             .padding(16)
-            .background(Color(.systemBackground))
+            .background(Color.systemBackground)
             .cornerRadius(12)
           }
 
@@ -157,7 +157,7 @@ struct WorkLogEditView: View {
               }
               .padding(16)
             }
-            .background(Color(.systemBackground))
+            .background(Color.systemBackground)
             .cornerRadius(12)
           }
 
@@ -171,7 +171,7 @@ struct WorkLogEditView: View {
             TextField("何をしましたか？", text: $viewModel.content, axis: .vertical)
               .lineLimit(5...10)
               .padding(16)
-              .background(Color(.systemBackground))
+              .background(Color.systemBackground)
               .cornerRadius(12)
           }
 
@@ -217,7 +217,7 @@ struct WorkLogEditView: View {
               .fontWeight(.semibold)
               .frame(maxWidth: .infinity)
               .padding(14)
-              .background(Color(.systemGray5))
+              .background(Color.systemGray5)
               .foregroundColor(.primary)
               .cornerRadius(12)
           }
@@ -225,7 +225,7 @@ struct WorkLogEditView: View {
         .padding(20)
       }
     }
-    .background(Color(.systemGroupedBackground))
+    .background(Color.systemGroupedBackground)
     .interactiveDismissDisabled(viewModel.isEdited)
     .alert("編集を破棄しますか？", isPresented: $showDiscardConfirmation) {
       Button("キャンセル", role: .cancel) {}

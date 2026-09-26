@@ -31,7 +31,7 @@ struct WorkLogDetailView: View {
         // User
         HStack {
           Circle()
-            .fill(Color(.systemGray5))
+            .fill(Color.systemGray5)
             .frame(width: 40, height: 40)
           VStack(alignment: .leading, spacing: 2) {
             Text(viewModel.workLog.userName)
@@ -52,7 +52,7 @@ struct WorkLogDetailView: View {
           VStack(alignment: .leading, spacing: 16) {
             HStack(spacing: 8) {
               RoundedRectangle(cornerRadius: 6)
-                .fill(Color(.systemGray5))
+                .fill(Color.systemGray5)
                 .frame(width: 56, height: 56)
               VStack(alignment: .leading, spacing: 2) {
                 Text(domain?.title ?? viewModel.workLog.domainId)
@@ -79,7 +79,7 @@ struct WorkLogDetailView: View {
               .foregroundColor(.primary)
           }
           .padding(16)
-          .background(Color(.systemGroupedBackground))
+          .background(Color.systemGroupedBackground)
           .cornerRadius(8)
         }
 
@@ -112,7 +112,7 @@ struct WorkLogDetailView: View {
             }
             .frame(maxWidth: .infinity)
             .padding(14)
-            .background(Color(.systemGray5))
+            .background(Color.systemGray5)
             .foregroundColor(.red)
             .cornerRadius(12)
           }
@@ -120,9 +120,9 @@ struct WorkLogDetailView: View {
       }
       .padding(20)
     }
-    .background(Color(.systemGroupedBackground))
+    .background(Color.systemGroupedBackground)
     .navigationTitle("WorkLog")
-    .navigationBarTitleDisplayMode(.inline)
+    .toolbarTitleDisplayMode(.inline)
     .onChange(of: viewModel.isDeleted) {
       if viewModel.isDeleted {
         dismiss()

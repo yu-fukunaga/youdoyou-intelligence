@@ -31,8 +31,8 @@ struct HomeView: View {
     }
     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
     .navigationTitle("Home")
-    .navigationBarTitleDisplayMode(.large)
-    .background(Color(.systemGroupedBackground))
+    .toolbarTitleDisplayMode(.automatic)
+    .background(Color.systemGroupedBackground)
   }
 }
 

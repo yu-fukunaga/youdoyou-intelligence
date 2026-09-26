@@ -46,6 +46,14 @@ repos:
         files: ^server/
         pass_filenames: false
 
+      - id: client-secure
+        name: client/secure
+        entry: make client/semgrep
+        language: system
+        types: [swift]
+        files: ^client/
+        pass_filenames: false
+
       - id: client-lint
         name: client/lint
         entry: make client/lint
@@ -54,9 +62,9 @@ repos:
         files: ^client/
         pass_filenames: false
 
-      - id: client-secure
-        name: client/secure
-        entry: make client/semgrep
+      - id: client-test
+        name: client/test
+        entry: make client/test
         language: system
         types: [swift]
         files: ^client/
