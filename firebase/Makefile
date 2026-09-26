@@ -9,7 +9,7 @@ emulators:
 # Setup dependencies
 setup:
 	@echo "Setting up..."
-	direnv allow .
+	@if [ "$(CI)" != "true" ]; then direnv allow .; fi
 	$(MAKE) install-tools
 	go mod tidy
 

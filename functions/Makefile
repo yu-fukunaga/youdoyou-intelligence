@@ -4,7 +4,7 @@ GCP_PROJECT_ID := $(GOOGLE_CLOUD_PROJECT)
 .PHONY: setup
 setup:
 	@echo "Setting up..."
-	direnv allow .
+	@if [ "$(CI)" != "true" ]; then direnv allow .; fi
 	$(MAKE) install-tools
 	go mod tidy
 
