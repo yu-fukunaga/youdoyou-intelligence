@@ -31,7 +31,10 @@ client/swift-format:
 	direnv exec client $(MAKE) -C client swift-format
 
 # --- firebase ---
-.PHONY: firebase/emulators firebase/format firebase/gen firebase/gen/go firebase/gen/swift firebase/gitleaks firebase/install-tools firebase/lint firebase/lint/schema firebase/secure firebase/setup firebase/test firebase/upgrade-tools firebase/vulncheck
+.PHONY: firebase/check-golangci-lint-go-version firebase/emulators firebase/format firebase/gen firebase/gen/go firebase/gen/swift firebase/gitleaks firebase/install-tools firebase/lint firebase/lint/schema firebase/secure firebase/setup firebase/test firebase/upgrade-tools firebase/vulncheck
+
+firebase/check-golangci-lint-go-version:
+	direnv exec firebase $(MAKE) -C firebase check-golangci-lint-go-version
 
 firebase/emulators:
 	direnv exec firebase $(MAKE) -C firebase emulators
@@ -76,7 +79,10 @@ firebase/vulncheck:
 	direnv exec firebase $(MAKE) -C firebase vulncheck
 
 # --- functions ---
-.PHONY: functions/format functions/gitleaks functions/gosec functions/install-tools functions/lint functions/secure functions/setup functions/vulncheck
+.PHONY: functions/check-golangci-lint-go-version functions/format functions/gitleaks functions/gosec functions/install-tools functions/lint functions/secure functions/setup functions/vulncheck
+
+functions/check-golangci-lint-go-version:
+	direnv exec functions $(MAKE) -C functions check-golangci-lint-go-version
 
 functions/format:
 	direnv exec functions $(MAKE) -C functions format
@@ -127,10 +133,13 @@ homepage/semgrep:
 	direnv exec homepage $(MAKE) -C homepage semgrep
 
 # --- server ---
-.PHONY: server/build server/deploy/dev server/dev server/dev-server server/dev-ui server/format server/gitleaks server/ingress/dev/close server/ingress/dev/open server/install-tools server/lint server/ping server/ping/cloud/dev server/secure server/seed server/setup server/test server/upgrade-tools server/vulncheck
+.PHONY: server/build server/check-golangci-lint-go-version server/deploy/dev server/dev server/dev-server server/dev-ui server/format server/gitleaks server/ingress/dev/close server/ingress/dev/open server/install-tools server/lint server/ping server/ping/cloud/dev server/secure server/seed server/setup server/test server/upgrade-tools server/vulncheck
 
 server/build:
 	direnv exec server $(MAKE) -C server build
+
+server/check-golangci-lint-go-version:
+	direnv exec server $(MAKE) -C server check-golangci-lint-go-version
 
 server/deploy/dev:
 	direnv exec server $(MAKE) -C server deploy/dev

@@ -18,14 +18,14 @@ repos:
 
       - id: functions-secure
         name: functions/secure
-        entry: bash -c 'cd functions && make secure SKIP_GITLEAKS=1'
+        entry: make functions/secure SKIP_GITLEAKS=1
         language: system
         files: ^functions/
         pass_filenames: false
 
       - id: functions-lint
         name: functions/lint
-        entry: bash -c 'cd functions && make lint'
+        entry: make functions/lint
         language: system
         types: [go]
         files: ^functions/
@@ -33,14 +33,14 @@ repos:
 
       - id: server-secure
         name: server/secure
-        entry: bash -c 'cd server && make vulncheck'
+        entry: make server/vulncheck
         language: system
         files: ^server/
         pass_filenames: false
 
       - id: server-lint
         name: server/lint
-        entry: bash -c 'cd server && make lint'
+        entry: make server/lint
         language: system
         types: [go]
         files: ^server/
@@ -48,7 +48,7 @@ repos:
 
       - id: client-lint
         name: client/lint
-        entry: bash -c 'cd client && make lint'
+        entry: make client/lint
         language: system
         types: [swift]
         files: ^client/
@@ -56,7 +56,7 @@ repos:
 
       - id: client-secure
         name: client/secure
-        entry: bash -c 'cd client && make semgrep'
+        entry: make client/semgrep
         language: system
         types: [swift]
         files: ^client/
@@ -64,7 +64,7 @@ repos:
 
       - id: client-format
         name: client/format
-        entry: bash -c 'cd client && make format'
+        entry: make client/format
         language: system
         types: [swift]
         files: ^client/
@@ -72,35 +72,35 @@ repos:
 
       - id: terraform-fmt
         name: terraform/fmt
-        entry: bash -c 'cd terraform && make fmt-check'
+        entry: make terraform/fmt-check
         language: system
         files: ^terraform/.*\.tf$
         pass_filenames: false
 
       - id: terraform-lint
         name: terraform/lint
-        entry: bash -c 'cd terraform && make lint'
+        entry: make terraform/lint
         language: system
         files: ^terraform/.*\.tf$
         pass_filenames: false
 
       - id: terraform-validate
         name: terraform/validate
-        entry: bash -c 'cd terraform && make validate/dev'
+        entry: make terraform/validate/dev
         language: system
         files: ^terraform/.*\.tf$
         pass_filenames: false
 
       - id: homepage-secure
         name: homepage/secure
-        entry: bash -c 'cd homepage && make secure'
+        entry: make homepage/secure
         language: system
         files: ^homepage/layouts/.*\.html$
         pass_filenames: false
 
       - id: homepage-lint
         name: homepage/lint
-        entry: bash -c 'cd homepage && make lint'
+        entry: make homepage/lint
         language: system
         files: ^homepage/layouts/.*\.html$
         pass_filenames: false

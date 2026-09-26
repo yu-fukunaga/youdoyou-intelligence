@@ -1,6 +1,5 @@
 # Environment / secrets
 .env
-.envrc
 client_secret_*.apps.googleusercontent.com.json
 
 bin/

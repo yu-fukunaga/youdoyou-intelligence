@@ -1,4 +1,4 @@
-.PHONY: build run seed check test clean setup lint secure semgrep secrets create-message upgrade-tools
+.PHONY: build run seed check test clean setup lint secure semgrep secrets create-message upgrade-tools check-golangci-lint-go-version
 
 PWD := $(shell pwd)
 DEPLOY_REGION := asia-northeast1
@@ -7,6 +7,7 @@ DEPLOY_REGION := asia-northeast1
 # Setup dependencies
 setup:
 	@echo "Setting up..."
+	@if [ "$(CI)" != "true" ]; then direnv allow .; fi
 	$(MAKE) install-tools
 	go mod tidy
 
@@ -74,9 +75,12 @@ test:
 	go test -v ./...
 
 # Run linter
-lint:
+lint: check-golangci-lint-go-version
 	@echo "Running linter..."
 	$(PWD)/bin/golangci-lint run --enable=gosec
+
+check-golangci-lint-go-version:
+	@../scripts/check_golangci_lint_go_version.sh $(PWD)/bin/golangci-lint
 
 # Format code
 format:
