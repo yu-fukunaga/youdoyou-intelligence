@@ -9,7 +9,10 @@ public struct RootView: View {
     repository: WorkLogRepository(),
     authRepository: AuthRepository()
   )
-  @StateObject private var appState = AppState(repository: WorkThemeRepository())
+  @StateObject private var appState = AppState(
+    repository: WorkThemeRepository(),
+    workTopicRepository: WorkTopicRepository()
+  )
   @State private var workLogRepository = WorkLogRepository()
   @StateObject private var navigationState = NavigationState()
   @State private var selectedTab = 0
