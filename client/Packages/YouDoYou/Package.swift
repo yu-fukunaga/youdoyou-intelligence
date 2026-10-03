@@ -31,6 +31,22 @@ let package = Package(
       name: "Domain"
     ),
     .target(
+      name: "Presentation",
+      dependencies: [
+        "Domain"
+      ]
+    ),
+    .target(
+      name: "Infrastructure",
+      dependencies: [
+        .product(name: "FirebaseFirestore", package: "firebase-ios-sdk"),
+        .product(name: "FirebaseAuth", package: "firebase-ios-sdk"),
+        .product(name: "FirebaseStorage", package: "firebase-ios-sdk"),
+        .product(name: "GoogleSignIn", package: "GoogleSignIn-iOS"),
+        "Domain",
+      ]
+    ),
+    .target(
       name: "AppCore",
       dependencies: [
         .product(name: "FirebaseFirestore", package: "firebase-ios-sdk"),
