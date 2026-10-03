@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct DomainItem: View {
-  let domain: Domain
+  let domain: WorkTheme
 
   var body: some View {
     VStack {
@@ -41,7 +41,7 @@ struct DomainItem: View {
 
 struct TopicCard: View {
   let topic: Topic
-  let domain: Domain
+  let domain: WorkTheme
   @Environment(WorkLogDraftStore.self) var workLogDraftStore: WorkLogDraftStore
   @EnvironmentObject var appState: AppState
 

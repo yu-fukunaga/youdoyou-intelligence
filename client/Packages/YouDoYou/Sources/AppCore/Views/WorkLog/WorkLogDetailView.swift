@@ -20,7 +20,7 @@ struct WorkLogDetailView: View {
     return formatter.string(from: viewModel.workLog.startedAt)
   }
 
-  private var domain: Domain? {
+  private var domain: WorkTheme? {
     appState.domains.first { $0.id == viewModel.workLog.domainId }
   }
 

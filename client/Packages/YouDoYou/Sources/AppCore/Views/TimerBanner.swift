@@ -5,7 +5,7 @@ struct TimerBanner: View {
   @EnvironmentObject var appState: AppState
   var onTap: () -> Void
 
-  private var domain: Domain? {
+  private var domain: WorkTheme? {
     appState.domains.first { $0.id == workLogDraftStore.activeDomainId }
   }
 

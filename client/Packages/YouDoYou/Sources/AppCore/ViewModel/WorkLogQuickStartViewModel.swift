@@ -26,7 +26,7 @@ class WorkLogQuickStartViewModel: ObservableObject {
   }
 
   // `workLogs` is already ordered most-recent-first by the repository.
-  func recentTopics(in domains: [Domain], limit: Int = 6) -> [Topic] {
+  func recentTopics(in domains: [WorkTheme], limit: Int = 6) -> [Topic] {
     let allTopics = domains.flatMap { $0.topics }
     var seenTopicIds = Set<String>()
     var result: [Topic] = []

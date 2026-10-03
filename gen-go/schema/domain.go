@@ -43,7 +43,7 @@ func (t *Topic) GetImageUrl() string {
 	return t.ImageUrl
 }
 
-type Domain struct {
+type WorkTheme struct {
 	ID          string    `firestore:"-" json:"id" yaml:"id"`
 	Title       string    `firestore:"title" json:"title" yaml:"title"`
 	Description string    `firestore:"description" json:"description" yaml:"description"`
@@ -53,53 +53,53 @@ type Domain struct {
 	UpdatedAt   time.Time `firestore:"updatedAt,serverTimestamp" json:"updatedAt" yaml:"updatedAt"`
 }
 
-func (d *Domain) GetTitle() string {
-	if d == nil {
+func (w *WorkTheme) GetTitle() string {
+	if w == nil {
 		return ""
 	}
-	return d.Title
+	return w.Title
 }
 
-func (d *Domain) GetDescription() string {
-	if d == nil {
+func (w *WorkTheme) GetDescription() string {
+	if w == nil {
 		return ""
 	}
-	return d.Description
+	return w.Description
 }
 
-func (d *Domain) GetTopics() []*Topic {
-	if d == nil {
+func (w *WorkTheme) GetTopics() []*Topic {
+	if w == nil {
 		return nil
 	}
-	return d.Topics
+	return w.Topics
 }
 
-func (d *Domain) GetColor() string {
-	if d == nil {
+func (w *WorkTheme) GetColor() string {
+	if w == nil {
 		return ""
 	}
-	return d.Color
+	return w.Color
 }
 
-func (d *Domain) GetCreatedAt() time.Time {
-	if d == nil {
+func (w *WorkTheme) GetCreatedAt() time.Time {
+	if w == nil {
 		return time.Time{}
 	}
-	return d.CreatedAt
+	return w.CreatedAt
 }
 
-func (d *Domain) GetUpdatedAt() time.Time {
-	if d == nil {
+func (w *WorkTheme) GetUpdatedAt() time.Time {
+	if w == nil {
 		return time.Time{}
 	}
-	return d.UpdatedAt
+	return w.UpdatedAt
 }
 
-func (d *Domain) GetID() string {
-	if d == nil {
+func (w *WorkTheme) GetID() string {
+	if w == nil {
 		return ""
 	}
-	return d.ID
+	return w.ID
 }
 
 // TopicFields contains field names for Topic.
@@ -113,8 +113,8 @@ var TopicFields = struct {
 	ImageUrl: "imageUrl",
 }
 
-// DomainFields contains field names for Domain.
-var DomainFields = struct {
+// WorkThemeFields contains field names for WorkTheme.
+var WorkThemeFields = struct {
 	Id          string
 	Title       string
 	Description string

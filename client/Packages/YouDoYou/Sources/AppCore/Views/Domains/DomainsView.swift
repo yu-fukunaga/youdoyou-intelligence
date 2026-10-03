@@ -47,7 +47,7 @@ struct DomainsView: View {
 }
 
 private struct DomainCard: View {
-  let domain: Domain
+  let domain: WorkTheme
 
   var body: some View {
     NavigationLink(destination: DomainDetailView(domain: domain)) {

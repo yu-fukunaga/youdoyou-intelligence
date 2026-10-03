@@ -30,7 +30,7 @@ models:
         type: integer
 
   # ドメイン（管理の最小単位）
-  Domain:
+  WorkTheme:
     fields:
       id:
         type: id
@@ -209,7 +209,7 @@ models:
 collections:
   domains:
     path: "domains/{domainID}"
-    model: Domain
+    model: WorkTheme
 
   work_logs:
     path: "work_logs/{workLogID}"

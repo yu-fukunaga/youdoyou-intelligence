@@ -307,7 +307,7 @@ class ReportViewModel: ObservableObject {
     return headerTotalDuration / Double(count)
   }
 
-  func timelineTitle(for id: String, domains: [Domain]) -> String {
+  func timelineTitle(for id: String, domains: [WorkTheme]) -> String {
     switch groupingUnit {
     case .domain:
       return domains.first { $0.id == id }?.title ?? id
@@ -327,7 +327,7 @@ class ReportViewModel: ObservableObject {
   // absent, so a segment's identity is stable across period navigation (a group that had
   // no workLog before still "exists" at height 0, letting it grow from the bottom
   // instead of being freshly inserted and fading in).
-  func barChartColumns(domains: [Domain]) -> [BarChartColumn] {
+  func barChartColumns(domains: [WorkTheme]) -> [BarChartColumn] {
     let workLogs = filteredWorkLogs
     let colorMap = colorMap(domains: domains)
     let allGroups = allGroupIds(domains: domains)
@@ -364,7 +364,7 @@ class ReportViewModel: ObservableObject {
     }
   }
 
-  private func allGroupIds(domains: [Domain]) -> [(id: String, title: String)] {
+  private func allGroupIds(domains: [WorkTheme]) -> [(id: String, title: String)] {
     switch groupingUnit {
     case .domain:
       return domains.map { (id: $0.id ?? "", title: $0.title) }
@@ -379,7 +379,7 @@ class ReportViewModel: ObservableObject {
 
   // Uses currentWorkLogs (not filteredWorkLogs) so every row stays visible
   // for tapping even while another item is selected.
-  func listRows(domains: [Domain]) -> [ListRow] {
+  func listRows(domains: [WorkTheme]) -> [ListRow] {
     let workLogs = currentWorkLogs
     let colorMap = colorMap(domains: domains)
     let allBuckets = buckets
@@ -399,7 +399,7 @@ class ReportViewModel: ObservableObject {
 
   // Topic-mode only: groups `listRows` by Domain, in Domain registration order,
   // with rows sorted by total within each section. Domains with no rows are omitted.
-  func listSections(domains: [Domain]) -> [ListSection] {
+  func listSections(domains: [WorkTheme]) -> [ListSection] {
     let rows = listRows(domains: domains)
     let rowsByTopicId = Dictionary(uniqueKeysWithValues: rows.map { ($0.id, $0) })
 
@@ -421,7 +421,7 @@ class ReportViewModel: ObservableObject {
   private func barChartSegments(
     _ workLogs: [WorkLog],
     in bucket: DateInterval,
-    domains: [Domain]
+    domains: [WorkTheme]
   ) -> [(id: String, title: String, duration: TimeInterval)] {
     var groups: [String: (title: String, duration: TimeInterval)] = [:]
 
@@ -465,7 +465,7 @@ class ReportViewModel: ObservableObject {
 
   private func listGroups(
     in workLogs: [WorkLog],
-    domains: [Domain]
+    domains: [WorkTheme]
   ) -> [(id: String, title: String)] {
     let ids = Set(workLogs.map { $0[keyPath: groupingKey] })
     return ids.map { id in
@@ -473,7 +473,7 @@ class ReportViewModel: ObservableObject {
     }
   }
 
-  private func colorMap(domains: [Domain]) -> [String: Color] {
+  private func colorMap(domains: [WorkTheme]) -> [String: Color] {
     var map: [String: Color] = [:]
     for (i, domain) in domains.enumerated() {
       let color = Self.palette[i % Self.palette.count]

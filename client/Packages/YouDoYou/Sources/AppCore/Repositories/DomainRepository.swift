@@ -3,9 +3,9 @@ import FirebaseStorage
 import Foundation
 
 protocol DomainRepositoryProtocol: Sendable {
-  func observe(onChange: @escaping ([Domain]) -> Void) -> ListenerRegistration
+  func observe(onChange: @escaping ([WorkTheme]) -> Void) -> ListenerRegistration
   func create(title: String, description: String, topics: [Topic], color: String?) async throws
-  func update(_ domain: Domain) async throws
+  func update(_ domain: WorkTheme) async throws
   func delete(id: String) async throws
   func uploadTopicImage(topicId: String, data: Data) async throws -> String
 }
@@ -23,14 +23,14 @@ struct DomainRepository: DomainRepositoryProtocol, @unchecked Sendable {
     self.storage = storage
   }
 
-  func observe(onChange: @escaping ([Domain]) -> Void) -> ListenerRegistration {
+  func observe(onChange: @escaping ([WorkTheme]) -> Void) -> ListenerRegistration {
     collection
-      .order(by: DomainFields.createdAt, descending: true)
+      .order(by: WorkThemeFields.createdAt, descending: true)
       .addSnapshotListener { snapshot, _ in
         let domains =
-          snapshot?.documents.compactMap { doc -> Domain? in
+          snapshot?.documents.compactMap { doc -> WorkTheme? in
             do {
-              return try doc.data(as: Domain.self)
+              return try doc.data(as: WorkTheme.self)
             }
             catch {
               print("デコードエラー: \(error)")
@@ -42,7 +42,7 @@ struct DomainRepository: DomainRepositoryProtocol, @unchecked Sendable {
   }
 
   func create(title: String, description: String, topics: [Topic], color: String?) async throws {
-    let newDomain = Domain(
+    let newDomain = WorkTheme(
       title: title,
       description: description,
       topics: topics,
@@ -51,7 +51,7 @@ struct DomainRepository: DomainRepositoryProtocol, @unchecked Sendable {
     try collection.addDocument(from: newDomain)
   }
 
-  func update(_ domain: Domain) async throws {
+  func update(_ domain: WorkTheme) async throws {
     guard let id = domain.id else { return }
     try collection.document(id).setData(from: domain, merge: true)
   }

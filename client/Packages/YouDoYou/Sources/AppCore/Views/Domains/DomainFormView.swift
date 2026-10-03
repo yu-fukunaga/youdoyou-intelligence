@@ -6,7 +6,7 @@
 
   enum DomainFormMode {
     case create
-    case edit(Domain)
+    case edit(WorkTheme)
   }
 
   private struct TopicField: Identifiable {

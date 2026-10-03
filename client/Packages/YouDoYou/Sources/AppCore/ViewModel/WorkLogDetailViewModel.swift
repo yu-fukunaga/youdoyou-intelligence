@@ -6,7 +6,7 @@ class WorkLogDetailViewModel: ObservableObject {
   @Published var isDeleted = false
   @Published var isUpdated = false
   @Published var error: String?
-  @Published var domain: Domain?
+  @Published var domain: WorkTheme?
   @Published var topic: Topic?
   @Published var workLog: WorkLog
 

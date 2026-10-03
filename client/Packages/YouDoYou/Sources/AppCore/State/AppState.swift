@@ -3,7 +3,7 @@ import SwiftUI
 
 @MainActor
 class AppState: ObservableObject {
-  @Published private(set) var domains: [Domain] = []
+  @Published private(set) var domains: [WorkTheme] = []
 
   private let repository: any DomainRepositoryProtocol
   private var listener: ListenerRegistration?

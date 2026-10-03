@@ -11,7 +11,7 @@ struct WorkLogCreateView: View {
   let domainId: String
   let topicId: String
 
-  private var domain: Domain? {
+  private var domain: WorkTheme? {
     appState.domains.first { $0.id == domainId }
   }
 

@@ -11,7 +11,7 @@ public enum DomainCollection {
   }
 }
 
-public enum DomainFields {
+public enum WorkThemeFields {
   public static let id = "id"
   public static let title = "title"
   public static let description = "description"
@@ -21,7 +21,7 @@ public enum DomainFields {
   public static let updatedAt = "updatedAt"
 }
 
-public struct Domain: Codable, Identifiable, Sendable {
+public struct WorkTheme: Codable, Identifiable, Sendable {
   @DocumentID public var id: String?
   public var title: String
   public var description: String

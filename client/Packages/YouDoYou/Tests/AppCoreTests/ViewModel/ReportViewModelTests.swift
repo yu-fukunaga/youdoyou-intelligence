@@ -26,8 +26,8 @@ private func workLog(
   )
 }
 
-private func domain(id: String, title: String, topics: [Topic] = []) -> Domain {
-  var d = Domain(title: title, description: "", topics: topics)
+private func domain(id: String, title: String, topics: [Topic] = []) -> WorkTheme {
+  var d = WorkTheme(title: title, description: "", topics: topics)
   d.id = id
   return d
 }
@@ -451,7 +451,7 @@ struct ReportViewModel_BarChartColumnsTests {
   struct TestCase: CustomTestStringConvertible {
     let name: String
     let workLogs: [WorkLog]
-    let domains: [Domain]
+    let domains: [WorkTheme]
     let groupingUnit: GroupingUnit
     let targetBucketIndex: Int
     let expectedSegments: [ExpectedSegment]
@@ -459,7 +459,7 @@ struct ReportViewModel_BarChartColumnsTests {
     var testDescription: String { name }
   }
 
-  static let domains: [Domain] = [
+  static let domains: [WorkTheme] = [
     domain(id: "d1", title: "Work", topics: [Topic(id: "t1", title: "Coding"), Topic(id: "t2", title: "Meeting")]),
     domain(id: "d2", title: "Life", topics: []),
   ]
@@ -554,7 +554,7 @@ struct ReportViewModel_ListRowsTests {
   struct TestCase: CustomTestStringConvertible {
     let name: String
     let workLogs: [WorkLog]
-    let domains: [Domain]
+    let domains: [WorkTheme]
     let groupingUnit: GroupingUnit
     let selectedItemId: String?
     let expectedRows: [ExpectedRow]
@@ -562,7 +562,7 @@ struct ReportViewModel_ListRowsTests {
     var testDescription: String { name }
   }
 
-  static let domains: [Domain] = [
+  static let domains: [WorkTheme] = [
     domain(id: "d1", title: "Work", topics: [Topic(id: "t1", title: "Coding"), Topic(id: "t2", title: "Meeting")]),
     domain(id: "d2", title: "Life", topics: []),
   ]
@@ -665,7 +665,7 @@ struct ReportViewModel_TimelineTitleTests {
     var testDescription: String { name }
   }
 
-  static let domains: [Domain] = [
+  static let domains: [WorkTheme] = [
     domain(id: "d1", title: "Work", topics: [Topic(id: "t1", title: "Coding")]),
     domain(id: "d2", title: "Life", topics: []),
   ]

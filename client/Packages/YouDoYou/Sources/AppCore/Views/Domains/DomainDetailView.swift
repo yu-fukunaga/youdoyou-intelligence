@@ -4,7 +4,7 @@ struct DomainDetailView: View {
   @Environment(WorkLogDraftStore.self) var workLogDraftStore: WorkLogDraftStore
   @EnvironmentObject var appState: AppState
   @Environment(\.dismiss) var dismiss
-  let domain: Domain
+  let domain: WorkTheme
 
   private let domainRepo = DomainRepository()
   @State private var isShowingEdit = false
@@ -96,7 +96,7 @@ struct DomainDetailView: View {
 }
 
 private struct DomainDetailTopicRow: View {
-  let domain: Domain
+  let domain: WorkTheme
   let topic: Topic
   @Environment(WorkLogDraftStore.self) var workLogDraftStore: WorkLogDraftStore
   @EnvironmentObject var appState: AppState
