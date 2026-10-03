@@ -61,6 +61,23 @@ models:
         type: string
         optional: true
 
+  WorkTopic:
+    fields:
+      id:
+        type: id
+      title:
+        type: string
+      description:
+        type: string
+        optional: true
+      imageUrl:
+        type: string
+        optional: true
+      createdAt:
+        type: server_timestamp
+      updatedAt:
+        type: server_timestamp
+
   # ワークログ（タイムラインに流れる実体）
   WorkLog:
     fields:
@@ -232,3 +249,7 @@ collections:
   github_pulls:
     path: "github_pulls/{githubPullID}"
     model: GithubPull
+
+  work_topics:
+    path: "work_topics/{workTopicID}"
+    model: WorkTopic
