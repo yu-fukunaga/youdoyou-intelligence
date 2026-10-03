@@ -1,5 +1,6 @@
 import FirebaseFirestore
 import Foundation
+import Infrastructure
 
 protocol WorkLogRepositoryProtocol: Sendable {
   func observe(onChange: @escaping ([WorkLog]) -> Void) -> ListenerRegistration

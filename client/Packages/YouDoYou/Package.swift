@@ -54,11 +54,12 @@ let package = Package(
         .product(name: "FirebaseStorage", package: "firebase-ios-sdk"),
         .product(name: "GoogleSignIn", package: "GoogleSignIn-iOS"),
         "TimerLiveActivityAttributes",
+        "Infrastructure",
       ]
     ),
     .testTarget(
       name: "AppCoreTests",
-      dependencies: ["AppCore"]
+      dependencies: ["AppCore", "Infrastructure"]
     ),
     .target(
       name: "TimerLiveActivityCore",

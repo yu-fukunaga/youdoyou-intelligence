@@ -1,4 +1,5 @@
 import FirebaseFirestore
+import Infrastructure
 
 @testable import AppCore
 

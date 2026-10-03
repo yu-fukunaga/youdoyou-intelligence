@@ -1,5 +1,6 @@
 import FirebaseFirestore
 import Foundation
+import Infrastructure
 
 @MainActor
 class WorkLogDetailViewModel: ObservableObject {

@@ -2,6 +2,7 @@ import ActivityKit
 import Combine
 import FirebaseAuth
 import Foundation
+import Infrastructure
 import Observation
 
 #if os(iOS)

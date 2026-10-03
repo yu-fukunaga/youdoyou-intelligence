@@ -1,6 +1,7 @@
 import FirebaseFirestore
 import FirebaseStorage
 import Foundation
+import Infrastructure
 
 protocol DomainRepositoryProtocol: Sendable {
   func observe(onChange: @escaping ([WorkTheme]) -> Void) -> ListenerRegistration
