@@ -49,6 +49,10 @@ var collectionsMap = map[string]CollectionConfig{
 		Path: schema.Work_logPath,
 		Seed: seedCollectionGeneric[schema.WorkLog],
 	},
+	schema.CollectionWork_topics: {
+		Path: schema.Work_topicPath,
+		Seed: seedCollectionGeneric[schema.WorkTopic],
+	},
 }
 
 func main() {
