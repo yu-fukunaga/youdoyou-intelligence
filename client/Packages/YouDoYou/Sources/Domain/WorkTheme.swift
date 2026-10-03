@@ -10,7 +10,7 @@ public struct WorkTheme: Identifiable, Sendable {
   public var updatedAt: Date?
 
   public init(
-    id: String,
+    id: String = UUID.v7().uuidString,
     title: String,
     description: String,
     topics: [Topic] = [],

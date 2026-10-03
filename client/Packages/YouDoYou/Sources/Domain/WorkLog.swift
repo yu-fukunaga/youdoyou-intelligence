@@ -14,7 +14,7 @@ public struct WorkLog: Identifiable, Sendable {
   public var updatedAt: Date?
 
   public init(
-    id: String,
+    id: String = UUID.v7().uuidString,
     domainId: String,
     topicId: String,
     content: String,
