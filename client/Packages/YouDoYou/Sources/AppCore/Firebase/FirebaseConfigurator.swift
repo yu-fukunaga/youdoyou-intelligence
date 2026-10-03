@@ -1,3 +1,4 @@
+import Domain
 import FirebaseAuth
 import FirebaseCore
 import FirebaseFirestore

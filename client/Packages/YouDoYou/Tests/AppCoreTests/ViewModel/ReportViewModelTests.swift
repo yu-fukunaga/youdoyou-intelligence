@@ -1,9 +1,9 @@
+import Domain
 import Foundation
-import Infrastructure
 import SwiftUI
 import Testing
 
-@testable import AppCore
+@testable import Presentation
 
 private func date(_ y: Int, _ m: Int, _ d: Int, _ h: Int = 0) -> Date {
   Calendar.current.date(from: DateComponents(year: y, month: m, day: d, hour: h))!

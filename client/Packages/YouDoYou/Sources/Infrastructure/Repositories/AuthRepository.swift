@@ -10,6 +10,10 @@ import GoogleSignIn
 public struct AuthRepository: AuthRepositoryProtocol, @unchecked Sendable {
   public init() {}
 
+  public var currentUser: Domain.User? {
+    Auth.auth().currentUser.map(Self.toDomainUser)
+  }
+
   public func observeAuthState(onChange: @escaping (Domain.User?) -> Void) -> any ListenerHandle {
     let handle = Auth.auth().addStateDidChangeListener { _, user in
       onChange(user.map(Self.toDomainUser))

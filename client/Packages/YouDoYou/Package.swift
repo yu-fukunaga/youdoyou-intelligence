@@ -33,7 +33,8 @@ let package = Package(
     .target(
       name: "Presentation",
       dependencies: [
-        "Domain"
+        "Domain",
+        "TimerLiveActivityAttributes",
       ]
     ),
     .target(
@@ -55,11 +56,13 @@ let package = Package(
         .product(name: "GoogleSignIn", package: "GoogleSignIn-iOS"),
         "TimerLiveActivityAttributes",
         "Infrastructure",
+        "Presentation",
+        "Domain",
       ]
     ),
     .testTarget(
       name: "AppCoreTests",
-      dependencies: ["AppCore", "Infrastructure"]
+      dependencies: ["Presentation", "Domain"]
     ),
     .target(
       name: "TimerLiveActivityCore",

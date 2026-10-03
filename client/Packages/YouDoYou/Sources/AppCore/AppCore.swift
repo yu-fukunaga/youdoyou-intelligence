@@ -1,9 +1,16 @@
+import Domain
+import Infrastructure
+import Presentation
 import SwiftUI
 
 public struct RootView: View {
-  @StateObject private var authState = AuthState()
-  @State private var workLogDraftStore = WorkLogDraftStore(repository: WorkLogRepository())
-  @StateObject private var appState = AppState()
+  @StateObject private var authState = AuthState(repository: AuthRepository())
+  @State private var workLogDraftStore = WorkLogDraftStore(
+    repository: WorkLogRepository(),
+    authRepository: AuthRepository()
+  )
+  @StateObject private var appState = AppState(repository: WorkThemeRepository())
+  @State private var workLogRepository = WorkLogRepository()
   @StateObject private var navigationState = NavigationState()
   @State private var selectedTab = 0
 
@@ -30,7 +37,7 @@ public struct RootView: View {
     ZStack(alignment: .bottom) {
       TabView(selection: $selectedTab) {
         NavigationStack {
-          HomeView()
+          HomeView(workLogRepository: workLogRepository)
         }
         .tabItem {
           Label("Home", systemImage: "house")
@@ -38,7 +45,7 @@ public struct RootView: View {
         .tag(0)
 
         NavigationStack {
-          ReportView()
+          ReportView(repository: workLogRepository)
         }
         .tabItem {
           Label("Reports", systemImage: "chart.bar.xaxis")
