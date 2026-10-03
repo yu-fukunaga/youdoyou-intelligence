@@ -1,0 +1,475 @@
+import Domain
+import Foundation
+import SwiftUI
+
+public struct ReportView: View {
+  @StateObject private var viewModel: ReportViewModel
+  @EnvironmentObject private var appState: AppState
+
+  public init(repository: any WorkLogRepositoryProtocol) {
+    _viewModel = StateObject(wrappedValue: ReportViewModel(repository: repository))
+  }
+
+  // Position and visibility are driven separately so a fresh selection (nil -> index)
+  // appears in place instead of sliding in from the last position, while switching
+  // between two selected bars (index -> index) still slides.
+  @State private var highlightedBarIndex: Int = 0
+  @State private var highlightOpacity: Double = 0
+
+  public var body: some View {
+    ScrollView {
+      VStack(spacing: 0) {
+        periodPicker
+        dateRangeHeader
+        barChart
+        totalsArea
+        summaryList
+      }
+    }
+    .navigationTitle("Report")
+    .toolbarTitleDisplayMode(.automatic)
+    #if os(iOS)
+      .toolbarBackground(.hidden, for: .navigationBar)
+    #endif
+    .background(Color.systemGroupedBackground)
+    .toolbar {
+      ToolbarItem(placement: .primaryAction) {
+        UserIconButton()
+      }
+    }
+    .task {
+      await viewModel.loadIfNeeded()
+    }
+    .onChange(of: viewModel.periodType) {
+      Task { await viewModel.loadIfNeeded() }
+    }
+  }
+
+  // MARK: - Period Picker
+
+  private var periodPicker: some View {
+    Picker("Period", selection: $viewModel.periodType) {
+      ForEach(PeriodType.allCases, id: \.self) { type in
+        Text(type.rawValue).tag(type)
+      }
+    }
+    .pickerStyle(.segmented)
+    .padding(.horizontal)
+    .padding(.top, 8)
+  }
+
+  // MARK: - Date Range Header
+
+  private var dateRangeHeader: some View {
+    ZStack {
+      HStack(spacing: 4) {
+        periodMoveButton(systemImage: "chevron.left", offset: -1)
+          .opacity(viewModel.isAtEarliestDate ? 0 : 1)
+          .disabled(viewModel.isAtEarliestDate)
+        Text(viewModel.headerDateRangeText)
+          .font(.subheadline)
+          .foregroundStyle(.primary)
+          .contentTransition(.numericText())
+          .animation(.easeInOut, value: viewModel.headerDateRangeText)
+        periodMoveButton(systemImage: "chevron.right", offset: 1)
+          .opacity(viewModel.isViewingToday ? 0 : 1)
+          .disabled(viewModel.isViewingToday)
+      }
+      HStack {
+        if !viewModel.isViewingToday {
+          todayButton
+        }
+        Spacer()
+      }
+      HStack {
+        Spacer()
+        groupingUnitButton
+      }
+    }
+    .padding(.horizontal)
+    .padding(.vertical, 16)
+  }
+
+  private var todayButton: some View {
+    Button {
+      viewModel.jumpToToday()
+    } label: {
+      Text("今日")
+        .font(.caption)
+        .fontWeight(.semibold)
+        .foregroundStyle(.secondary)
+        .padding(.horizontal, 10)
+        .padding(.vertical, 4)
+        .background(Color.systemFill)
+        .clipShape(Capsule())
+    }
+  }
+
+  private func periodMoveButton(systemImage: String, offset: Int) -> some View {
+    Button {
+      viewModel.movePeriod(by: offset)
+    } label: {
+      Image(systemName: systemImage)
+        .font(.system(size: 13, weight: .semibold))
+        .foregroundStyle(.secondary)
+        .frame(width: 20, height: 20)
+    }
+  }
+
+  private func styledDuration(_ duration: TimeInterval) -> some View {
+    let totalMinutes = Int(duration) / 60
+    let hours = totalMinutes / 60
+    let minutes = totalMinutes % 60
+
+    func number(_ value: Int) -> Text {
+      Text("\(value)").font(.headline).fontWeight(.bold)
+    }
+    func unit(_ label: String) -> Text {
+      Text(label).font(.callout).foregroundStyle(.secondary)
+    }
+
+    return HStack(alignment: .lastTextBaseline, spacing: 2) {
+      if hours == 0 {
+        number(minutes)
+        unit("分")
+      }
+      else if minutes == 0 {
+        number(hours)
+        unit("時間")
+      }
+      else {
+        number(hours)
+        unit("時間")
+        number(minutes)
+        unit("分")
+      }
+    }
+  }
+
+  private var groupingUnitButton: some View {
+    let isTopic = viewModel.groupingUnit == .topic
+
+    return Button {
+      viewModel.groupingUnit = isTopic ? .domain : .topic
+    } label: {
+      Image(systemName: "list.bullet.indent")
+        .font(.system(size: 14, weight: .semibold))
+        .foregroundStyle(isTopic ? Color.systemBackground : .secondary)
+        .frame(width: 24, height: 24)
+        .background(isTopic ? Color.primary : Color.systemFill)
+        .clipShape(Circle())
+    }
+  }
+
+  // MARK: - Bar Chart
+
+  // Custom-drawn (not Swift Charts): gridlines/labels are always computed fresh from
+  // live data with no animation, while each bar column animates its own height
+  // independently via `.animation(value:)`, so the background never gets swept into
+  // a bar's animation transaction.
+  private static let barChartPlotHeight: CGFloat = 90
+  private static let barSpacing: CGFloat = 10
+  private static let axisGutterWidth: CGFloat = 28
+  private static let labelAnimationDelay: TimeInterval = 0.1
+  private static let dataAnimationDelay: TimeInterval = 0.3
+  private static let dataAnimationDuration: TimeInterval = 0.5
+  private static let highlightAnimationDuration: TimeInterval = 0.2
+
+  // Compact "3h35m" form for the per-bar annotation, kept separate from the
+  // Japanese "3時間35分" used elsewhere (header, list, day chart).
+  private func compactDuration(_ duration: TimeInterval) -> String {
+    let totalMinutes = Int(duration) / 60
+    let hours = totalMinutes / 60
+    let minutes = totalMinutes % 60
+    if hours == 0 { return "\(minutes)m" }
+    if minutes == 0 { return "\(hours)h" }
+    return "\(hours)h\(minutes)m"
+  }
+
+  // Rounds up to a clean axis value so the top and midpoint gridlines are always
+  // whole numbers instead of an arbitrary decimal like 2.4. Day's bars are daily
+  // totals (capped at 24h) so it uses its own small-scale tiers; Month/Year bars are
+  // monthly/yearly totals that can run much higher, so those round up to the next
+  // multiple of 20h instead (minimum 20h).
+  private static let dayAxisTiers: [Double] = [6, 12, 18, 24]
+  private static let axisStepHours: Double = 20
+
+  private func niceMaxHours(_ rawMaxHours: Double) -> Double {
+    let buffered = rawMaxHours * 1.2
+
+    guard viewModel.periodType == .day else {
+      return max((buffered / Self.axisStepHours).rounded(.up) * Self.axisStepHours, Self.axisStepHours)
+    }
+    if let tier = Self.dayAxisTiers.first(where: { $0 >= buffered }) {
+      return tier
+    }
+    var tier = Self.dayAxisTiers.last!
+    while tier < buffered { tier *= 2 }
+    return tier
+  }
+
+  private var barChart: some View {
+    let bars = viewModel.barChartColumns(domains: appState.domains)
+    let maxHours = niceMaxHours(bars.map { $0.total / 3600 }.max() ?? 0)
+    // Placeholder columns (beyond the current PeriodType's real bucket count) are
+    // squeezed to width 0 so only real columns share the available width - see
+    // ReportViewModel.maxBarSlots for why the column count itself never changes.
+    let realCount = max(bars.filter { !$0.isPlaceholder }.count, 1)
+
+    return GeometryReader { geometry in
+      let plotWidth = geometry.size.width - Self.axisGutterWidth
+      let totalSpacing = Self.barSpacing * CGFloat(bars.count - 1)
+      let columnWidth = max((plotWidth - totalSpacing) / CGFloat(realCount), 0)
+
+      ZStack(alignment: .topLeading) {
+        selectionHighlight(columnWidth: columnWidth, height: geometry.size.height)
+        barChartGridlines(maxHours: maxHours, columnWidth: columnWidth, realCount: realCount)
+          .frame(height: Self.barChartPlotHeight)
+        HStack(alignment: .top, spacing: Self.barSpacing) {
+          ForEach(bars) { bar in
+            barColumn(bar, maxHours: maxHours, width: bar.isPlaceholder ? 0 : columnWidth)
+          }
+        }
+      }
+    }
+    .frame(height: 120)
+    .padding(.horizontal)
+    .onChange(of: viewModel.selectedBarIndex) { oldValue, newValue in
+      guard let newValue else {
+        // Deselecting: disappear instantly, no fade.
+        var noAnimation = Transaction()
+        noAnimation.disablesAnimations = true
+        withTransaction(noAnimation) { highlightOpacity = 0 }
+        return
+      }
+      if oldValue == nil {
+        // Fresh selection: snap to the new bar first, then fade in there -
+        // avoids sliding in from wherever the indicator last was.
+        var noAnimation = Transaction()
+        noAnimation.disablesAnimations = true
+        withTransaction(noAnimation) { highlightedBarIndex = newValue }
+        withAnimation(.easeInOut(duration: Self.highlightAnimationDuration)) { highlightOpacity = 1 }
+      }
+      else {
+        // Switching between two selected bars: slide.
+        withAnimation(.easeInOut(duration: Self.highlightAnimationDuration)) { highlightedBarIndex = newValue }
+      }
+    }
+  }
+
+  // A single highlight rectangle that slides to the selected bar's x position,
+  // rather than each bar toggling its own background - gives the selection a
+  // sense of motion when it moves from one bar to another.
+  private func selectionHighlight(columnWidth: CGFloat, height: CGFloat) -> some View {
+    Rectangle()
+      .fill(Color.systemFill)
+      .frame(width: columnWidth, height: height)
+      .offset(x: CGFloat(highlightedBarIndex) * (columnWidth + Self.barSpacing))
+      .opacity(highlightOpacity)
+  }
+
+  // Gridline positions are fixed fractions of the plot height (never move, no
+  // dependency on data at all). Only the value label at each fixed position
+  // changes/animates as `maxHours` changes.
+  private static let gridlineFractions: [Double] = [0, 0.5, 1]
+
+  private func barChartGridlines(maxHours: Double, columnWidth: CGFloat, realCount: Int) -> some View {
+    GeometryReader { geometry in
+      ZStack(alignment: .topLeading) {
+        ForEach(Array(Self.gridlineFractions.enumerated()), id: \.offset) { _, fraction in
+          let y = geometry.size.height * (1 - CGFloat(fraction))
+          let tickValue = fraction * maxHours
+
+          Path { path in
+            path.move(to: CGPoint(x: 0, y: y))
+            path.addLine(to: CGPoint(x: geometry.size.width - Self.axisGutterWidth, y: y))
+          }
+          .stroke(Color.separator, lineWidth: 0.5)
+
+          Text("\(Int(tickValue))h")
+            .font(.caption2)
+            .foregroundStyle(.secondary)
+            .frame(width: 26, alignment: .leading)
+            .position(x: geometry.size.width - 12, y: y)
+            .contentTransition(.numericText())
+            .animation(.easeInOut.delay(Self.labelAnimationDelay), value: tickValue)
+        }
+
+        // Dashed separator centered in the gap between each pair of real bars.
+        ForEach(1..<realCount, id: \.self) { index in
+          let x = CGFloat(index) * (columnWidth + Self.barSpacing) - Self.barSpacing / 2
+
+          Path { path in
+            path.move(to: CGPoint(x: x, y: 0))
+            path.addLine(to: CGPoint(x: x, y: geometry.size.height))
+          }
+          .stroke(Color.separator, style: StrokeStyle(lineWidth: 0.5, dash: [3, 3]))
+          .animation(
+            .easeInOut(duration: Self.dataAnimationDuration).delay(Self.dataAnimationDelay), value: columnWidth)
+        }
+      }
+    }
+  }
+
+  private func barColumn(_ bar: BarChartColumn, maxHours: Double, width: CGFloat) -> some View {
+    VStack(spacing: 4) {
+      VStack(spacing: 0) {
+        Spacer(minLength: 0)
+
+        VStack(spacing: 2) {
+          Text(bar.total > 0 ? compactDuration(bar.total) : "")
+            .font(.system(size: 9))
+            .foregroundStyle(.secondary)
+            .lineLimit(1)
+            .fixedSize(horizontal: true, vertical: false)
+            .contentTransition(.opacity)
+            .animation(
+              .easeInOut(duration: Self.dataAnimationDuration).delay(Self.dataAnimationDelay), value: bar.total)
+
+          VStack(spacing: 0) {
+            ForEach(bar.segments) { segment in
+              Rectangle()
+                .fill(segment.color)
+                .frame(height: CGFloat(segment.duration / 3600 / maxHours) * Self.barChartPlotHeight)
+            }
+          }
+          .padding(.horizontal, 4)
+        }
+      }
+      .frame(width: width, height: Self.barChartPlotHeight)
+      .clipped()
+
+      Text(bar.label)
+        .font(.caption2)
+        .foregroundStyle(.secondary)
+        .frame(width: width)
+        .clipped()
+        .contentTransition(.opacity)
+        .animation(.easeInOut.delay(Self.labelAnimationDelay), value: bar.label)
+        .animation(.easeInOut.delay(Self.labelAnimationDelay), value: width)
+    }
+    .contentShape(Rectangle())
+    .onTapGesture {
+      viewModel.toggleBar(bar.id)
+    }
+    .animation(.easeInOut(duration: Self.dataAnimationDuration).delay(Self.dataAnimationDelay), value: bar.total)
+    .animation(.easeInOut(duration: Self.dataAnimationDuration).delay(Self.dataAnimationDelay), value: width)
+  }
+
+  // MARK: - Totals Area
+
+  private static let cardCornerRadius: CGFloat = 16
+
+  private var totalsArea: some View {
+    let bars = viewModel.barChartColumns(domains: appState.domains)
+    let selectedBar = viewModel.selectedBarIndex.flatMap { index in bars.first { $0.id == index } }
+
+    return HStack(spacing: 12) {
+      if let selectedBar {
+        let cumulative = bars.filter { $0.id <= selectedBar.id }.reduce(0) { $0 + $1.total }
+        let label = viewModel.totalsAreaLabel(for: selectedBar)
+        totalsCard(title: "\(label)の合計", duration: selectedBar.total)
+        totalsCard(title: "\(label)までの累計", duration: cumulative)
+      }
+      else {
+        totalsCard(title: "合計時間", duration: viewModel.headerTotalDuration)
+        totalsCard(title: "平均時間", duration: viewModel.headerAverageDuration)
+      }
+    }
+    .padding(.horizontal)
+    .padding(.top, 12)
+  }
+
+  private func totalsCard(title: String, duration: TimeInterval) -> some View {
+    VStack(alignment: .leading, spacing: 4) {
+      Text(title)
+        .font(.caption2)
+        .foregroundStyle(.secondary)
+      styledDuration(duration)
+    }
+    .frame(maxWidth: .infinity, alignment: .leading)
+    .padding(.horizontal)
+    .padding(.vertical, 12)
+    .background(Color.secondarySystemGroupedBackground)
+    .clipShape(RoundedRectangle(cornerRadius: Self.cardCornerRadius))
+  }
+
+  // MARK: - Summary List
+
+  private var summaryList: some View {
+    Group {
+      if viewModel.groupingUnit == .topic {
+        let sections = viewModel.listSections(domains: appState.domains)
+        LazyVStack(spacing: 0) {
+          ForEach(sections) { section in
+            Section {
+              ForEach(section.rows) { row in
+                summaryRowView(row)
+              }
+            } header: {
+              sectionHeaderView(section.title)
+            }
+          }
+        }
+      }
+      else {
+        let rows = viewModel.listRows(domains: appState.domains)
+        LazyVStack(spacing: 0) {
+          ForEach(rows) { row in
+            summaryRowView(row)
+          }
+        }
+      }
+    }
+    .background(Color.secondarySystemGroupedBackground)
+    .clipShape(RoundedRectangle(cornerRadius: Self.cardCornerRadius))
+    .padding(.horizontal)
+    .padding(.top, 16)
+  }
+
+  private func sectionHeaderView(_ title: String) -> some View {
+    Text(title)
+      .font(.caption)
+      .fontWeight(.semibold)
+      .foregroundStyle(.secondary)
+      .frame(maxWidth: .infinity, alignment: .leading)
+      .padding(.horizontal)
+      .padding(.top, 12)
+      .padding(.bottom, 4)
+  }
+
+  private func summaryRowView(_ row: ListRow) -> some View {
+    let isSelected = viewModel.selectedItemId == row.id
+    // While a bar is selected, show that bucket's duration instead of the row's
+    // full-period total - falls back to the total if the index is out of range
+    // (shouldn't happen since selectedBarIndex only ever targets a real bucket).
+    let displayDuration: TimeInterval =
+      if let index = viewModel.selectedBarIndex, row.bucketDurations.indices.contains(index) {
+        row.bucketDurations[index]
+      }
+      else {
+        row.total
+      }
+
+    return Button {
+      viewModel.toggleItem(row.id)
+    } label: {
+      HStack(spacing: 10) {
+        Circle()
+          .fill(row.color)
+          .frame(width: 10, height: 10)
+        Text(row.title)
+          .font(.subheadline)
+          .lineLimit(1)
+        Spacer()
+        Text(displayDuration.reportText)
+          .font(.subheadline)
+          .foregroundStyle(.secondary)
+      }
+      .padding(.horizontal)
+      .padding(.vertical, 12)
+      .background(isSelected ? Color.systemFill : .clear)
+    }
+    .buttonStyle(.plain)
+  }
+}

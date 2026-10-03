@@ -1,4 +1,4 @@
-import AppCore
+import AppRoot
 import SwiftUI
 
 struct ContentView: View {
