@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		49894E552F5BCBD600F3EAAC /* AppCore in Frameworks */ = {isa = PBXBuildFile; productRef = 49894E542F5BCBD600F3EAAC /* AppCore */; };
+		49894E552F5BCBD600F3EAAC /* AppRoot in Frameworks */ = {isa = PBXBuildFile; productRef = 49894E542F5BCBD600F3EAAC /* AppRoot */; };
 		49894EA82F5DA28400F3EAAC /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 49894EA72F5DA28400F3EAAC /* FirebaseCore */; };
 		499F8EF130221CB100E8E893 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 499F8EF030221CB100E8E893 /* WidgetKit.framework */; };
 		499F8EF330221CB100E8E893 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 499F8EF230221CB100E8E893 /* SwiftUI.framework */; };
@@ -117,7 +117,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				49894EA82F5DA28400F3EAAC /* FirebaseCore in Frameworks */,
-				49894E552F5BCBD600F3EAAC /* AppCore in Frameworks */,
+				49894E552F5BCBD600F3EAAC /* AppRoot in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -197,7 +197,7 @@
 			);
 			name = YouDoYou_iOS;
 			packageProductDependencies = (
-				49894E542F5BCBD600F3EAAC /* AppCore */,
+				49894E542F5BCBD600F3EAAC /* AppRoot */,
 				49894EA72F5DA28400F3EAAC /* FirebaseCore */,
 			);
 			productName = YouDoYou_iOS;
@@ -910,9 +910,9 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		49894E542F5BCBD600F3EAAC /* AppCore */ = {
+		49894E542F5BCBD600F3EAAC /* AppRoot */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = AppCore;
+			productName = AppRoot;
 		};
 		49894EA72F5DA28400F3EAAC /* FirebaseCore */ = {
 			isa = XCSwiftPackageProductDependency;

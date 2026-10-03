@@ -1,4 +1,4 @@
-import AppCore
+import AppRoot
 import FirebaseCore
 import GoogleSignIn
 import SwiftUI

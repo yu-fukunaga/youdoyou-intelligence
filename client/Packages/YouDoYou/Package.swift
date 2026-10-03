@@ -12,8 +12,8 @@ let package = Package(
   products: [
     // Products define the executables and libraries a package produces, making them visible to other packages.
     .library(
-      name: "AppCore",
-      targets: ["AppCore"]
+      name: "AppRoot",
+      targets: ["AppRoot"]
     ),
     .library(
       name: "TimerLiveActivityCore",
@@ -48,7 +48,7 @@ let package = Package(
       ]
     ),
     .target(
-      name: "AppCore",
+      name: "AppRoot",
       dependencies: [
         .product(name: "FirebaseFirestore", package: "firebase-ios-sdk"),
         .product(name: "FirebaseAuth", package: "firebase-ios-sdk"),
