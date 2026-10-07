@@ -29,7 +29,7 @@ struct WorkLogQuickStartContent: View {
       Divider()
         .frame(height: 40)
 
-      NavigationLink(destination: TopicSelectionView()) {
+      NavigationLink(destination: WorkTopicsView(workTopics: appState.workTopics)) {
         VStack(spacing: 4) {
           Image(systemName: "folder.fill")
             .font(.title2)
