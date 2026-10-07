@@ -10,12 +10,8 @@ public struct TimerBanner: View {
     self.onTap = onTap
   }
 
-  private var domain: WorkTheme? {
-    appState.domains.first { $0.id == workLogDraftStore.activeDomainId }
-  }
-
-  private var topic: Topic? {
-    domain?.topics.first { $0.id == workLogDraftStore.activeTopicId }
+  private var workTopic: WorkTopic? {
+    appState.workTopics.first { $0.id == workLogDraftStore.activeWorkTopicId }
   }
 
   public var body: some View {
@@ -25,10 +21,7 @@ public struct TimerBanner: View {
         .frame(width: 8, height: 8)
 
       VStack(alignment: .leading, spacing: 2) {
-        Text(domain?.title ?? "")
-          .font(.caption)
-          .foregroundColor(.secondary)
-        Text(topic?.title ?? "")
+        Text(workTopic?.title ?? "")
           .font(.subheadline)
           .fontWeight(.semibold)
       }

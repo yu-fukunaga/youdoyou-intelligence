@@ -88,15 +88,10 @@ public struct RootView: View {
       }
     }
     .sheet(isPresented: $navigationState.isShowingWorkLogCreate) {
-      if let domainId = workLogDraftStore.activeDomainId,
-        let topicId = workLogDraftStore.activeTopicId
-      {
-        WorkLogCreateView(
-          domainId: domainId,
-          topicId: topicId
-        )
-        .environment(workLogDraftStore)
-        .environmentObject(appState)
+      if let workTopicId = workLogDraftStore.activeWorkTopicId {
+        WorkLogCreateView(workTopicId: workTopicId)
+          .environment(workLogDraftStore)
+          .environmentObject(appState)
       }
     }
     .sheet(isPresented: $navigationState.isShowingSettings) {

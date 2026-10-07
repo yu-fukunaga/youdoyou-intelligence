@@ -10,6 +10,7 @@ extension WorkLog {
       id: id,
       domainId: domainId,
       topicId: topicId,
+      workTopicId: workTopicId,
       content: content,
       startedAt: startedAt,
       endedAt: endedAt,
@@ -27,6 +28,7 @@ extension Domain.WorkLog {
     WorkLog(
       domainId: domainId,
       topicId: topicId,
+      workTopicId: workTopicId,
       content: content,
       startedAt: startedAt,
       endedAt: endedAt,

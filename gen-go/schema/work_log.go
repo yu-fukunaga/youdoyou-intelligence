@@ -17,17 +17,18 @@ func Work_logPath(workLogID string) string {
 }
 
 type WorkLog struct {
-	ID        string    `firestore:"-" json:"id" yaml:"id"`
-	DomainId  string    `firestore:"domainId" json:"domainId" yaml:"domainId"`
-	TopicId   string    `firestore:"topicId" json:"topicId" yaml:"topicId"`
-	Content   string    `firestore:"content" json:"content" yaml:"content"`
-	StartedAt time.Time `firestore:"startedAt" json:"startedAt" yaml:"startedAt"`
-	EndedAt   time.Time `firestore:"endedAt" json:"endedAt" yaml:"endedAt"`
-	UserId    string    `firestore:"userId" json:"userId" yaml:"userId"`
-	UserName  string    `firestore:"userName" json:"userName" yaml:"userName"`
-	UserIcon  string    `firestore:"userIcon" json:"userIcon" yaml:"userIcon"`
-	CreatedAt time.Time `firestore:"createdAt,serverTimestamp" json:"createdAt" yaml:"createdAt"`
-	UpdatedAt time.Time `firestore:"updatedAt,serverTimestamp" json:"updatedAt" yaml:"updatedAt"`
+	ID          string    `firestore:"-" json:"id" yaml:"id"`
+	DomainId    string    `firestore:"domainId" json:"domainId" yaml:"domainId"`
+	TopicId     string    `firestore:"topicId" json:"topicId" yaml:"topicId"`
+	WorkTopicId string    `firestore:"workTopicId" json:"workTopicId" yaml:"workTopicId"`
+	Content     string    `firestore:"content" json:"content" yaml:"content"`
+	StartedAt   time.Time `firestore:"startedAt" json:"startedAt" yaml:"startedAt"`
+	EndedAt     time.Time `firestore:"endedAt" json:"endedAt" yaml:"endedAt"`
+	UserId      string    `firestore:"userId" json:"userId" yaml:"userId"`
+	UserName    string    `firestore:"userName" json:"userName" yaml:"userName"`
+	UserIcon    string    `firestore:"userIcon" json:"userIcon" yaml:"userIcon"`
+	CreatedAt   time.Time `firestore:"createdAt,serverTimestamp" json:"createdAt" yaml:"createdAt"`
+	UpdatedAt   time.Time `firestore:"updatedAt,serverTimestamp" json:"updatedAt" yaml:"updatedAt"`
 }
 
 func (w *WorkLog) GetDomainId() string {
@@ -42,6 +43,13 @@ func (w *WorkLog) GetTopicId() string {
 		return ""
 	}
 	return w.TopicId
+}
+
+func (w *WorkLog) GetWorkTopicId() string {
+	if w == nil {
+		return ""
+	}
+	return w.WorkTopicId
 }
 
 func (w *WorkLog) GetContent() string {
@@ -109,27 +117,29 @@ func (w *WorkLog) GetID() string {
 
 // WorkLogFields contains field names for WorkLog.
 var WorkLogFields = struct {
-	Id        string
-	DomainId  string
-	TopicId   string
-	Content   string
-	StartedAt string
-	EndedAt   string
-	UserId    string
-	UserName  string
-	UserIcon  string
-	CreatedAt string
-	UpdatedAt string
+	Id          string
+	DomainId    string
+	TopicId     string
+	WorkTopicId string
+	Content     string
+	StartedAt   string
+	EndedAt     string
+	UserId      string
+	UserName    string
+	UserIcon    string
+	CreatedAt   string
+	UpdatedAt   string
 }{
-	Id:        "id",
-	DomainId:  "domainId",
-	TopicId:   "topicId",
-	Content:   "content",
-	StartedAt: "startedAt",
-	EndedAt:   "endedAt",
-	UserId:    "userId",
-	UserName:  "userName",
-	UserIcon:  "userIcon",
-	CreatedAt: "createdAt",
-	UpdatedAt: "updatedAt",
+	Id:          "id",
+	DomainId:    "domainId",
+	TopicId:     "topicId",
+	WorkTopicId: "workTopicId",
+	Content:     "content",
+	StartedAt:   "startedAt",
+	EndedAt:     "endedAt",
+	UserId:      "userId",
+	UserName:    "userName",
+	UserIcon:    "userIcon",
+	CreatedAt:   "createdAt",
+	UpdatedAt:   "updatedAt",
 }

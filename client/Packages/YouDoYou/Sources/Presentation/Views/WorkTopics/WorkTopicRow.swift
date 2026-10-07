@@ -3,30 +3,34 @@ import SwiftUI
 
 struct WorkTopicRow: View {
   let workTopic: WorkTopic
+  let onTap: () -> Void
 
   var body: some View {
-    HStack(spacing: 12) {
-      thumbnail
-        .frame(width: 56, height: 56)
-        .clipped()
-        .clipShape(RoundedRectangle(cornerRadius: 10))
+    Button(action: onTap) {
+      HStack(spacing: 12) {
+        thumbnail
+          .frame(width: 56, height: 56)
+          .clipped()
+          .clipShape(RoundedRectangle(cornerRadius: 10))
 
-      Text(workTopic.title)
-        .font(.body)
-        .fontWeight(.medium)
-        .lineLimit(2)
-        .foregroundColor(.primary)
+        Text(workTopic.title)
+          .font(.body)
+          .fontWeight(.medium)
+          .lineLimit(2)
+          .foregroundColor(.primary)
 
-      Spacer(minLength: 8)
+        Spacer(minLength: 8)
 
-      // Secondary affordance (edit/delete). Wiring is deferred.
-      Image(systemName: "ellipsis")
-        .font(.body)
-        .foregroundColor(.secondary)
+        // Secondary affordance (edit/delete). Wiring is deferred.
+        Image(systemName: "ellipsis")
+          .font(.body)
+          .foregroundColor(.secondary)
+      }
+      .padding(12)
+      .background(Color.systemBackground)
+      .clipShape(RoundedRectangle(cornerRadius: 12))
     }
-    .padding(12)
-    .background(Color.systemBackground)
-    .clipShape(RoundedRectangle(cornerRadius: 12))
+    .buttonStyle(.plain)
   }
 
   @ViewBuilder
@@ -51,7 +55,8 @@ struct WorkTopicRow: View {
     workTopic: WorkTopic(
       title: "YouDoYou Intelligence開発",
       imageUrl: "https://picsum.photos/seed/topic-001-1/200/200"
-    )
+    ),
+    onTap: {}
   )
   .padding()
 }

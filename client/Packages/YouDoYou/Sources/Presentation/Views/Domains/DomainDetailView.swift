@@ -102,60 +102,33 @@ public struct DomainDetailView: View {
 private struct DomainDetailTopicRow: View {
   let domain: WorkTheme
   let topic: Topic
-  @Environment(WorkLogDraftStore.self) var workLogDraftStore: WorkLogDraftStore
-  @EnvironmentObject var appState: AppState
-  @State private var isShowingCreateView = false
-
-  private var isDisabled: Bool {
-    workLogDraftStore.startDate != nil && workLogDraftStore.activeTopicId != topic.id
-  }
 
   var body: some View {
-    Button {
-      isShowingCreateView = true
-    } label: {
-      HStack(spacing: 12) {
-        Group {
-          if let urlString = topic.imageUrl, let url = URL(string: urlString), !urlString.isEmpty {
-            AsyncImage(url: url) { image in
-              image
-                .resizable()
-                .scaledToFill()
-            } placeholder: {
-              Color.systemGray5
-            }
-          }
-          else {
+    HStack(spacing: 12) {
+      Group {
+        if let urlString = topic.imageUrl, let url = URL(string: urlString), !urlString.isEmpty {
+          AsyncImage(url: url) { image in
+            image
+              .resizable()
+              .scaledToFill()
+          } placeholder: {
             Color.systemGray5
           }
         }
-        .frame(width: 40, height: 40)
-        .clipShape(RoundedRectangle(cornerRadius: 8))
-
-        Text(topic.title)
-          .foregroundColor(.primary)
-
-        Spacer()
-
-        Text("START WORK")
-          .font(.caption2)
-          .foregroundColor(.secondary)
-        Image(systemName: "chevron.right")
-          .font(.caption2)
-          .foregroundColor(.secondary)
+        else {
+          Color.systemGray5
+        }
       }
-      .opacity(isDisabled ? 0.4 : 1.0)
-      .padding(12)
-      .background(Color.systemBackground)
-      .cornerRadius(12)
+      .frame(width: 40, height: 40)
+      .clipShape(RoundedRectangle(cornerRadius: 8))
+
+      Text(topic.title)
+        .foregroundColor(.primary)
+
+      Spacer()
     }
-    .disabled(isDisabled)
-    .buttonStyle(.plain)
-    .sheet(isPresented: $isShowingCreateView) {
-      WorkLogCreateView(domainId: domain.id, topicId: topic.id)
-        .environment(workLogDraftStore)
-        .environmentObject(appState)
-        .presentationCornerRadius(16)
-    }
+    .padding(12)
+    .background(Color.systemBackground)
+    .cornerRadius(12)
   }
 }

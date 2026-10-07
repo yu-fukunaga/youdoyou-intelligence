@@ -87,6 +87,8 @@ models:
         type: string
       topicId:
         type: string
+      workTopicId:
+        type: string
       content:
         type: string
       startedAt:

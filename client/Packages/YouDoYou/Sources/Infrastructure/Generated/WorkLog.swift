@@ -15,6 +15,7 @@ public enum WorkLogFields {
   public static let id = "id"
   public static let domainId = "domainId"
   public static let topicId = "topicId"
+  public static let workTopicId = "workTopicId"
   public static let content = "content"
   public static let startedAt = "startedAt"
   public static let endedAt = "endedAt"
@@ -29,6 +30,7 @@ public struct WorkLog: Codable, Identifiable, Sendable {
   @DocumentID public var id: String?
   public var domainId: String
   public var topicId: String
+  public var workTopicId: String
   public var content: String
   public var startedAt: Date
   public var endedAt: Date
@@ -41,6 +43,7 @@ public struct WorkLog: Codable, Identifiable, Sendable {
   public init(
     domainId: String,
     topicId: String,
+    workTopicId: String,
     content: String,
     startedAt: Date,
     endedAt: Date,
@@ -50,6 +53,7 @@ public struct WorkLog: Codable, Identifiable, Sendable {
   ) {
     self.domainId = domainId
     self.topicId = topicId
+    self.workTopicId = workTopicId
     self.content = content
     self.startedAt = startedAt
     self.endedAt = endedAt

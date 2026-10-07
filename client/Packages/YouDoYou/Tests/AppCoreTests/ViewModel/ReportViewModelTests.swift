@@ -12,12 +12,14 @@ private func date(_ y: Int, _ m: Int, _ d: Int, _ h: Int = 0) -> Date {
 private func workLog(
   domainId: String,
   topicId: String,
+  workTopicId: String = "",
   startedAt: Date,
   endedAt: Date
 ) -> WorkLog {
   WorkLog(
     domainId: domainId,
     topicId: topicId,
+    workTopicId: workTopicId,
     content: "",
     startedAt: startedAt,
     endedAt: endedAt,

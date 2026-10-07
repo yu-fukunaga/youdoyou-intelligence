@@ -3,6 +3,7 @@ import SwiftUI
 
 public struct WorkTopicsView: View {
   private let workTopics: [WorkTopic]
+  @State private var startingWorkTopic: WorkTopic?
 
   public init(workTopics: [WorkTopic]) {
     self.workTopics = workTopics
@@ -12,13 +13,19 @@ public struct WorkTopicsView: View {
     ScrollView {
       LazyVStack(spacing: 12) {
         ForEach(workTopics) { workTopic in
-          WorkTopicRow(workTopic: workTopic)
+          WorkTopicRow(workTopic: workTopic) {
+            startingWorkTopic = workTopic
+          }
         }
       }
       .padding(16)
     }
     .navigationTitle("Topics")
     .background(Color.systemGroupedBackground)
+    .sheet(item: $startingWorkTopic) { workTopic in
+      WorkLogCreateView(workTopicId: workTopic.id)
+        .presentationCornerRadius(16)
+    }
   }
 }
 

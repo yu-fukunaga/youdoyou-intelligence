@@ -9,20 +9,14 @@ public struct WorkLogCreateView: View {
   @State private var isLoading = false
   @State private var error: String?
 
-  let domainId: String
-  let topicId: String
+  let workTopicId: String
 
-  public init(domainId: String, topicId: String) {
-    self.domainId = domainId
-    self.topicId = topicId
+  public init(workTopicId: String) {
+    self.workTopicId = workTopicId
   }
 
-  private var domain: WorkTheme? {
-    appState.domains.first { $0.id == domainId }
-  }
-
-  private var topic: Topic? {
-    domain?.topics.first { $0.id == topicId }
+  private var workTopic: WorkTopic? {
+    appState.workTopics.first { $0.id == workTopicId }
   }
 
   public var body: some View {
@@ -37,19 +31,16 @@ public struct WorkLogCreateView: View {
       ScrollView {
         VStack(alignment: .leading, spacing: 24) {
 
-          WorkLogDomainTopicView(
-            domainTitle: domain?.title ?? "",
-            topicTitle: topic?.title ?? ""
+          WorkLogWorkTopicView(
+            title: workTopic?.title ?? ""
           )
 
           WorkLogTimeSectionView(
             workLogDraftStore: workLogDraftStore,
             onStartTimer: {
               workLogDraftStore.startTimer(
-                domainId: domainId,
-                topicId: topicId,
-                domainTitle: domain?.title ?? "",
-                topicTitle: topic?.title ?? ""
+                workTopicId: workTopicId,
+                title: workTopic?.title ?? ""
               )
             },
             onStopTimer: { workLogDraftStore.stopTimer() }
@@ -187,12 +178,11 @@ private struct WorkLogHeaderView: View {
   }
 }
 
-private struct WorkLogDomainTopicView: View {
-  let domainTitle: String
-  let topicTitle: String
+private struct WorkLogWorkTopicView: View {
+  let title: String
   var body: some View {
     VStack(alignment: .leading, spacing: 12) {
-      Text("DOMAIN / TOPIC")
+      Text("TOPIC")
         .font(.caption)
         .fontWeight(.semibold)
         .foregroundColor(.secondary)
@@ -202,14 +192,9 @@ private struct WorkLogDomainTopicView: View {
           .fill(Color.systemGray5)
           .frame(width: 44, height: 44)
 
-        VStack(alignment: .leading, spacing: 4) {
-          Text(domainTitle)
-            .font(.caption)
-            .foregroundColor(.secondary)
-          Text(topicTitle)
-            .font(.headline)
-            .fontWeight(.semibold)
-        }
+        Text(title)
+          .font(.headline)
+          .fontWeight(.semibold)
         Spacer()
       }
       .padding(16)
