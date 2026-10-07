@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"encoding/json"
 	"log"
 	"net/http"
 
@@ -14,10 +13,7 @@ import (
 	"github.com/firebase/genkit/go/plugins/server"
 	"github.com/go-chi/chi/v5"
 
-	"github.com/yu-fukunaga/youdoyou-intelligence/server/internal/clients"
 	"github.com/yu-fukunaga/youdoyou-intelligence/server/internal/config"
-	"github.com/yu-fukunaga/youdoyou-intelligence/server/internal/handler"
-	"github.com/yu-fukunaga/youdoyou-intelligence/server/internal/repository"
 	"github.com/yu-fukunaga/youdoyou-intelligence/server/internal/usecase"
 )
 
@@ -67,39 +63,12 @@ func main() {
 	llmPingUsecase := usecase.NewLlmPingUsecase(g, localModel)
 	llmPingFlow := genkit.DefineFlow(g, "llmPingFlow", llmPingUsecase.Execute)
 
-	pullRequestRepo := repository.NewFirestorePullRequestRepository(firestoreClient)
-
 	// --- 3. Routes ---
 
 	r := chi.NewRouter()
 	r.Route("/v1", func(r chi.Router) {
 		r.Get("/ping", genkit.Handler(pingFlow))
 		r.Post("/llm-ping", genkit.Handler(llmPingFlow))
-
-		if cfg.GitHubAppID == "" {
-			log.Println("GITHUB_WATCHER_APP_ID not set, GitHub webhook integration disabled")
-		} else {
-			githubClient, err := clients.NewGithubClient(cfg.GitHubAppID, cfg.GitHubInstallationID, cfg.GitHubPrivateKey)
-			if err != nil {
-				log.Fatal(err)
-			}
-
-			var repoDomainMap []usecase.RepoDomainMapping
-			if err := json.Unmarshal([]byte(cfg.RepoDomainMapStr), &repoDomainMap); err != nil {
-				log.Fatalf("failed to parse REPO_DOMAIN_MAP: %v", err)
-			}
-
-			githubWatcherUsecase := usecase.NewGithubWatcherUsecase(
-				pullRequestRepo,
-				githubClient,
-				repoDomainMap,
-			)
-			githubWebhookFlow := genkit.DefineFlow(g, "githubWebhookFlow", githubWatcherUsecase.Execute)
-
-			r.Post("/webhook/github", func(w http.ResponseWriter, r *http.Request) {
-				handler.HandleGithubWebhook(w, r, githubWebhookFlow.Run)
-			})
-		}
 	})
 
 	// --- 4. Start Server ---

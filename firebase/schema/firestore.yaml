@@ -85,45 +85,6 @@ models:
       createdAt:
         type: server_timestamp
 
-  GithubPull:
-    fields:
-      id:
-        type: id
-        description: "GitHub node_id"
-      domainId:
-        type: string
-      topicId:
-        type: string
-        optional: true
-      prNumber:
-        type: integer
-      title:
-        type: string
-      status:
-        type: string
-        enum: [open, merged, closed]
-      firstCommitAt:
-        type: timestamp
-        optional: true
-        description: "作業の最初の一撃（最古のコミット日時）"
-      closedAt:
-        type: timestamp
-        optional: true
-        description: "merged または closed になった時間"
-      fullNote:
-        type: string
-        description: "PR本文 + --- + 全コミット履歴の連結テキスト"
-      url:
-        type: string
-      repository:
-        type: string
-      createdAt:
-        type: timestamp
-        description: "PRが作成された時間"
-      updatedAt:
-        type: server_timestamp
-        description: "ドキュメントが更新された時間"
-
   # スレッド（親）
   Thread:
     fields:
@@ -207,10 +168,6 @@ collections:
   members:
     path: "members/{memberId}"
     model: Member
-
-  github_pulls:
-    path: "github_pulls/{githubPullID}"
-    model: GithubPull
 
   work_topics:
     path: "work_topics/{workTopicID}"
