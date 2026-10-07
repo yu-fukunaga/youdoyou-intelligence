@@ -13,15 +13,10 @@ struct WorkLogQuickStartContent: View {
     HStack(spacing: 12) {
       ScrollView(.horizontal, showsIndicators: false) {
         HStack(spacing: 8) {
-          ForEach(viewModel.recentTopics(in: appState.domains)) { topic in
-            Text(topic.title)
-              .font(.footnote)
-              .fontWeight(.medium)
-              .foregroundColor(.primary)
-              .padding(.vertical, 8)
-              .padding(.horizontal, 12)
-              .background(Color.systemGray6)
-              .cornerRadius(16)
+          ForEach(viewModel.recentWorkTopics(in: appState.workTopics)) { workTopic in
+            workTopicThumbnail(workTopic)
+              .frame(width: 44, height: 44)
+              .clipShape(RoundedRectangle(cornerRadius: 10))
           }
         }
       }
@@ -44,5 +39,21 @@ struct WorkLogQuickStartContent: View {
     }
     .onAppear { viewModel.startObserving() }
     .onDisappear { viewModel.stopObserving() }
+  }
+
+  @ViewBuilder
+  private func workTopicThumbnail(_ workTopic: WorkTopic) -> some View {
+    if let urlString = workTopic.imageUrl, let url = URL(string: urlString), !urlString.isEmpty {
+      AsyncImage(url: url) { image in
+        image
+          .resizable()
+          .scaledToFill()
+      } placeholder: {
+        Color.systemGray5
+      }
+    }
+    else {
+      Color.systemGray5
+    }
   }
 }
