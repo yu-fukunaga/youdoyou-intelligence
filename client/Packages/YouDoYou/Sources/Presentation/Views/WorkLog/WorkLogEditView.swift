@@ -38,7 +38,7 @@ struct WorkLogEditView: View {
       ScrollView {
         VStack(alignment: .leading, spacing: 24) {
 
-          // Domain / Topic
+          // WorkTopic
           VStack(alignment: .leading, spacing: 12) {
             Text("DOMAIN / TOPIC")
               .font(.caption)
@@ -49,14 +49,9 @@ struct WorkLogEditView: View {
               RoundedRectangle(cornerRadius: 8)
                 .fill(Color.systemGray5)
                 .frame(width: 44, height: 44)
-              VStack(alignment: .leading, spacing: 4) {
-                Text(viewModel.domain?.title ?? "")
-                  .font(.caption)
-                  .foregroundColor(.secondary)
-                Text(viewModel.topic?.title ?? "")
-                  .font(.headline)
-                  .fontWeight(.semibold)
-              }
+              Text(viewModel.workTopic?.title ?? "")
+                .font(.headline)
+                .fontWeight(.semibold)
               Spacer()
             }
             .padding(16)

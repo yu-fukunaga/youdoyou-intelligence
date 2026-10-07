@@ -6,8 +6,7 @@ public class WorkLogDetailViewModel: ObservableObject {
   @Published public var isDeleted = false
   @Published public var isUpdated = false
   @Published public var error: String?
-  @Published public var domain: WorkTheme?
-  @Published public var topic: Topic?
+  @Published public var workTopic: WorkTopic?
   @Published public var workLog: WorkLog
 
   // 編集用
@@ -35,8 +34,7 @@ public class WorkLogDetailViewModel: ObservableObject {
     self.content = workLog.content
     self.startDate = workLog.startedAt
     self.endDate = workLog.endedAt
-    self.domain = appState.domains.first { $0.id == workLog.domainId }
-    self.topic = domain?.topics.first { $0.id == workLog.topicId }
+    self.workTopic = appState.workTopics.first { $0.id == workLog.workTopicId }
   }
 
   public func delete() async {

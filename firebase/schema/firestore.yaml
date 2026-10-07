@@ -29,38 +29,6 @@ models:
       totalTokens:
         type: integer
 
-  # ドメイン（管理の最小単位）
-  WorkTheme:
-    fields:
-      id:
-        type: id
-      title:
-        type: string
-      description:
-        type: string
-      topics:
-        type: array
-        item_model: Topic
-      color:
-        type: string
-        description: "HEXカラーコード (例: #4285F4)"
-        optional: true
-      createdAt:
-        type: server_timestamp
-      updatedAt:
-        type: server_timestamp
-
-  Topic:
-    fields:
-      id:
-        type: string
-        description: "development: issue番号 / learning: uuid"
-      title:
-        type: string
-      imageUrl:
-        type: string
-        optional: true
-
   WorkTopic:
     fields:
       id:
@@ -83,10 +51,6 @@ models:
     fields:
       id:
         type: id
-      domainId:
-        type: string
-      topicId:
-        type: string
       workTopicId:
         type: string
       content:
@@ -226,10 +190,6 @@ models:
 # 2. コレクション定義 (パス生成ロジックになるもの)
 # ---------------------------------------------------------
 collections:
-  domains:
-    path: "domains/{domainID}"
-    model: WorkTheme
-
   work_logs:
     path: "work_logs/{workLogID}"
     model: WorkLog

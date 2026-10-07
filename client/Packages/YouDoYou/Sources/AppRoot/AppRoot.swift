@@ -9,10 +9,7 @@ public struct RootView: View {
     repository: WorkLogRepository(),
     authRepository: AuthRepository()
   )
-  @StateObject private var appState = AppState(
-    repository: WorkThemeRepository(),
-    workTopicRepository: WorkTopicRepository()
-  )
+  @StateObject private var appState = AppState(workTopicRepository: WorkTopicRepository())
   @State private var workLogRepository = WorkLogRepository()
   @StateObject private var navigationState = NavigationState()
   @State private var selectedTab = 0
@@ -54,14 +51,6 @@ public struct RootView: View {
           Label("Reports", systemImage: "chart.bar.xaxis")
         }
         .tag(1)
-
-        NavigationStack {
-          DomainsView()
-        }
-        .tabItem {
-          Label("Domains", systemImage: "square.grid.2x2")
-        }
-        .tag(2)
       }
       .environment(workLogDraftStore)
       .environmentObject(appState)

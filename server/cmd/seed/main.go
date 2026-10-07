@@ -41,10 +41,6 @@ var collectionsMap = map[string]CollectionConfig{
 		},
 		Seed: seedCollectionGeneric[schema.Thread],
 	},
-	schema.CollectionDomains: {
-		Path: schema.DomainPath,
-		Seed: seedCollectionGeneric[schema.WorkTheme],
-	},
 	schema.CollectionWork_logs: {
 		Path: schema.Work_logPath,
 		Seed: seedCollectionGeneric[schema.WorkLog],

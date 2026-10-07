@@ -87,8 +87,7 @@ public final class WorkLogDraftStore {
       do {
         _ = try ActivityKit.Activity<TimerLiveActivityAttributes>.request(
           attributes: TimerLiveActivityAttributes(
-            domainTitle: "",
-            topicTitle: title,
+            title: title,
             startDate: startDate ?? Date()
           ),
           content: ActivityContent(
@@ -125,8 +124,6 @@ public final class WorkLogDraftStore {
     }
 
     let workLog = WorkLog(
-      domainId: "",
-      topicId: "",
       workTopicId: workTopicId,
       content: content,
       startedAt: start,

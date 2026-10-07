@@ -8,8 +8,6 @@ extension WorkLog {
     guard let id else { return nil }
     return Domain.WorkLog(
       id: id,
-      domainId: domainId,
-      topicId: topicId,
       workTopicId: workTopicId,
       content: content,
       startedAt: startedAt,
@@ -26,8 +24,6 @@ extension WorkLog {
 extension Domain.WorkLog {
   func toDTO() -> WorkLog {
     WorkLog(
-      domainId: domainId,
-      topicId: topicId,
       workTopicId: workTopicId,
       content: content,
       startedAt: startedAt,

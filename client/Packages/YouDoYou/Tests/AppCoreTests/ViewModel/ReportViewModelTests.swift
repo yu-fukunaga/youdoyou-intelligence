@@ -15,8 +15,6 @@ private func workLog(
   endedAt: Date
 ) -> WorkLog {
   WorkLog(
-    domainId: "",
-    topicId: "",
     workTopicId: workTopicId,
     content: "",
     startedAt: startedAt,

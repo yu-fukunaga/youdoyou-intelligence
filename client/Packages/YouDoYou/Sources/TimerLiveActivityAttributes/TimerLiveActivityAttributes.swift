@@ -14,13 +14,11 @@
     }
 
     // Fixed non-changing properties about your activity go here!
-    public var domainTitle: String
-    public var topicTitle: String
+    public var title: String
     public var startDate: Date
 
-    public init(domainTitle: String, topicTitle: String, startDate: Date) {
-      self.domainTitle = domainTitle
-      self.topicTitle = topicTitle
+    public init(title: String, startDate: Date) {
+      self.title = title
       self.startDate = startDate
     }
   }

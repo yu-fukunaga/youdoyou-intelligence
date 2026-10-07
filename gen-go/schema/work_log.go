@@ -18,8 +18,6 @@ func Work_logPath(workLogID string) string {
 
 type WorkLog struct {
 	ID          string    `firestore:"-" json:"id" yaml:"id"`
-	DomainId    string    `firestore:"domainId" json:"domainId" yaml:"domainId"`
-	TopicId     string    `firestore:"topicId" json:"topicId" yaml:"topicId"`
 	WorkTopicId string    `firestore:"workTopicId" json:"workTopicId" yaml:"workTopicId"`
 	Content     string    `firestore:"content" json:"content" yaml:"content"`
 	StartedAt   time.Time `firestore:"startedAt" json:"startedAt" yaml:"startedAt"`
@@ -29,20 +27,6 @@ type WorkLog struct {
 	UserIcon    string    `firestore:"userIcon" json:"userIcon" yaml:"userIcon"`
 	CreatedAt   time.Time `firestore:"createdAt,serverTimestamp" json:"createdAt" yaml:"createdAt"`
 	UpdatedAt   time.Time `firestore:"updatedAt,serverTimestamp" json:"updatedAt" yaml:"updatedAt"`
-}
-
-func (w *WorkLog) GetDomainId() string {
-	if w == nil {
-		return ""
-	}
-	return w.DomainId
-}
-
-func (w *WorkLog) GetTopicId() string {
-	if w == nil {
-		return ""
-	}
-	return w.TopicId
 }
 
 func (w *WorkLog) GetWorkTopicId() string {
@@ -118,8 +102,6 @@ func (w *WorkLog) GetID() string {
 // WorkLogFields contains field names for WorkLog.
 var WorkLogFields = struct {
 	Id          string
-	DomainId    string
-	TopicId     string
 	WorkTopicId string
 	Content     string
 	StartedAt   string
@@ -131,8 +113,6 @@ var WorkLogFields = struct {
 	UpdatedAt   string
 }{
 	Id:          "id",
-	DomainId:    "domainId",
-	TopicId:     "topicId",
 	WorkTopicId: "workTopicId",
 	Content:     "content",
 	StartedAt:   "startedAt",
