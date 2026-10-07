@@ -10,15 +10,13 @@ private func date(_ y: Int, _ m: Int, _ d: Int, _ h: Int = 0) -> Date {
 }
 
 private func workLog(
-  domainId: String,
-  topicId: String,
-  workTopicId: String = "",
+  workTopicId: String,
   startedAt: Date,
   endedAt: Date
 ) -> WorkLog {
   WorkLog(
-    domainId: domainId,
-    topicId: topicId,
+    domainId: "",
+    topicId: "",
     workTopicId: workTopicId,
     content: "",
     startedAt: startedAt,
@@ -29,10 +27,8 @@ private func workLog(
   )
 }
 
-private func domain(id: String, title: String, topics: [Topic] = []) -> WorkTheme {
-  var d = WorkTheme(title: title, description: "", topics: topics)
-  d.id = id
-  return d
+private func workTopic(id: String, title: String) -> WorkTopic {
+  WorkTopic(id: id, title: title)
 }
 
 struct ReportViewModel_DateIntervalTests {
@@ -325,9 +321,9 @@ struct ReportViewModel_ToggleItemTests {
       input: String,
       expected: String?
     )] = [
-      (initialSelectedItemId: nil, input: "d1", expected: "d1"),
-      (initialSelectedItemId: "d1", input: "d1", expected: nil),
-      (initialSelectedItemId: "d1", input: "d2", expected: "d2"),
+      (initialSelectedItemId: nil, input: "wt1", expected: "wt1"),
+      (initialSelectedItemId: "wt1", input: "wt1", expected: nil),
+      (initialSelectedItemId: "wt1", input: "wt2", expected: "wt2"),
     ]
 
   @Test(arguments: cases)
@@ -347,27 +343,11 @@ struct ReportViewModel_ToggleItemTests {
 
 }
 
-struct ReportViewModel_GroupingUnitTests {
-
-  @Test
-  @MainActor
-  func changingGroupingUnit_resetsSelectedItem() {
-    let vm = ReportViewModel(repository: MockWorkLogRepository())
-    vm.selectedItemId = "d1"
-
-    vm.groupingUnit = .topic
-
-    #expect(vm.selectedItemId == nil)
-  }
-
-}
-
 struct ReportViewModel_HeaderTotalDurationTests {
 
   struct TestCase: CustomTestStringConvertible {
     let name: String
     let workLogs: [WorkLog]
-    let groupingUnit: GroupingUnit
     let selectedItemId: String?
     let expected: TimeInterval
 
@@ -378,32 +358,20 @@ struct ReportViewModel_HeaderTotalDurationTests {
     TestCase(
       name: "sums all workLogs without filter",
       workLogs: [
-        workLog(domainId: "d1", topicId: "t1", startedAt: date(2026, 1, 1, 0), endedAt: date(2026, 1, 1, 1)),
-        workLog(domainId: "d2", topicId: "t2", startedAt: date(2026, 1, 1, 1), endedAt: date(2026, 1, 1, 3)),
+        workLog(workTopicId: "wt1", startedAt: date(2026, 1, 1, 0), endedAt: date(2026, 1, 1, 1)),
+        workLog(workTopicId: "wt2", startedAt: date(2026, 1, 1, 1), endedAt: date(2026, 1, 1, 3)),
       ],
-      groupingUnit: .domain,
       selectedItemId: nil,
       expected: 3 * 3600
     ),
     TestCase(
-      name: "filters by selected domain",
+      name: "filters by selected workTopic",
       workLogs: [
-        workLog(domainId: "d1", topicId: "t1", startedAt: date(2026, 1, 1, 0), endedAt: date(2026, 1, 1, 1)),
-        workLog(domainId: "d2", topicId: "t2", startedAt: date(2026, 1, 1, 1), endedAt: date(2026, 1, 1, 3)),
+        workLog(workTopicId: "wt1", startedAt: date(2026, 1, 1, 0), endedAt: date(2026, 1, 1, 1)),
+        workLog(workTopicId: "wt2", startedAt: date(2026, 1, 1, 1), endedAt: date(2026, 1, 1, 3)),
       ],
-      groupingUnit: .domain,
-      selectedItemId: "d1",
+      selectedItemId: "wt1",
       expected: 1 * 3600
-    ),
-    TestCase(
-      name: "filters by selected topic",
-      workLogs: [
-        workLog(domainId: "d1", topicId: "t1", startedAt: date(2026, 1, 1, 0), endedAt: date(2026, 1, 1, 1)),
-        workLog(domainId: "d1", topicId: "t2", startedAt: date(2026, 1, 1, 1), endedAt: date(2026, 1, 1, 3)),
-      ],
-      groupingUnit: .topic,
-      selectedItemId: "t2",
-      expected: 2 * 3600
     ),
   ]
 
@@ -413,7 +381,6 @@ struct ReportViewModel_HeaderTotalDurationTests {
     let mock = MockWorkLogRepository()
     mock.workLogs = testCase.workLogs
     let vm = ReportViewModel(repository: mock)
-    vm.groupingUnit = testCase.groupingUnit
     vm.selectedItemId = testCase.selectedItemId
 
     await vm.loadIfNeeded()
@@ -430,7 +397,7 @@ struct ReportViewModel_HeaderAverageDurationTests {
   func headerAverageDuration_dividesByBucketCount() async {
     let mock = MockWorkLogRepository()
     mock.workLogs = [
-      workLog(domainId: "d1", topicId: "t1", startedAt: date(2026, 1, 1, 0), endedAt: date(2026, 1, 1, 14))
+      workLog(workTopicId: "wt1", startedAt: date(2026, 1, 1, 0), endedAt: date(2026, 1, 1, 14))
     ]
     let vm = ReportViewModel(repository: mock)
     vm.periodType = .day
@@ -454,17 +421,15 @@ struct ReportViewModel_BarChartColumnsTests {
   struct TestCase: CustomTestStringConvertible {
     let name: String
     let workLogs: [WorkLog]
-    let domains: [WorkTheme]
-    let groupingUnit: GroupingUnit
     let targetBucketIndex: Int
     let expectedSegments: [ExpectedSegment]
 
     var testDescription: String { name }
   }
 
-  static let domains: [WorkTheme] = [
-    domain(id: "d1", title: "Work", topics: [Topic(id: "t1", title: "Coding"), Topic(id: "t2", title: "Meeting")]),
-    domain(id: "d2", title: "Life", topics: []),
+  static let workTopics: [WorkTopic] = [
+    workTopic(id: "wt1", title: "Coding"),
+    workTopic(id: "wt2", title: "Meeting"),
   ]
 
   // Day period starting 2026/1/1: bucket 3 is the 2026/1/1 (Thu) day bucket
@@ -472,53 +437,33 @@ struct ReportViewModel_BarChartColumnsTests {
     TestCase(
       name: "bucket with no workLogs still includes every known group at 0 duration",
       workLogs: [],
-      domains: domains,
-      groupingUnit: .domain,
       targetBucketIndex: 3,
       expectedSegments: [
-        ExpectedSegment(id: "d1", title: "Work", duration: 0),
-        ExpectedSegment(id: "d2", title: "Life", duration: 0),
+        ExpectedSegment(id: "wt1", title: "Coding", duration: 0),
+        ExpectedSegment(id: "wt2", title: "Meeting", duration: 0),
       ]
     ),
     TestCase(
-      name: "groups by domain and sums duration within the bucket",
+      name: "groups by workTopic and sums duration within the bucket",
       workLogs: [
-        workLog(domainId: "d1", topicId: "t1", startedAt: date(2026, 1, 1, 1), endedAt: date(2026, 1, 1, 3)),
-        workLog(domainId: "d2", topicId: "t9", startedAt: date(2026, 1, 1, 5), endedAt: date(2026, 1, 1, 6)),
+        workLog(workTopicId: "wt1", startedAt: date(2026, 1, 1, 1), endedAt: date(2026, 1, 1, 3)),
+        workLog(workTopicId: "wt2", startedAt: date(2026, 1, 1, 5), endedAt: date(2026, 1, 1, 6)),
       ],
-      domains: domains,
-      groupingUnit: .domain,
       targetBucketIndex: 3,
       expectedSegments: [
-        ExpectedSegment(id: "d1", title: "Work", duration: 2 * 3600),
-        ExpectedSegment(id: "d2", title: "Life", duration: 1 * 3600),
-      ]
-    ),
-    TestCase(
-      name: "groups by topic when grouping unit is topic",
-      workLogs: [
-        workLog(domainId: "d1", topicId: "t1", startedAt: date(2026, 1, 1, 1), endedAt: date(2026, 1, 1, 3)),
-        workLog(domainId: "d1", topicId: "t2", startedAt: date(2026, 1, 1, 5), endedAt: date(2026, 1, 1, 6)),
-      ],
-      domains: domains,
-      groupingUnit: .topic,
-      targetBucketIndex: 3,
-      expectedSegments: [
-        ExpectedSegment(id: "t1", title: "Coding", duration: 2 * 3600),
-        ExpectedSegment(id: "t2", title: "Meeting", duration: 1 * 3600),
+        ExpectedSegment(id: "wt1", title: "Coding", duration: 2 * 3600),
+        ExpectedSegment(id: "wt2", title: "Meeting", duration: 1 * 3600),
       ]
     ),
     TestCase(
       name: "clamps duration to the bucket when an workLog spans two buckets",
       workLogs: [
-        workLog(domainId: "d1", topicId: "t1", startedAt: date(2025, 12, 31, 23), endedAt: date(2026, 1, 1, 2))
+        workLog(workTopicId: "wt1", startedAt: date(2025, 12, 31, 23), endedAt: date(2026, 1, 1, 2))
       ],
-      domains: domains,
-      groupingUnit: .domain,
       targetBucketIndex: 3,
       expectedSegments: [
-        ExpectedSegment(id: "d1", title: "Work", duration: 2 * 3600),
-        ExpectedSegment(id: "d2", title: "Life", duration: 0),
+        ExpectedSegment(id: "wt1", title: "Coding", duration: 2 * 3600),
+        ExpectedSegment(id: "wt2", title: "Meeting", duration: 0),
       ]
     ),
   ]
@@ -531,11 +476,10 @@ struct ReportViewModel_BarChartColumnsTests {
     let vm = ReportViewModel(repository: mock)
     vm.periodType = .day
     vm.currentDate = date(2026, 1, 1)
-    vm.groupingUnit = testCase.groupingUnit
 
     await vm.loadIfNeeded()
 
-    let bars = vm.barChartColumns(domains: testCase.domains)
+    let bars = vm.barChartColumns(workTopics: Self.workTopics)
     let segments =
       bars[testCase.targetBucketIndex].segments
       .map { ExpectedSegment(id: $0.id, title: $0.title, duration: $0.duration) }
@@ -557,58 +501,34 @@ struct ReportViewModel_ListRowsTests {
   struct TestCase: CustomTestStringConvertible {
     let name: String
     let workLogs: [WorkLog]
-    let domains: [WorkTheme]
-    let groupingUnit: GroupingUnit
     let selectedItemId: String?
     let expectedRows: [ExpectedRow]
 
     var testDescription: String { name }
   }
 
-  static let domains: [WorkTheme] = [
-    domain(id: "d1", title: "Work", topics: [Topic(id: "t1", title: "Coding"), Topic(id: "t2", title: "Meeting")]),
-    domain(id: "d2", title: "Life", topics: []),
+  static let workTopics: [WorkTopic] = [
+    workTopic(id: "wt1", title: "Coding"),
+    workTopic(id: "wt2", title: "Meeting"),
   ]
 
   // Day period starting 2026/1/1: bucket index 3=1/1, 4=1/2, 5=1/3
   static let cases: [TestCase] = [
     TestCase(
-      name: "groups by domain per bucket and sorts by total descending",
+      name: "groups by workTopic per bucket and sorts by total descending",
       workLogs: [
-        workLog(domainId: "d1", topicId: "t1", startedAt: date(2026, 1, 1, 1), endedAt: date(2026, 1, 1, 3)),
-        workLog(domainId: "d1", topicId: "t1", startedAt: date(2026, 1, 3, 1), endedAt: date(2026, 1, 3, 2)),
-        workLog(domainId: "d2", topicId: "t9", startedAt: date(2026, 1, 2, 1), endedAt: date(2026, 1, 2, 2)),
+        workLog(workTopicId: "wt1", startedAt: date(2026, 1, 1, 1), endedAt: date(2026, 1, 1, 3)),
+        workLog(workTopicId: "wt1", startedAt: date(2026, 1, 3, 1), endedAt: date(2026, 1, 3, 2)),
+        workLog(workTopicId: "wt2", startedAt: date(2026, 1, 2, 1), endedAt: date(2026, 1, 2, 2)),
       ],
-      domains: domains,
-      groupingUnit: .domain,
       selectedItemId: nil,
       expectedRows: [
         ExpectedRow(
-          id: "d1", title: "Work",
+          id: "wt1", title: "Coding",
           bucketDurations: [0, 0, 0, 2 * 3600, 0, 1 * 3600, 0]
         ),
         ExpectedRow(
-          id: "d2", title: "Life",
-          bucketDurations: [0, 0, 0, 0, 1 * 3600, 0, 0]
-        ),
-      ]
-    ),
-    TestCase(
-      name: "groups by topic when grouping unit is topic",
-      workLogs: [
-        workLog(domainId: "d1", topicId: "t1", startedAt: date(2026, 1, 1, 1), endedAt: date(2026, 1, 1, 3)),
-        workLog(domainId: "d1", topicId: "t2", startedAt: date(2026, 1, 2, 1), endedAt: date(2026, 1, 2, 2)),
-      ],
-      domains: domains,
-      groupingUnit: .topic,
-      selectedItemId: nil,
-      expectedRows: [
-        ExpectedRow(
-          id: "t1", title: "Coding",
-          bucketDurations: [0, 0, 0, 2 * 3600, 0, 0, 0]
-        ),
-        ExpectedRow(
-          id: "t2", title: "Meeting",
+          id: "wt2", title: "Meeting",
           bucketDurations: [0, 0, 0, 0, 1 * 3600, 0, 0]
         ),
       ]
@@ -616,19 +536,17 @@ struct ReportViewModel_ListRowsTests {
     TestCase(
       name: "keeps every row visible (with its real total) even when an item is selected",
       workLogs: [
-        workLog(domainId: "d1", topicId: "t1", startedAt: date(2026, 1, 1, 1), endedAt: date(2026, 1, 1, 3)),
-        workLog(domainId: "d2", topicId: "t9", startedAt: date(2026, 1, 2, 1), endedAt: date(2026, 1, 2, 2)),
+        workLog(workTopicId: "wt1", startedAt: date(2026, 1, 1, 1), endedAt: date(2026, 1, 1, 3)),
+        workLog(workTopicId: "wt2", startedAt: date(2026, 1, 2, 1), endedAt: date(2026, 1, 2, 2)),
       ],
-      domains: domains,
-      groupingUnit: .domain,
-      selectedItemId: "d1",
+      selectedItemId: "wt1",
       expectedRows: [
         ExpectedRow(
-          id: "d1", title: "Work",
+          id: "wt1", title: "Coding",
           bucketDurations: [0, 0, 0, 2 * 3600, 0, 0, 0]
         ),
         ExpectedRow(
-          id: "d2", title: "Life",
+          id: "wt2", title: "Meeting",
           bucketDurations: [0, 0, 0, 0, 1 * 3600, 0, 0]
         ),
       ]
@@ -643,13 +561,12 @@ struct ReportViewModel_ListRowsTests {
     let vm = ReportViewModel(repository: mock)
     vm.periodType = .day
     vm.currentDate = date(2026, 1, 1)
-    vm.groupingUnit = testCase.groupingUnit
     vm.selectedItemId = testCase.selectedItemId
 
     await vm.loadIfNeeded()
 
     let rows =
-      vm.listRows(domains: testCase.domains)
+      vm.listRows(workTopics: Self.workTopics)
       .map { ExpectedRow(id: $0.id, title: $0.title, bucketDurations: $0.bucketDurations) }
 
     #expect(rows == testCase.expectedRows)
@@ -661,40 +578,25 @@ struct ReportViewModel_TimelineTitleTests {
 
   struct TestCase: CustomTestStringConvertible {
     let name: String
-    let groupingUnit: GroupingUnit
     let id: String
     let expected: String
 
     var testDescription: String { name }
   }
 
-  static let domains: [WorkTheme] = [
-    domain(id: "d1", title: "Work", topics: [Topic(id: "t1", title: "Coding")]),
-    domain(id: "d2", title: "Life", topics: []),
+  static let workTopics: [WorkTopic] = [
+    workTopic(id: "wt1", title: "Coding"),
+    workTopic(id: "wt2", title: "Meeting"),
   ]
 
   static let cases: [TestCase] = [
     TestCase(
-      name: "resolves domain title when grouping unit is domain",
-      groupingUnit: .domain,
-      id: "d1",
-      expected: "Work"
-    ),
-    TestCase(
-      name: "falls back to the id when no matching domain is found",
-      groupingUnit: .domain,
-      id: "unknown",
-      expected: "unknown"
-    ),
-    TestCase(
-      name: "resolves topic title by searching across all domains when grouping unit is topic",
-      groupingUnit: .topic,
-      id: "t1",
+      name: "resolves workTopic title",
+      id: "wt1",
       expected: "Coding"
     ),
     TestCase(
-      name: "falls back to the id when no domain contains a matching topic",
-      groupingUnit: .topic,
+      name: "falls back to the id when no matching workTopic is found",
       id: "unknown",
       expected: "unknown"
     ),
@@ -704,9 +606,8 @@ struct ReportViewModel_TimelineTitleTests {
   @MainActor
   func timelineTitle_test(testCase: TestCase) {
     let vm = ReportViewModel(repository: MockWorkLogRepository())
-    vm.groupingUnit = testCase.groupingUnit
 
-    #expect(vm.timelineTitle(for: testCase.id, domains: Self.domains) == testCase.expected)
+    #expect(vm.timelineTitle(for: testCase.id, workTopics: Self.workTopics) == testCase.expected)
   }
 
 }

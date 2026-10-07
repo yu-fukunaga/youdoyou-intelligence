@@ -81,10 +81,6 @@ public struct ReportView: View {
         }
         Spacer()
       }
-      HStack {
-        Spacer()
-        groupingUnitButton
-      }
     }
     .padding(.horizontal)
     .padding(.vertical, 16)
@@ -146,21 +142,6 @@ public struct ReportView: View {
     }
   }
 
-  private var groupingUnitButton: some View {
-    let isTopic = viewModel.groupingUnit == .topic
-
-    return Button {
-      viewModel.groupingUnit = isTopic ? .domain : .topic
-    } label: {
-      Image(systemName: "list.bullet.indent")
-        .font(.system(size: 14, weight: .semibold))
-        .foregroundStyle(isTopic ? Color.systemBackground : .secondary)
-        .frame(width: 24, height: 24)
-        .background(isTopic ? Color.primary : Color.systemFill)
-        .clipShape(Circle())
-    }
-  }
-
   // MARK: - Bar Chart
 
   // Custom-drawn (not Swift Charts): gridlines/labels are always computed fresh from
@@ -209,7 +190,7 @@ public struct ReportView: View {
   }
 
   private var barChart: some View {
-    let bars = viewModel.barChartColumns(domains: appState.domains)
+    let bars = viewModel.barChartColumns(workTopics: appState.workTopics)
     let maxHours = niceMaxHours(bars.map { $0.total / 3600 }.max() ?? 0)
     // Placeholder columns (beyond the current PeriodType's real bucket count) are
     // squeezed to width 0 so only real columns share the available width - see
@@ -361,7 +342,7 @@ public struct ReportView: View {
   private static let cardCornerRadius: CGFloat = 16
 
   private var totalsArea: some View {
-    let bars = viewModel.barChartColumns(domains: appState.domains)
+    let bars = viewModel.barChartColumns(workTopics: appState.workTopics)
     let selectedBar = viewModel.selectedBarIndex.flatMap { index in bars.first { $0.id == index } }
 
     return HStack(spacing: 12) {
@@ -397,45 +378,16 @@ public struct ReportView: View {
   // MARK: - Summary List
 
   private var summaryList: some View {
-    Group {
-      if viewModel.groupingUnit == .topic {
-        let sections = viewModel.listSections(domains: appState.domains)
-        LazyVStack(spacing: 0) {
-          ForEach(sections) { section in
-            Section {
-              ForEach(section.rows) { row in
-                summaryRowView(row)
-              }
-            } header: {
-              sectionHeaderView(section.title)
-            }
-          }
-        }
-      }
-      else {
-        let rows = viewModel.listRows(domains: appState.domains)
-        LazyVStack(spacing: 0) {
-          ForEach(rows) { row in
-            summaryRowView(row)
-          }
-        }
+    let rows = viewModel.listRows(workTopics: appState.workTopics)
+    return LazyVStack(spacing: 0) {
+      ForEach(rows) { row in
+        summaryRowView(row)
       }
     }
     .background(Color.secondarySystemGroupedBackground)
     .clipShape(RoundedRectangle(cornerRadius: Self.cardCornerRadius))
     .padding(.horizontal)
     .padding(.top, 16)
-  }
-
-  private func sectionHeaderView(_ title: String) -> some View {
-    Text(title)
-      .font(.caption)
-      .fontWeight(.semibold)
-      .foregroundStyle(.secondary)
-      .frame(maxWidth: .infinity, alignment: .leading)
-      .padding(.horizontal)
-      .padding(.top, 12)
-      .padding(.bottom, 4)
   }
 
   private func summaryRowView(_ row: ListRow) -> some View {
