@@ -1,6 +1,6 @@
 module github.com/yu-fukunaga/youdoyou-intelligence/firebase
 
-go 1.26.6
+go 1.26.9
 
 tool (
 	github.com/golangci/golangci-lint/cmd/golangci-lint
