@@ -3,7 +3,6 @@ import SwiftUI
 
 struct WorkLogDetailView: View {
   @Environment(\.dismiss) var dismiss
-  @EnvironmentObject var appState: AppState
   @StateObject var viewModel: WorkLogDetailViewModel
   @State private var isShowingEdit = false
 

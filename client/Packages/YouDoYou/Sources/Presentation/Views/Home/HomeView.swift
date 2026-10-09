@@ -2,7 +2,6 @@ import Domain
 import SwiftUI
 
 public struct HomeView: View {
-  @EnvironmentObject private var appState: AppState
   private let workLogRepository: any WorkLogRepositoryProtocol
 
   public init(workLogRepository: any WorkLogRepositoryProtocol) {
