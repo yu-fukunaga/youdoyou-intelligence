@@ -3,34 +3,44 @@ import SwiftUI
 
 struct WorkTopicRow: View {
   let workTopic: WorkTopic
-  let onTap: () -> Void
+  let onStart: () -> Void
+  let onEdit: () -> Void
+  let onDelete: () -> Void
 
   var body: some View {
-    Button(action: onTap) {
-      HStack(spacing: 12) {
-        thumbnail
-          .frame(width: 56, height: 56)
-          .clipped()
-          .clipShape(RoundedRectangle(cornerRadius: 10))
+    HStack(spacing: 12) {
+      Button(action: onStart) {
+        HStack(spacing: 12) {
+          thumbnail
+            .frame(width: 56, height: 56)
+            .clipped()
+            .clipShape(RoundedRectangle(cornerRadius: 10))
 
-        Text(workTopic.title)
-          .font(.body)
-          .fontWeight(.medium)
-          .lineLimit(2)
-          .foregroundColor(.primary)
+          Text(workTopic.title)
+            .font(.body)
+            .fontWeight(.medium)
+            .lineLimit(2)
+            .foregroundColor(.primary)
 
-        Spacer(minLength: 8)
+          Spacer(minLength: 8)
+        }
+      }
+      .buttonStyle(.plain)
 
-        // Secondary affordance (edit/delete). Wiring is deferred.
+      Menu {
+        Button("編集", systemImage: "pencil") { onEdit() }
+        Button("削除", systemImage: "trash", role: .destructive) { onDelete() }
+      } label: {
         Image(systemName: "ellipsis")
           .font(.body)
           .foregroundColor(.secondary)
+          .frame(width: 44, height: 44)
+          .contentShape(Rectangle())
       }
-      .padding(12)
-      .background(Color.systemBackground)
-      .clipShape(RoundedRectangle(cornerRadius: 12))
     }
-    .buttonStyle(.plain)
+    .padding(12)
+    .background(Color.systemBackground)
+    .clipShape(RoundedRectangle(cornerRadius: 12))
   }
 
   @ViewBuilder
@@ -56,7 +66,9 @@ struct WorkTopicRow: View {
       title: "YouDoYou Intelligence開発",
       imageUrl: "https://picsum.photos/seed/topic-001-1/200/200"
     ),
-    onTap: {}
+    onStart: {},
+    onEdit: {},
+    onDelete: {}
   )
   .padding()
 }
