@@ -40,7 +40,7 @@ struct WorkLogEditView: View {
 
           // WorkTopic
           VStack(alignment: .leading, spacing: 12) {
-            Text("DOMAIN / TOPIC")
+            Text("TOPIC")
               .font(.caption)
               .fontWeight(.semibold)
               .foregroundColor(.secondary)
