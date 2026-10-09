@@ -15,11 +15,6 @@ type Config struct {
 	ProjectID string `envconfig:"GCP_PROJECT_ID"`
 	Env       string `envconfig:"ENV" default:"production"`
 
-	GitHubAppID          string `envconfig:"GITHUB_WATCHER_APP_ID"`
-	GitHubInstallationID string `envconfig:"GITHUB_WATCHER_INSTALLATION_ID"`
-	GitHubPrivateKey     string `envconfig:"GITHUB_WATCHER_PRIVATE_KEY"`
-	RepoDomainMapStr     string `envconfig:"REPO_DOMAIN_MAP"`
-
 	OllamaServerAddress string `envconfig:"OLLAMA_SERVER_ADDRESS" default:"http://127.0.0.1:11434"`
 	OllamaModel         string `envconfig:"OLLAMA_MODEL" default:"gemma4"`
 }

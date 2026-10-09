@@ -4,6 +4,7 @@ import SwiftUI
 struct WorkLogQuickStartContent: View {
   @EnvironmentObject private var appState: AppState
   @StateObject private var viewModel: WorkLogQuickStartViewModel
+  @State private var startingWorkTopic: WorkTopic?
 
   init(repository: any WorkLogRepositoryProtocol) {
     _viewModel = StateObject(wrappedValue: WorkLogQuickStartViewModel(repository: repository))
@@ -13,15 +14,15 @@ struct WorkLogQuickStartContent: View {
     HStack(spacing: 12) {
       ScrollView(.horizontal, showsIndicators: false) {
         HStack(spacing: 8) {
-          ForEach(viewModel.recentTopics(in: appState.domains)) { topic in
-            Text(topic.title)
-              .font(.footnote)
-              .fontWeight(.medium)
-              .foregroundColor(.primary)
-              .padding(.vertical, 8)
-              .padding(.horizontal, 12)
-              .background(Color.systemGray6)
-              .cornerRadius(16)
+          ForEach(viewModel.recentWorkTopics(in: appState.workTopics)) { workTopic in
+            Button {
+              startingWorkTopic = workTopic
+            } label: {
+              workTopicThumbnail(workTopic)
+                .frame(width: 44, height: 44)
+                .clipShape(RoundedRectangle(cornerRadius: 10))
+            }
+            .buttonStyle(.plain)
           }
         }
       }
@@ -29,7 +30,7 @@ struct WorkLogQuickStartContent: View {
       Divider()
         .frame(height: 40)
 
-      NavigationLink(destination: TopicSelectionView()) {
+      NavigationLink(destination: WorkTopicsView(workTopics: appState.workTopics)) {
         VStack(spacing: 4) {
           Image(systemName: "folder.fill")
             .font(.title2)
@@ -44,5 +45,25 @@ struct WorkLogQuickStartContent: View {
     }
     .onAppear { viewModel.startObserving() }
     .onDisappear { viewModel.stopObserving() }
+    .sheet(item: $startingWorkTopic) { workTopic in
+      WorkLogCreateView(workTopicId: workTopic.id)
+        .presentationCornerRadius(16)
+    }
+  }
+
+  @ViewBuilder
+  private func workTopicThumbnail(_ workTopic: WorkTopic) -> some View {
+    if let urlString = workTopic.imageUrl, let url = URL(string: urlString), !urlString.isEmpty {
+      AsyncImage(url: url) { image in
+        image
+          .resizable()
+          .scaledToFill()
+      } placeholder: {
+        Color.systemGray5
+      }
+    }
+    else {
+      Color.systemGray5
+    }
   }
 }

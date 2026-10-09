@@ -9,7 +9,7 @@ public struct RootView: View {
     repository: WorkLogRepository(),
     authRepository: AuthRepository()
   )
-  @StateObject private var appState = AppState(repository: WorkThemeRepository())
+  @StateObject private var appState = AppState(workTopicRepository: WorkTopicRepository())
   @State private var workLogRepository = WorkLogRepository()
   @StateObject private var navigationState = NavigationState()
   @State private var selectedTab = 0
@@ -51,14 +51,6 @@ public struct RootView: View {
           Label("Reports", systemImage: "chart.bar.xaxis")
         }
         .tag(1)
-
-        NavigationStack {
-          DomainsView()
-        }
-        .tabItem {
-          Label("Domains", systemImage: "square.grid.2x2")
-        }
-        .tag(2)
       }
       .environment(workLogDraftStore)
       .environmentObject(appState)
@@ -85,15 +77,10 @@ public struct RootView: View {
       }
     }
     .sheet(isPresented: $navigationState.isShowingWorkLogCreate) {
-      if let domainId = workLogDraftStore.activeDomainId,
-        let topicId = workLogDraftStore.activeTopicId
-      {
-        WorkLogCreateView(
-          domainId: domainId,
-          topicId: topicId
-        )
-        .environment(workLogDraftStore)
-        .environmentObject(appState)
+      if let workTopicId = workLogDraftStore.activeWorkTopicId {
+        WorkLogCreateView(workTopicId: workTopicId)
+          .environment(workLogDraftStore)
+          .environmentObject(appState)
       }
     }
     .sheet(isPresented: $navigationState.isShowingSettings) {

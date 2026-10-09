@@ -10,11 +10,6 @@ enum PeriodType: String, CaseIterable {
   case year = "Year"
 }
 
-enum GroupingUnit: String, CaseIterable {
-  case domain = "Domain"
-  case topic = "Topic"
-}
-
 struct BarChartSegment: Identifiable {
   let id: String
   let title: String
@@ -46,14 +41,6 @@ struct ListRow: Identifiable {
   var total: TimeInterval { bucketDurations.reduce(0, +) }
 }
 
-// Topic-mode grouping of ListRow by its Domain, in Domain registration order,
-// with rows sorted by total within each section.
-struct ListSection: Identifiable {
-  let id: String
-  let title: String
-  let rows: [ListRow]
-}
-
 // MARK: - ViewModel
 
 @MainActor
@@ -62,9 +49,6 @@ class ReportViewModel: ObservableObject {
     didSet { selectedBarIndex = nil }
   }
   @Published var currentDate: Date
-  @Published var groupingUnit: GroupingUnit = .domain {
-    didSet { selectedItemId = nil }
-  }
   @Published var selectedItemId: String?
   // Independent from selectedItemId: selects a bar chart bucket rather than a
   // domain/topic, and both can be active at once.
@@ -308,18 +292,8 @@ class ReportViewModel: ObservableObject {
     return headerTotalDuration / Double(count)
   }
 
-  func timelineTitle(for id: String, domains: [WorkTheme]) -> String {
-    switch groupingUnit {
-    case .domain:
-      return domains.first { $0.id == id }?.title ?? id
-    case .topic:
-      for domain in domains {
-        if let topic = domain.topics.first(where: { $0.id == id }) {
-          return topic.title
-        }
-      }
-      return id
-    }
+  func timelineTitle(for id: String, workTopics: [WorkTopic]) -> String {
+    workTopics.first { $0.id == id }?.title ?? id
   }
 
   // MARK: - Bar Chart (Day / Month / Year)
@@ -328,10 +302,10 @@ class ReportViewModel: ObservableObject {
   // absent, so a segment's identity is stable across period navigation (a group that had
   // no workLog before still "exists" at height 0, letting it grow from the bottom
   // instead of being freshly inserted and fading in).
-  func barChartColumns(domains: [WorkTheme]) -> [BarChartColumn] {
+  func barChartColumns(workTopics: [WorkTopic]) -> [BarChartColumn] {
     let workLogs = filteredWorkLogs
-    let colorMap = colorMap(domains: domains)
-    let allGroups = allGroupIds(domains: domains)
+    let colorMap = colorMap(workTopics: workTopics)
+    let allGroups = allGroupIds(workTopics: workTopics)
     let realBuckets = buckets
 
     return (0..<Self.maxBarSlots).map { index in
@@ -349,7 +323,7 @@ class ReportViewModel: ObservableObject {
         $0.startedAt < bucket.end && bucket.start < $0.endedAt
       }
 
-      let grouped = barChartSegments(inBucket, in: bucket, domains: domains)
+      let grouped = barChartSegments(inBucket, in: bucket, workTopics: workTopics)
       let durationById = Dictionary(uniqueKeysWithValues: grouped.map { ($0.id, $0.duration) })
 
       let segments = allGroups.map { group in
@@ -365,26 +339,19 @@ class ReportViewModel: ObservableObject {
     }
   }
 
-  private func allGroupIds(domains: [WorkTheme]) -> [(id: String, title: String)] {
-    switch groupingUnit {
-    case .domain:
-      return domains.map { (id: $0.id ?? "", title: $0.title) }
-    case .topic:
-      return domains.flatMap { domain in
-        domain.topics.map { (id: $0.id, title: $0.title) }
-      }
-    }
+  private func allGroupIds(workTopics: [WorkTopic]) -> [(id: String, title: String)] {
+    workTopics.map { (id: $0.id, title: $0.title) }
   }
 
   // MARK: - List
 
   // Uses currentWorkLogs (not filteredWorkLogs) so every row stays visible
   // for tapping even while another item is selected.
-  func listRows(domains: [WorkTheme]) -> [ListRow] {
+  func listRows(workTopics: [WorkTopic]) -> [ListRow] {
     let workLogs = currentWorkLogs
-    let colorMap = colorMap(domains: domains)
+    let colorMap = colorMap(workTopics: workTopics)
     let allBuckets = buckets
-    let groups = listGroups(in: workLogs, domains: domains)
+    let groups = listGroups(in: workLogs, workTopics: workTopics)
 
     return groups.map { group in
       let durations = allBuckets.map { bucket in
@@ -398,31 +365,16 @@ class ReportViewModel: ObservableObject {
     .sorted { $0.total > $1.total }
   }
 
-  // Topic-mode only: groups `listRows` by Domain, in Domain registration order,
-  // with rows sorted by total within each section. Domains with no rows are omitted.
-  func listSections(domains: [WorkTheme]) -> [ListSection] {
-    let rows = listRows(domains: domains)
-    let rowsByTopicId = Dictionary(uniqueKeysWithValues: rows.map { ($0.id, $0) })
-
-    return domains.compactMap { domain in
-      let sectionRows = domain.topics.compactMap { rowsByTopicId[$0.id] }.sorted { $0.total > $1.total }
-      guard !sectionRows.isEmpty else { return nil }
-      return ListSection(id: domain.id ?? domain.title, title: domain.title, rows: sectionRows)
-    }
-  }
-
   // MARK: - Helpers
 
-  private var groupingKey: KeyPath<WorkLog, String> {
-    groupingUnit == .domain ? \.domainId : \.topicId
-  }
+  private let groupingKey: KeyPath<WorkLog, String> = \.workTopicId
 
   // One BarChartColumn's segments: groups only include workLog within this bucket,
   // and groups with zero duration in this bucket are omitted.
   private func barChartSegments(
     _ workLogs: [WorkLog],
     in bucket: DateInterval,
-    domains: [WorkTheme]
+    workTopics: [WorkTopic]
   ) -> [(id: String, title: String, duration: TimeInterval)] {
     var groups: [String: (title: String, duration: TimeInterval)] = [:]
 
@@ -432,7 +384,7 @@ class ReportViewModel: ObservableObject {
       guard clamped > 0 else { continue }
 
       if groups[id] == nil {
-        groups[id] = (title: timelineTitle(for: id, domains: domains), duration: 0)
+        groups[id] = (title: timelineTitle(for: id, workTopics: workTopics), duration: 0)
       }
       groups[id]!.duration += clamped
     }
@@ -466,22 +418,18 @@ class ReportViewModel: ObservableObject {
 
   private func listGroups(
     in workLogs: [WorkLog],
-    domains: [WorkTheme]
+    workTopics: [WorkTopic]
   ) -> [(id: String, title: String)] {
     let ids = Set(workLogs.map { $0[keyPath: groupingKey] })
     return ids.map { id in
-      (id: id, title: timelineTitle(for: id, domains: domains))
+      (id: id, title: timelineTitle(for: id, workTopics: workTopics))
     }
   }
 
-  private func colorMap(domains: [WorkTheme]) -> [String: Color] {
+  private func colorMap(workTopics: [WorkTopic]) -> [String: Color] {
     var map: [String: Color] = [:]
-    for (i, domain) in domains.enumerated() {
-      let color = Self.palette[i % Self.palette.count]
-      map[domain.id ?? ""] = color
-      for (j, topic) in domain.topics.enumerated() {
-        map[topic.id] = Self.palette[(i + j) % Self.palette.count]
-      }
+    for (i, workTopic) in workTopics.enumerated() {
+      map[workTopic.id] = Self.palette[i % Self.palette.count]
     }
     return map
   }

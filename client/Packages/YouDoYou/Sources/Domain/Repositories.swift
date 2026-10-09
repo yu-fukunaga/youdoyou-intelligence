@@ -16,10 +16,10 @@ public protocol WorkLogRepositoryProtocol: Sendable {
   func query(from: Date, to: Date) async throws -> [WorkLog]
 }
 
-public protocol WorkThemeRepositoryProtocol: Sendable {
-  func observe(onChange: @escaping ([WorkTheme]) -> Void) -> any ListenerHandle
-  func add(_ workTheme: WorkTheme) async throws
-  func update(_ workTheme: WorkTheme) async throws
+public protocol WorkTopicRepositoryProtocol: Sendable {
+  func observe(onChange: @escaping ([WorkTopic]) -> Void) -> any ListenerHandle
+  func add(_ workTopic: WorkTopic) async throws
+  func update(_ workTopic: WorkTopic) async throws
   func delete(id: String) async throws
-  func uploadTopicImage(topicId: String, data: Data) async throws -> String
+  func uploadImage(workTopicId: String, data: Data) async throws -> String
 }

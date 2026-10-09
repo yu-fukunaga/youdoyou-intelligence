@@ -3,7 +3,6 @@ import SwiftUI
 
 struct WorkLogDetailView: View {
   @Environment(\.dismiss) var dismiss
-  @EnvironmentObject var appState: AppState
   @StateObject var viewModel: WorkLogDetailViewModel
   @State private var isShowingEdit = false
 
@@ -19,10 +18,6 @@ struct WorkLogDetailView: View {
     formatter.dateFormat = "yyyy/MM/dd (EEE) HH:mm"
     formatter.locale = Locale(identifier: "ja_JP")
     return formatter.string(from: viewModel.workLog.startedAt)
-  }
-
-  private var domain: WorkTheme? {
-    appState.domains.first { $0.id == viewModel.workLog.domainId }
   }
 
   var body: some View {
@@ -45,7 +40,7 @@ struct WorkLogDetailView: View {
           Spacer()
         }
 
-        // Domain / Topic
+        // WorkTopic
         ZStack(alignment: .leading) {
           RoundedRectangle(cornerRadius: 8)
             .fill(Color.blue)
@@ -55,16 +50,9 @@ struct WorkLogDetailView: View {
               RoundedRectangle(cornerRadius: 6)
                 .fill(Color.systemGray5)
                 .frame(width: 56, height: 56)
-              VStack(alignment: .leading, spacing: 2) {
-                Text(domain?.title ?? viewModel.workLog.domainId)
-                  .font(.caption)
-                  .fontWeight(.bold)
-                  .foregroundColor(.secondary)
-                  .lineLimit(1)
-                Text("Topic Title")
-                  .font(.headline)
-                  .lineLimit(2)
-              }
+              Text(viewModel.workTopic?.title ?? viewModel.workLog.workTopicId)
+                .font(.headline)
+                .lineLimit(2)
               Spacer()
               HStack(spacing: 4) {
                 Image(systemName: "clock")

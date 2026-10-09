@@ -14,14 +14,9 @@
             .frame(width: 36, height: 36)
             .clipShape(RoundedRectangle(cornerRadius: 8))
 
-          VStack(alignment: .leading, spacing: 2) {
-            Text(context.attributes.domainTitle)
-              .font(.caption)
-              .foregroundStyle(.secondary)
-            Text(context.attributes.topicTitle)
-              .font(.headline)
-              .fontWeight(.semibold)
-          }
+          Text(context.attributes.title)
+            .font(.headline)
+            .fontWeight(.semibold)
           Spacer()
           Text(timerInterval: context.attributes.startDate...Date.distantFuture, countsDown: false)
             .font(.system(.title3, design: .monospaced))
@@ -51,17 +46,12 @@
               .foregroundStyle(.red)
           }
           DynamicIslandExpandedRegion(.bottom) {
-            VStack(alignment: .leading, spacing: 2) {
-              Text(context.attributes.domainTitle)
-                .font(.caption)
-                .foregroundStyle(.secondary)
-              Text(context.attributes.topicTitle)
-                .font(.headline)
-                .fontWeight(.semibold)
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(.horizontal)
-            .padding(.top, 4)
+            Text(context.attributes.title)
+              .font(.headline)
+              .fontWeight(.semibold)
+              .frame(maxWidth: .infinity, alignment: .leading)
+              .padding(.horizontal)
+              .padding(.top, 4)
           }
         } compactLeading: {
           Image("YouDoYouClientAppIcon")

@@ -28,8 +28,7 @@ public final class WorkLogDraftStore {
   public var startDate: Date?
   public var endDate: Date?
   public var displayTime = "0:00:00"
-  public var activeDomainId: String?
-  public var activeTopicId: String?
+  public var activeWorkTopicId: String?
   public var content: String = "" {
     didSet {
       if isRunning {
@@ -54,10 +53,8 @@ public final class WorkLogDraftStore {
 
   private enum Keys {
     static let startDate = "timerStartedAt"
-    static let domainId = "timerDomainId"
-    static let topicId = "timerTopicId"
-    static let domainTitle = "timerDomainTitle"
-    static let topicTitle = "timerTopicTitle"
+    static let workTopicId = "timerWorkTopicId"
+    static let workTopicTitle = "timerWorkTopicTitle"
     static let content = "timerContent"
   }
 
@@ -67,38 +64,34 @@ public final class WorkLogDraftStore {
     restore()
   }
 
-  public func start(domainId: String, topicId: String) {
+  public func start(workTopicId: String) {
     let now = Date()
     startDate = now
-    activeDomainId = domainId
-    activeTopicId = topicId
+    activeWorkTopicId = workTopicId
 
     // 永続化
     UserDefaults.standard.set(now, forKey: Keys.startDate)
-    UserDefaults.standard.set(domainId, forKey: Keys.domainId)
-    UserDefaults.standard.set(topicId, forKey: Keys.topicId)
+    UserDefaults.standard.set(workTopicId, forKey: Keys.workTopicId)
 
     startTicking()
   }
 
-  public func startTimer(domainId: String, topicId: String, domainTitle: String, topicTitle: String) {
-    start(domainId: domainId, topicId: topicId)
-    UserDefaults.standard.set(domainTitle, forKey: Keys.domainTitle)
-    UserDefaults.standard.set(topicTitle, forKey: Keys.topicTitle)
-    requestLiveActivity(domainTitle: domainTitle, topicTitle: topicTitle)
+  public func startTimer(workTopicId: String, title: String) {
+    start(workTopicId: workTopicId)
+    UserDefaults.standard.set(title, forKey: Keys.workTopicTitle)
+    requestLiveActivity(title: title)
   }
 
-  private func requestLiveActivity(domainTitle: String, topicTitle: String) {
+  private func requestLiveActivity(title: String) {
     #if os(iOS)
       do {
         _ = try ActivityKit.Activity<TimerLiveActivityAttributes>.request(
           attributes: TimerLiveActivityAttributes(
-            domainTitle: domainTitle,
-            topicTitle: topicTitle,
+            title: title,
             startDate: startDate ?? Date()
           ),
           content: ActivityContent(
-            state: TimerLiveActivityAttributes.ContentState(emoji: topicTitle),
+            state: TimerLiveActivityAttributes.ContentState(emoji: title),
             staleDate: nil
           ),
           pushType: nil
@@ -126,10 +119,12 @@ public final class WorkLogDraftStore {
     guard let start = startDate, let end = endDate, start < end else {
       throw WorkLogDraftStoreError.invalidTimeRange
     }
+    guard let workTopicId = activeWorkTopicId else {
+      throw WorkLogDraftStoreError.invalidTimeRange
+    }
 
     let workLog = WorkLog(
-      domainId: activeDomainId ?? "",
-      topicId: activeTopicId ?? "",
+      workTopicId: workTopicId,
       content: content,
       startedAt: start,
       endedAt: end,
@@ -148,8 +143,7 @@ public final class WorkLogDraftStore {
     startDate = nil
     endDate = nil
     displayTime = "0:00:00"
-    activeDomainId = nil
-    activeTopicId = nil
+    activeWorkTopicId = nil
     clearPersisted()
     endLiveActivity()
   }
@@ -168,13 +162,11 @@ public final class WorkLogDraftStore {
   private func restore() {
     guard
       let startDate = UserDefaults.standard.object(forKey: Keys.startDate) as? Date,
-      let domainId = UserDefaults.standard.string(forKey: Keys.domainId),
-      let topicId = UserDefaults.standard.string(forKey: Keys.topicId)
+      let workTopicId = UserDefaults.standard.string(forKey: Keys.workTopicId)
     else { return }
 
     self.startDate = startDate
-    self.activeDomainId = domainId
-    self.activeTopicId = topicId
+    self.activeWorkTopicId = workTopicId
     self.content = UserDefaults.standard.string(forKey: Keys.content) ?? ""
     startTicking()
 
@@ -183,9 +175,8 @@ public final class WorkLogDraftStore {
       hasNoActiveLiveActivity = ActivityKit.Activity<TimerLiveActivityAttributes>.activities.isEmpty
     #endif
     if hasNoActiveLiveActivity {
-      let domainTitle = UserDefaults.standard.string(forKey: Keys.domainTitle) ?? ""
-      let topicTitle = UserDefaults.standard.string(forKey: Keys.topicTitle) ?? ""
-      requestLiveActivity(domainTitle: domainTitle, topicTitle: topicTitle)
+      let title = UserDefaults.standard.string(forKey: Keys.workTopicTitle) ?? ""
+      requestLiveActivity(title: title)
     }
   }
 
@@ -199,10 +190,8 @@ public final class WorkLogDraftStore {
 
   private func clearPersisted() {
     UserDefaults.standard.removeObject(forKey: Keys.startDate)
-    UserDefaults.standard.removeObject(forKey: Keys.domainId)
-    UserDefaults.standard.removeObject(forKey: Keys.topicId)
-    UserDefaults.standard.removeObject(forKey: Keys.domainTitle)
-    UserDefaults.standard.removeObject(forKey: Keys.topicTitle)
+    UserDefaults.standard.removeObject(forKey: Keys.workTopicId)
+    UserDefaults.standard.removeObject(forKey: Keys.workTopicTitle)
     UserDefaults.standard.removeObject(forKey: Keys.content)
   }
 

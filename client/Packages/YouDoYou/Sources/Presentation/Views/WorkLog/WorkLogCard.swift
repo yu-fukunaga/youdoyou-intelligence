@@ -20,6 +20,10 @@ struct WorkLogCard: View {
     return formatter.string(from: workLog.startedAt)
   }
 
+  private var workTopic: WorkTopic? {
+    appState.workTopics.first { $0.id == workLog.workTopicId }
+  }
+
   var body: some View {
 
     NavigationLink(
@@ -71,22 +75,15 @@ struct WorkLogCard: View {
           // 前のカード
           HStack(alignment: .top, spacing: 12) {
             VStack(alignment: .leading, spacing: 16) {
-              // Topic + Domain情報
+              // WorkTopic
               HStack(spacing: 8) {
                 RoundedRectangle(cornerRadius: 6)
                   .fill(Color.systemGray5)
                   .frame(width: 56, height: 56)
-                VStack(alignment: .leading, spacing: 2) {
-                  Text("Domain Title Domain Title Domain Title")  // 後でappStateから
-                    .font(.caption)
-                    .fontWeight(.bold)
-                    .foregroundColor(.secondary)
-                    .lineLimit(1)
-                  Text("Topic Title")  // 後でappStateから
-                    .font(.headline)
-                    .lineLimit(2)
-                    .frame(height: 44, alignment: .top)
-                }
+                Text(workTopic?.title ?? workLog.workTopicId)
+                  .font(.headline)
+                  .lineLimit(2)
+                  .frame(height: 44, alignment: .top)
                 Spacer()
                 HStack(spacing: 4) {
                   Image(systemName: "clock")

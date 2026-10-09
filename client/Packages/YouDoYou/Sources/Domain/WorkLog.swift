@@ -2,8 +2,7 @@ import Foundation
 
 public struct WorkLog: Identifiable, Sendable {
   public var id: String
-  public var domainId: String
-  public var topicId: String
+  public var workTopicId: String
   public var content: String
   public var startedAt: Date
   public var endedAt: Date
@@ -15,8 +14,7 @@ public struct WorkLog: Identifiable, Sendable {
 
   public init(
     id: String = UUID.v7().uuidString,
-    domainId: String,
-    topicId: String,
+    workTopicId: String,
     content: String,
     startedAt: Date,
     endedAt: Date,
@@ -27,8 +25,7 @@ public struct WorkLog: Identifiable, Sendable {
     updatedAt: Date? = nil
   ) {
     self.id = id
-    self.domainId = domainId
-    self.topicId = topicId
+    self.workTopicId = workTopicId
     self.content = content
     self.startedAt = startedAt
     self.endedAt = endedAt
