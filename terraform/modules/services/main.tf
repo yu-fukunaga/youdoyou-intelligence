@@ -10,6 +10,7 @@ locals {
     "secretmanager.googleapis.com",        # Secret Manager
     "identitytoolkit.googleapis.com",      # Firebase Auth
     "firebase.googleapis.com",             # Firebase
+    "firebasestorage.googleapis.com",      # Firebase Storage
     "iam.googleapis.com",                  # IAM
     "iamcredentials.googleapis.com",       # IAM Credentials
     "sts.googleapis.com",                  # STS

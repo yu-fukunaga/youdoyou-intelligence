@@ -1,5 +1,6 @@
 locals {
-  project_id = "${var.project_id_prefix}-${basename(path.cwd)}"
+  env        = basename(abspath(path.module))
+  project_id = "${var.project_id_prefix}-${local.env}"
 }
 
 terraform {
