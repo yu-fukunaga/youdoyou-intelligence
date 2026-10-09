@@ -4,6 +4,7 @@ import SwiftUI
 struct WorkLogQuickStartContent: View {
   @EnvironmentObject private var appState: AppState
   @StateObject private var viewModel: WorkLogQuickStartViewModel
+  @State private var startingWorkTopic: WorkTopic?
 
   init(repository: any WorkLogRepositoryProtocol) {
     _viewModel = StateObject(wrappedValue: WorkLogQuickStartViewModel(repository: repository))
@@ -14,9 +15,14 @@ struct WorkLogQuickStartContent: View {
       ScrollView(.horizontal, showsIndicators: false) {
         HStack(spacing: 8) {
           ForEach(viewModel.recentWorkTopics(in: appState.workTopics)) { workTopic in
-            workTopicThumbnail(workTopic)
-              .frame(width: 44, height: 44)
-              .clipShape(RoundedRectangle(cornerRadius: 10))
+            Button {
+              startingWorkTopic = workTopic
+            } label: {
+              workTopicThumbnail(workTopic)
+                .frame(width: 44, height: 44)
+                .clipShape(RoundedRectangle(cornerRadius: 10))
+            }
+            .buttonStyle(.plain)
           }
         }
       }
@@ -39,6 +45,10 @@ struct WorkLogQuickStartContent: View {
     }
     .onAppear { viewModel.startObserving() }
     .onDisappear { viewModel.stopObserving() }
+    .sheet(item: $startingWorkTopic) { workTopic in
+      WorkLogCreateView(workTopicId: workTopic.id)
+        .presentationCornerRadius(16)
+    }
   }
 
   @ViewBuilder
