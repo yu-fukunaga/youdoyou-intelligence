@@ -40,14 +40,14 @@ order: "Zy"
 - [x] precommitの各フックは元々`files: ^server/`等で対象ディレクトリの変更がある時だけ実行される仕組みが既にある(`pre-commit run --files spec/....md`で実機検証、無関係フックは`Skipped`になることを確認済み)。追加対応不要
 
 ### 対応方針
-- [x] golangci-lint自体のバージョンアップ(v2.14.0)は本specの対応範囲外。別途「golangci-lintの新バージョン検知」specで扱う
+- [x] golangci-lint自体のバージョンアップ(v2.14.0)は本 task note の対応範囲外。別途「golangci-lintの新バージョン検知」task note で扱う
 
 ---
 
 ## Operation
 
 ### Task 1: server-secureをブロックしていたgrpc脆弱性(GO-2026-6348)の解消
-- 本specの対象(GOTOOLCHAIN/precommit)とは無関係だが、`server/.envrc`が`files: ^server/`にマッチし`server-secure`(govulncheck)を必ず誘発するため、Task 2のコミットが通らずブロッカーとして先に対応
+- 本 task note の対象(GOTOOLCHAIN/precommit)とは無関係だが、`server/.envrc`が`files: ^server/`にマッチし`server-secure`(govulncheck)を必ず誘発するため、Task 2のコミットが通らずブロッカーとして先に対応
 - 原因はコード変更ではなく脆弱性DB(vuln.go.dev)側が2026-09-15に`GO-2026-6348`を新規公開したこと。`google.golang.org/grpc`は2026-08-24時点のバージョン(v1.82.1)のまま
 - `go get google.golang.org/grpc@v1.83.1 && go mod tidy`で解消、`govulncheck`で0件を確認済み
 - 他モジュール(firebase/functions/gen-go)にはこの依存が無いことを確認済み

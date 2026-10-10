@@ -43,8 +43,8 @@ order: "a0"
 
 ### 調査メモ
 
-- [x] 過去の`Activity`→`WorkLog`リネーム(spec/done/0027)の手順を確認。schema変更→generator再生成→server手書き修正→client手書き修正→過去specファイルの用語置換、という順で進めていた。**Task 4として過去specファイルの文言も書き換えていた**(spec/MEMO.md、当時のspec/0025・spec/done/0020・spec/done/0006など)
-  - 今回は単純なリネームではなく構造変更(階層廃止)を伴うため、過去specの文言をそのまま`WorkTopic`に置換するのが適切とは限らない。過去specの扱いは着手前に方針を決める(旧`Domain`/`Topic`という語が指していた構造自体が変わるため、置換すると当時の文脈が不正確になる箇所がありうる)
+- [x] 過去の`Activity`→`WorkLog`リネーム(docs/task-notes/done/0027)の手順を確認。schema変更→generator再生成→server手書き修正→client手書き修正→過去の task note ファイルの用語置換、という順で進めていた。**Task 4として過去の task note ファイルの文言も書き換えていた**(docs/task-notes/MEMO.md、当時のdocs/task-notes/0025・docs/task-notes/done/0020・docs/task-notes/done/0006など)
+  - 今回は単純なリネームではなく構造変更(階層廃止)を伴うため、過去の task note の文言をそのまま`WorkTopic`に置換するのが適切とは限らない。過去の task note の扱いは着手前に方針を決める(旧`Domain`/`Topic`という語が指していた構造自体が変わるため、置換すると当時の文脈が不正確になる箇所がありうる)
 - [x] client側のDomain/Topic関連ファイルを洗い出し、二階層構造への依存箇所を特定。特に以下が単純リネームでは済まない箇所
   - `DomainFormView.swift`: Domain単位(title/description/color)の入力に加えて、`TopicField`配列(title/imageUrl、画像アップロード付き)を動的に追加/削除するUIを持つ。フラット化後は1つの`WorkTopic`が持つフィールド(title/description/color/imageUrl)を統合する必要があり、「複数Topicをまとめて作る」UIそのものが不要になる
   - `DomainsView`/`DomainDetailView`/`DomainItem`/`TopicSelectionView`: いずれも「Domain一覧→各Domain内のTopicカード/行」という二階層の表示構造。フラット化すると単一階層の`WorkTopic`一覧表示に置き換わり、`TopicCard`/`DomainDetailTopicRow`のような子要素固有のコンポーネントは統合または削除が必要

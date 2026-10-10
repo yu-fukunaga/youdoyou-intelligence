@@ -66,9 +66,9 @@ GoogleService-Info*.plist
 # Skill
 .claude/skills/*
 !.claude/skills/branch-create/
-!.claude/skills/spec-write/
+!.claude/skills/task-note-write/
 
-# Personal task notes (not part of tracked specs)
-spec/*.md
-!spec/README.md
-!spec/done/
+# Personal task notes (local working drafts, not committed)
+docs/task-notes/*.md
+!docs/task-notes/README.md
+!docs/task-notes/done/
