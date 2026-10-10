@@ -1,0 +1,43 @@
+name: PR Policy Comment
+description: Upsert or delete a marker comment on a PR based on a check outcome.
+inputs:
+  marker:
+    description: Hidden marker that identifies this check's comment.
+    required: true
+  body:
+    description: Comment body to post when the check failed.
+    required: true
+  outcome:
+    description: Outcome of the check step (success / failure).
+    required: true
+  pr-number:
+    description: Pull request number.
+    required: true
+  repo:
+    description: owner/repo.
+    required: true
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      env:
+        GH_TOKEN: ${{ github.token }}
+        GH_REPO: ${{ inputs.repo }}
+        PR_NUMBER: ${{ inputs.pr-number }}
+        MARKER: ${{ inputs.marker }}
+        BODY: ${{ inputs.body }}
+        OUTCOME: ${{ inputs.outcome }}
+      run: |
+        set -euo pipefail
+        cid=$(gh api "repos/$GH_REPO/issues/$PR_NUMBER/comments" --paginate \
+          --jq ".[] | select(.body | contains(\"$MARKER\")) | .id" | head -n1)
+        if [ "$OUTCOME" = "failure" ]; then
+          b=$(printf '%s\n%s' "$MARKER" "$BODY")
+          if [ -n "$cid" ]; then
+            gh api -X PATCH "repos/$GH_REPO/issues/comments/$cid" -f body="$b" >/dev/null
+          else
+            gh api -X POST "repos/$GH_REPO/issues/$PR_NUMBER/comments" -f body="$b" >/dev/null
+          fi
+        elif [ -n "$cid" ]; then
+          gh api -X DELETE "repos/$GH_REPO/issues/comments/$cid" >/dev/null
+        fi
