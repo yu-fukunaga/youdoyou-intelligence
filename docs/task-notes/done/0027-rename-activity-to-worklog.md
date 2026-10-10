@@ -22,7 +22,7 @@ order: ""
 - schemaが起点: `firebase/schema/firestore.yaml`の`Activity`モデル・`activities`コレクション定義を変更し、`gen-go/schema/activity.go`と`client/.../Generated/Activity.swift`を再生成する
 - 手書きコードの影響範囲: client(Swift)側は`ActivityRepository`/`ActivityState`/`ActivityViewModel`系5つ/`Views/Activity/`配下5ファイル/`Views/Home/`の2ファイル/`TimerBanner`/`DomainItem`/`NavigationState`/`AppCore`/`ReportViewModel`/テスト2ファイル。server側は`server/cmd/seed/main.go`のみ(APIルート等は無し)。`functions/`はActivity関連の参照なし
 - **重要な区別**: `TimerLiveActivityAttributes`等のApple ActivityKit(Live Activity機能)は今回のリネーム対象外の別概念。混同して変更しないこと
-- spec側: `spec/MEMO.md`、`spec/0025`(Live Activity機能の話と混在してるので要注意)、`spec/done/0020`(同様に要注意)、`spec/done/0006`など、Activityに言及してる過去specファイルもWorkLogに置き換える(gitignore対象で未追跡のものも含む)
+- task note 側: `docs/task-notes/MEMO.md`、`docs/task-notes/0025`(Live Activity機能の話と混在してるので要注意)、`docs/task-notes/done/0020`(同様に要注意)、`docs/task-notes/done/0006`など、Activityに言及してる過去の task note ファイルもWorkLogに置き換える(gitignore対象で未追跡のものも含む)
 - terraform配下にActivity関連の記述は無し。変更不要
 
 ---
@@ -41,6 +41,6 @@ order: ""
 
 Repository/State/ViewModel/View/テストの各ファイルで、型名・変数名・ファイル名を`Activity`→`WorkLog`に一括リネームする。
 
-### Task 4: specファイルの用語更新
+### Task 4: task note ファイルの用語更新
 
-`spec/`配下(`done/`含む、未追跡ファイル含む)で、ドメイン概念としての「Activity」への言及を「WorkLog」に置き換える。Apple ActivityKit(Live Activity)への言及は変更しない。
+`docs/task-notes/`配下(`done/`含む、未追跡ファイル含む)で、ドメイン概念としての「Activity」への言及を「WorkLog」に置き換える。Apple ActivityKit(Live Activity)への言及は変更しない。

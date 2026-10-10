@@ -3,7 +3,7 @@ set -euo pipefail
 
 # Warn when the active Go toolchain is newer than the Go golangci-lint itself
 # was built with, since golangci-lint can't analyze stdlib source gated to a
-# newer Go version than its own build (see spec/done/0030).
+# newer Go version than its own build (see docs/task-notes/done/0030).
 
 golangci_lint_bin="${1:-./bin/golangci-lint}"
 
