@@ -1,0 +1,41 @@
+name: PR Policy
+on:
+  pull_request:
+    types: [opened, reopened, synchronize, ready_for_review, unlabeled]
+
+jobs:
+  task-note-check:
+    if: ${{ github.event.pull_request.draft == false && github.event.pull_request.user.type != 'Bot' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      PR_NUMBER: ${{ github.event.pull_request.number }}
+    steps:
+      - name: Checkout composite action
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 #v7.0.1
+        with:
+          sparse-checkout: .github/actions
+
+      - name: Evaluate task-note policy
+        id: check
+        run: |
+          set -euo pipefail
+          has_optout=$(gh pr view "$PR_NUMBER" --json labels --jq 'any(.labels[]; .name == "allow: no-task-note")')
+          if [ "$has_optout" = "true" ] || gh pr diff "$PR_NUMBER" --name-only | grep -q '^docs/task-notes/done/'; then
+            exit 0
+          fi
+          echo "::error::No task note under docs/task-notes/done/. Add one, or apply the 'allow: no-task-note' label and re-run."
+          exit 1
+
+      - name: Comment
+        if: ${{ !cancelled() }}
+        uses: ./.github/actions/pr-policy-comment
+        with:
+          marker: "<!-- pr-policy:task-note -->"
+          body: "⚠️ No task note added under `docs/task-notes/done/`. Add one, or apply the `allow: no-task-note` label and re-run this check."
+          outcome: ${{ steps.check.outcome }}
+          pr-number: ${{ env.PR_NUMBER }}
+          repo: ${{ github.repository }}
