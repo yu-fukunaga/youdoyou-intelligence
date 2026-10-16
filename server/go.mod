@@ -8,10 +8,8 @@ require (
 	cloud.google.com/go/compute/metadata v0.10.0
 	cloud.google.com/go/firestore v1.26.0
 	firebase.google.com/go/v4 v4.22.0
-	github.com/bradleyfalzon/ghinstallation/v2 v2.19.0
 	github.com/firebase/genkit/go v1.13.1
-	github.com/go-chi/chi/v5 v5.3.2
-	github.com/google/go-github/v72 v72.0.0
+	github.com/go-chi/chi/v5 v5.4.0
 	github.com/joho/godotenv v1.5.1
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/yu-fukunaga/youdoyou-intelligence/gen-go v0.0.0
@@ -56,8 +54,6 @@ require (
 	github.com/golang/protobuf v1.5.4 // indirect
 	github.com/google/dotprompt/go v0.0.0-20260708220100-73beb993ac95 // indirect
 	github.com/google/go-cmp v0.7.0 // indirect
-	github.com/google/go-github/v88 v88.0.0 // indirect
-	github.com/google/go-querystring v1.2.0 // indirect
 	github.com/google/s2a-go v0.1.9 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/googleapis/enterprise-certificate-proxy v0.3.17 // indirect
