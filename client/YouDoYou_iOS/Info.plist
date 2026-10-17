@@ -13,11 +13,7 @@
 			</array>
 		</dict>
 	</array>
-	<key>ITSAppUsesNonExemptEncryption</key>
-	<false/>
 	<key>MacIPAddress</key>
 	<string>$(MAC_IP_ADDRESS)</string>
-	<key>NSSupportsLiveActivities</key>
-	<true/>
 </dict>
 </plist>

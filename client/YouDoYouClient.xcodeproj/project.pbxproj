@@ -53,6 +53,9 @@
 		499F8EF030221CB100E8E893 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		499F8EF230221CB100E8E893 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		49F1FE5E2FBB337C00450E6C /* YouDoYou_iOS_Test.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = YouDoYou_iOS_Test.xctestplan; sourceTree = "<group>"; };
+		4B5C00012FD1A00100A1B2C3 /* Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = xcconfigs/ios/Debug.xcconfig; sourceTree = "<group>"; };
+		4B5C00022FD1A00100A1B2C3 /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = xcconfigs/ios/Release.xcconfig; sourceTree = "<group>"; };
+		4B5C00032FD1A00100A1B2C3 /* Test.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = xcconfigs/ios/Test.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -146,6 +149,7 @@
 			children = (
 				49F1FE5E2FBB337C00450E6C /* YouDoYou_iOS_Test.xctestplan */,
 				49894E502F5B43B300F3EAAC /* Packages */,
+				4B5C00042FD1A00100A1B2C3 /* env */,
 				496B2DE92F5B3E93009735E3 /* YouDoYou_iOS */,
 				496B2E012F5B3E95009735E3 /* YouDoYou_iOS_UITests */,
 				499F8EF430221CB100E8E893 /* YouDoYou_Widgets */,
@@ -171,6 +175,16 @@
 				499F8EF230221CB100E8E893 /* SwiftUI.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		4B5C00042FD1A00100A1B2C3 /* env */ = {
+			isa = PBXGroup;
+			children = (
+				4B5C00012FD1A00100A1B2C3 /* Debug.xcconfig */,
+				4B5C00022FD1A00100A1B2C3 /* Release.xcconfig */,
+				4B5C00032FD1A00100A1B2C3 /* Test.xcconfig */,
+			);
+			path = env;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -329,9 +343,9 @@
 			inputFileListPaths = (
 			);
 			inputPaths = (
-				"$(PROJECT_DIR)/YouDoYou_iOS/env/plists/GoogleService-Info-emu.plist",
-				"$(PROJECT_DIR)/YouDoYou_iOS/env/plists/GoogleService-Info-dev.plist",
-				"$(PROJECT_DIR)/YouDoYou_iOS/env/plists/GoogleService-Info-prod.plist",
+				"$(PROJECT_DIR)/env/plists/GoogleService-Info-emu.plist",
+				"$(PROJECT_DIR)/env/plists/GoogleService-Info-dev.plist",
+				"$(PROJECT_DIR)/env/plists/GoogleService-Info-prod.plist",
 			);
 			name = "Copy GoogleService-Info.plist";
 			outputFileListPaths = (
@@ -504,16 +518,19 @@
 		};
 		496B2E092F5B3E95009735E3 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReferenceAnchor = 496B2DE92F5B3E93009735E3 /* YouDoYou_iOS */;
-			baseConfigurationReferenceRelativePath = env/xcconfigs/Debug.xcconfig;
+			baseConfigurationReference = 4B5C00012FD1A00100A1B2C3 /* Debug.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon-Local;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = XSG72YD495;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = YouDoYou_iOS/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = YouDoYou;
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
+				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -524,7 +541,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = jp.co.youdoyou.client.dev;
+				PRODUCT_BUNDLE_IDENTIFIER = jp.co.youdoyou.client.local;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -542,16 +559,19 @@
 		};
 		496B2E0A2F5B3E95009735E3 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReferenceAnchor = 496B2DE92F5B3E93009735E3 /* YouDoYou_iOS */;
-			baseConfigurationReferenceRelativePath = env/xcconfigs/Release.xcconfig;
+			baseConfigurationReference = 4B5C00022FD1A00100A1B2C3 /* Release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = XSG72YD495;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = YouDoYou_iOS/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = YouDoYou;
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
+				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -646,7 +666,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "jp.co.youdoyou.client.dev.youdoyou-widgets";
+				PRODUCT_BUNDLE_IDENTIFIER = "jp.co.youdoyou.client.local.youdoyou-widgets";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -792,10 +812,9 @@
 		};
 		49BC573B2F9F94510050A02D /* Test */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReferenceAnchor = 496B2DE92F5B3E93009735E3 /* YouDoYou_iOS */;
-			baseConfigurationReferenceRelativePath = env/xcconfigs/Test.xcconfig;
+			baseConfigurationReference = 4B5C00032FD1A00100A1B2C3 /* Test.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon-Dev;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -803,6 +822,9 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = YouDoYou_iOS/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = YouDoYou;
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
+				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
