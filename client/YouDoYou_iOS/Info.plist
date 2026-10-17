@@ -15,5 +15,7 @@
 	</array>
 	<key>MacIPAddress</key>
 	<string>$(MAC_IP_ADDRESS)</string>
+	<key>UIUserInterfaceStyle</key>
+	<string>Light</string>
 </dict>
 </plist>
