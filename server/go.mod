@@ -9,7 +9,7 @@ require (
 	cloud.google.com/go/firestore v1.26.0
 	firebase.google.com/go/v4 v4.22.0
 	github.com/firebase/genkit/go v1.13.1
-	github.com/go-chi/chi/v5 v5.4.0
+	github.com/go-chi/chi/v5 v5.5.0
 	github.com/joho/godotenv v1.5.1
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/yu-fukunaga/youdoyou-intelligence/gen-go v0.0.0
