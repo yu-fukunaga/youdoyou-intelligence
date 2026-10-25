@@ -20,6 +20,15 @@ resource "google_firebase_project" "default" {
 resource "google_identity_platform_config" "auth_config" {
   provider = google-beta
   project  = google_firebase_project.default.project
+
+  sign_in {
+    email {
+      enabled = false
+    }
+    phone_number {
+      enabled = false
+    }
+  }
 }
 
 resource "google_identity_platform_default_supported_idp_config" "google_signin" {
